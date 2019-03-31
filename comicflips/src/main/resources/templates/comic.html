@@ -63,7 +63,7 @@
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item active">
-                        <a class="nav-link" href="#">Home
+                        <a class="nav-link" href="/">Home
                         </a>
                     </li>
                 </ul>
@@ -76,8 +76,8 @@
                             <i class="fas fa-user-circle" style="font-size: 30px;" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
                             <!--</button>-->
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                                <a class="dropdown-item" href="#">Login</a>
-                                <a class="dropdown-item" href="#">Register</a>
+                                <a class="dropdown-item" th:href="@{/login}">Login</a>
+                                <a class="dropdown-item" th:href="@{/register}">Register</a>
                             </div>
                         </div>
                         <!--<i class="fas fa-user-circle" style="font-size: 30px;"></i>-->
@@ -157,8 +157,8 @@
                         <div class="media mb-4">
                             <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
                             <div class="media-body">
-                                <h5 class="mt-0">Commenter Name</h5>
-                                Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+                                <h5 class="mt-0">User</h5>
+                                Comment
                             </div>
                         </div>
                         <form>
