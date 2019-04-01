@@ -1,10 +1,248 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<html xmlns:th="http://www.thymeleaf.org">
 
-</body>
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Comic</title>
+
+    <link href="https://cdn.jsdelivr.net/webjars/bootstrap/4.3.1/css/bootstrap.min.css"
+          th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}"
+          rel="stylesheet" media="screen"/>
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+          th:href="@{https://use.fontawesome.com/releases/v5.7.0/css/all.css}" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+
+    <script src="https://cdn.jsdelivr.net/webjars/jquery/3.3.1/jquery.min.js"
+            th:src="@{/webjars/jquery/3.3.1/jquery.min.js}"></script>
+
+    <script src="https://cdn.jsdelivr.net/webjars/bootstrap/4.3.1/js/bootstrap.min.js"
+            th:src="@{/webjars/bootstrap/4.3.1/js/bootstrap.min.js}"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            th:src="@{https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js}" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+
+    <script src="https://cdn.bootcss.com/fabric.js/2.7.0/fabric.min.js"
+            th:src="@{https://cdn.bootcss.com/fabric.js/2.7.0/fabric.min.js}"></script>
+
+    <style>
+        body {
+            padding-top: 56px;
+            background-color: whitesmoke;
+            overflow: visible;
+        }
+
+        canvas {
+            border: 1px solid black;
+            margin: 5px;
+            /*z-index: 1;*/
+        }
+
+        /*.canvas-container{*/
+        /*margin: 5px;*/
+        /*}*/
+
+        .canvas-container {
+            margin:0 auto ;
+            margin-bottom: 10px;
+        }
+
+        i:hover{
+            cursor: pointer;
+        }
+
+        .control:hover{
+            cursor: pointer;
+            background-color: ghostwhite;
+        }
+
+        .selected:hover{
+            cursor: pointer;
+            background-color: #e34f51;
+            color: white;
+        }
+
+        .card-header, .card-footer{
+            background-color: white;
+        }
+
+        .blogBody{
+            background-color: whitesmoke;
+            padding: 10px 10px 2px 10px;
+        }
+
+        hr{
+            margin: 0;
+        }
+
+        .control{
+            background-color: white;
+            font-size: 25px;
+            border-right: #dad7d9 solid 1px;
+            border-bottom: #dad7d9 solid 1px;
+            border-top: #dad7d9 solid 1px;
+            padding: 15px 25px;
+        }
+
+        .import{
+            background-color: lightskyblue;
+            font-size: 25px;
+            border-right: #dad7d9 solid 1px;
+            border-bottom: #dad7d9 solid 1px;
+            border-top: #dad7d9 solid 1px;
+            padding: 15px 25px;
+        }
+
+        .selected{
+            background-color: #e34f51;
+            color: white;
+        }
+
+    </style>
+
+</head>
+
+    <body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#" th:href="@{/}">ComicFlips</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+                    aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+                            Comic
+                        </a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="#" th:href="@{/create}">Create Comic</a>
+                            <a class="dropdown-item" href="#" th:href="@{/component}">Create Component</a>
+                        </div>
+                    </li>
+                </ul>
+
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <div class="dropdown dropdown">
+                            <i class="fas fa-user-circle" style="font-size: 30px; color:white;" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="#" th:href="@{/login}">Login</a>
+                                <a class="dropdown-item" href="#" th:href="@{/register}">Register</a>
+                                <a class="dropdown-item" href="#" th:href="@{/profile}">View Profile(TEMP)</a>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h3 style="text-align:center; margin-top: 1.5rem;   margin-bottom: 1.5rem;">
+                    <input type="text" id="title" style="text-align: center" placeholder="Component Title"autofocus>
+                </h3>
+
+                <div id = "tools" class="d-flex justify-content-center sticky-top" style="top:56px">
+                    <i id = "draw" class="control fas fa-pencil-alt" style="border-left: #dad7d9 solid 1px;"></i>
+                    <i id = "circle" class="control far fa-circle"></i>
+                    <i id = "square" class="control far fa-square"></i>
+                    <i id = "line" class="control fal"><img src="https://img.icons8.com/metro/26/000000/horizontal-line.png"></i>
+                    <i id = "triangle" class="control fas fa-caret-up"></i>
+                    <i id = "image" class="control far fa-image"></i>
+                    <i id = "text" class="control fas fa-font"></i>
+                    <i id = "eraser" class="control fas fa-eraser"></i>
+                    <i id = "clear" class="control fas fa-trash"></i>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div id="canvasContainer" class="d-flex flex-wrap" style="display: block;text-align: center;">
+                            <canvas id = "c1"></canvas>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <div class = "card-body">
+                        <input type="text" id="about" style="text-align: center; width:100%; height: 50px;" placeholder="About">
+                        <button type="button" class="btn btn-primary btn-block" style="margin-top:10px;">Publish</button>
+                    </div>
+
+                    <hr>
+
+                </div>
+            </div>
+        </div>
+        <!-- /.row -->
+
+    </div>
+    <!-- /.container -->
+
+
+    <!--Scripts-->
+    <script>
+
+        var currentCanvas;
+
+        $(document).ready(function () {
+            // addCanvas();
+            currentCanvas = new fabric.Canvas("c1", { width: 900, height: 500 });
+
+            $("#tools").children().on("click", function () {
+                staticMode();
+                $(this).addClass("selected").siblings().removeClass("selected");
+                console.log(this);
+                switch (this.id) {
+                    case "draw":
+                        drawMode();
+                        break;
+                    case "circle":
+                        break;
+                    case "square":
+                        break;
+                    case "line":
+                        break;
+                    case "triangle":
+                        break;
+                    case "image":
+                        break;
+                    case "eraser":
+                        break;
+                    case "clear":
+                        currentCanvas.clear();
+                        break;
+                    case "text":
+                        break
+                }
+            })
+
+
+        });
+
+        function drawMode(){
+            currentCanvas.isDrawingMode = true;
+        }
+
+        function staticMode(){
+            currentCanvas.isDrawingMode = false;
+        }
+
+    </script>
+
+    </body>
+
 </html>

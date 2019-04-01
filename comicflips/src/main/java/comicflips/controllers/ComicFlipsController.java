@@ -24,7 +24,24 @@ public class ComicFlipsController {
     }
 
     @GetMapping("/create")
-    ModelAndView createPage(){
+    ModelAndView createComicPage(){
         return new ModelAndView("create");
     }
+
+    @GetMapping("/component")
+    ModelAndView createComponentPage(){
+        return new ModelAndView("component");
+    }
+
+    @GetMapping("/profile")
+    ModelAndView profilePage(){
+        return new ModelAndView("profile");
+    }
+
+    @GetMapping("/comic")
+    ModelAndView viewSingleComic(){
+        return new ModelAndView("comic");
+    }
+
+
 }
