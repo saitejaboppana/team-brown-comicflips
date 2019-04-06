@@ -63,6 +63,13 @@ public class ComicFlipsController {
         return "login";
     }
 
+    @GetMapping("/menu")
+    String menu(Authentication auth, Model M){
+        String username = auth.getName();
+        M.addAttribute("username", username);
+        return "index";
+    }
+
     @GetMapping("/")
     ModelAndView indexPage(){
         return new ModelAndView("index");
