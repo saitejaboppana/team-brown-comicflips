@@ -42,10 +42,6 @@
             /*z-index: 1;*/
         }
 
-        /*.canvas-container{*/
-            /*margin: 5px;*/
-        /*}*/
-
         .canvas-container {
             margin:0 auto ;
             margin-bottom: 10px;
@@ -62,17 +58,8 @@
 
         .selected:hover{
             cursor: pointer;
-            background-color: #e34f51;
+            background-color: #e34f52;
             color: white;
-        }
-
-        .card-header, .card-footer{
-            background-color: white;
-        }
-
-        .blogBody{
-            background-color: whitesmoke;
-            padding: 10px 10px 2px 10px;
         }
 
         hr{
@@ -81,11 +68,14 @@
 
         .control{
             background-color: white;
-            font-size: 25px;
+            font-size: 20px;
             border-right: #dad7d9 solid 1px;
             border-bottom: #dad7d9 solid 1px;
             border-top: #dad7d9 solid 1px;
-            padding: 15px 25px;
+            padding-top: 20px;
+            padding-bottom: 20px;
+            padding-right: 20px;
+            padding-left: 20px;
         }
 
         .import{
@@ -156,22 +146,27 @@
                     <input type="text" id="title" style="text-align: center" placeholder="Comic Title"autofocus>
                 </h3>
 
-                <div id = "tools" class="d-flex justify-content-center sticky-top" style="top:56px">
-                    <i id = "addCanvas" class="control fas fa-plus-circle" style="border-left: #dad7d9 solid 1px;">
-                        <span>Add Canvas</span>
-                    </i>
-                    <i id = "draw" class="control fas fa-pencil-alt"></i>
+                <div id = "tools" class="d-flex justify-content-center sticky-top" style="top:56px; text-align: center;">
+                    <i id = "addCanvas" class="control fas fa-plus-circle" style="border-left: #dad7d9 solid 1px;"></i>
+                    <i id = "select" class="control fas fa-mouse-pointer" style="padding-left: 23px; padding-right: 23px;"></i>
+                    <i id = "draw" data-toggle="collapse" data-target="#drawOptions" class="control fas fa-pencil-alt"></i>
                     <i id = "circle" class="control far fa-circle"></i>
                     <i id = "square" class="control far fa-square"></i>
-                    <i id = "line" class="control fal"><img src="https://img.icons8.com/metro/26/000000/horizontal-line.png"></i>
-                    <i id = "triangle" class="control fas fa-caret-up"></i>
+                    <span id = "line" class="control" style='line-height: 20px;'>&#8213;</span>
+                    <span id = "triangle" class="control" style="font-size:25px;line-height: 20px;" >&#9651;</span>
                     <i id = "image" class="control far fa-image"></i>
                     <i id = "text" class="control fas fa-font"></i>
                     <i id = "eraser" class="control fas fa-eraser"></i>
                     <i id = "clear" class="control fas fa-trash"></i>
-                    <i id = "deleteCanvas" class="control fas fa-minus-circle">
-                        <span>Remove Canvas</span>
-                    </i>
+                    <i id = "deleteCanvas" class="control fas fa-minus-circle"></i>
+                </div>
+
+                <div id = "drawOptions" class="collapse">
+                    <label for="drawing-line-width">Line width:</label>
+                    <span class="info">30</span><input type="range" value="30" min="0" max="150" id="drawing-line-width"><br>
+
+                    <label for="drawing-color">Line color:</label>
+                    <input type="color" value="#000000" id="drawing-color"><br>
                 </div>
 
                 <div class="card mb-4">
@@ -209,6 +204,14 @@
         var comicSlides = {};
         var currentCanvas;
         var count = 4;
+        var shape;
+        var shapeType;
+        var fill;
+        var stroke;
+        var strokeWidth;
+        var isDown;
+        var origX;
+        var origY;
 
         $(document).ready(function () {
             // addCanvas();
@@ -223,7 +226,44 @@
                     console.log("changing canvas");
                     setCurrentCanvas(event.target.previousElementSibling.id);
                 }
-            })
+            });
+
+            // currentCanvas.on('mouse:down', function (o) {
+            //     var pointer = currentCanvas.getPointer(o.e);
+            //     isDown = true;
+            //     origX = pointer.x;
+            //     origY = pointer.y;
+            //
+            //     shape = new fabric.Rect({
+            //         left:origX,
+            //         top:origY,
+            //         fill:'transparent',
+            //         stroke:'red',
+            //         strokeWidth: 3,
+            //     });
+            //
+            //     currentCanvas.add(shape);
+            //
+            // });
+            //
+            // currentCanvas.on('mouse:move', function(o){
+            //     if (!isDown) return;
+            //     var pointer = currentCanvas.getPointer(o.e);
+            //     if(origX>pointer.x){
+            //         shape.set({ left: Math.abs(pointer.x) });
+            //     }
+            //     if(origY>pointer.y){
+            //         shape.set({ top: Math.abs(pointer.y) });
+            //     }
+            //
+            //     shape.set({ width: Math.abs(origX - pointer.x) });
+            //     shape.set({ height: Math.abs(origY - pointer.y) });
+            //     currentCanvas.renderAll();
+            // });
+            //
+            // currentCanvas.on('mouse:up', function(o){
+            //     isDown = false;
+            // });
 
             $("#tools").children().on("click", function () {
                 staticMode();
@@ -231,7 +271,17 @@
                 console.log(this);
                 switch (this.id) {
                     case "draw":
-                        drawMode();
+                        freeDrawingMode();
+                        $("#drawing-color").change(function(){
+                            currentCanvas.freeDrawingBrush.color = this.value;
+                        });
+
+                        $("#drawing-line-width").change(function(){
+                            currentCanvas.freeDrawingBrush.width = parseInt(this.value, 10) || 1;
+                            this.previousSibling.innerHTML = this.value;
+                        });
+                        break;
+                    case "select":
                         break;
                     case "circle":
                         break;
@@ -246,7 +296,8 @@
                     case "eraser":
                         break;
                     case "clear":
-                        currentCanvas.clear();
+                        console.log(currentCanvas.getActiveObject());
+                        clearCanvas();
                         break;
                     case "text":
                         break
@@ -255,11 +306,10 @@
                         break;
                     case "deleteCanvas":
                         deleteCanvas();
-                        $(this).removeClass("selected");
+                        // $(this).removeClass("selected");
                         break;
                 }
             })
-
 
         });
 
@@ -301,16 +351,13 @@
 
         function changeMode() {
             console.log(currentCanvas.isDrawingMode);
+            var collapse = $(".selected").data("target");
+            $(collapse).collapse('hide');
             $(".selected").removeClass("selected");
             currentCanvas.isDrawingMode = !currentCanvas.isDrawingMode;
-            if (currentCanvas.isDrawingMode) {
-                // document.getElementById("changeMode").innerHTML = "Cancel Drawing Mode";
-            } else {
-                // document.getElementById("changeMode").innerHTML = "Start Drawing";
-            }
         }
 
-        function drawMode(){
+        function freeDrawingMode(){
             currentCanvas.isDrawingMode = true;
         }
 
@@ -319,18 +366,41 @@
         }
 
         function deleteCanvas(){
-            var numberOfCanvases = Object.keys(comicSlides).length
-            if(numberOfCanvases == 1){
-                alert("Need At least One Canvas");
+            var choice = confirm("Are You Sure You Want To Remove This Canvas?")
+            $(".selected").removeClass("selected");
+            if(choice == true){
+                var numberOfCanvases = Object.keys(comicSlides).length
+                if(numberOfCanvases == 1){
+                    alert("Need At least One Canvas");
+                    return;
+                }
+                var id = currentCanvas.lowerCanvasEl.id;
+                currentCanvas.dispose();
+                delete comicSlides[id];
+                var newCurrent = $("#" + id).siblings()[0].firstChild.id;
+                currentCanvas = undefined;
+                setCurrentCanvas(newCurrent)
+                document.getElementById(id).parentNode.removeChild(document.getElementById(id));
+            }else {
                 return;
             }
-            var id = currentCanvas.lowerCanvasEl.id;
-            currentCanvas.dispose();
-            delete comicSlides[id];
-            var newCurrent = $("#" + id).siblings()[0].firstChild.id;
-            currentCanvas = undefined;
-            setCurrentCanvas(newCurrent)
-            document.getElementById(id).parentNode.removeChild(document.getElementById(id));
+        }
+
+        function clearCanvas(){
+            if(!currentCanvas.getActiveObject()){
+                var choice = confirm("Are You Sure You Want To Clear The Canvas?");
+                if(choice == true){
+                    currentCanvas.clear();
+                }else {
+                    return
+                }
+            }else{
+                currentCanvas.remove(currentCanvas.getActiveObject());
+            }
+        }
+
+        function drawShape(){
+
         }
 
     </script>
