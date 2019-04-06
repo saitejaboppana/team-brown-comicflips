@@ -1,26 +1,71 @@
 package comicflips.controllers;
+
+import comicflips.MongoUserDetailsService;
+import comicflips.entities.User;
+import comicflips.repositories.UserRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.ui.Model;
+import org.springframework.security.core.Authentication;
 
 import javax.jws.WebParam;
+import java.security.Principal;
 
 @Controller
 public class ComicFlipsController {
 
+    @Autowired
+    private MongoUserDetailsService userDetailsService;
+
+    @GetMapping("/register")
+    String register(Principal user){
+
+        if(user != null){
+            return "redirect:/menu";
+        }
+
+        return "register";
+    }
+
+    @PostMapping("/addUser")
+    ModelAndView addUser(@RequestParam String firstName, @RequestParam String lastName, @RequestParam String username,
+                         @RequestParam String password, @RequestParam String email){
+        System.out.println("Entering registering1");
+        ModelAndView mv = new ModelAndView();
+        if(userDetailsService.loadUserByUsername(username) != null){
+            mv.addObject("error", "User Already Exists");
+            mv.setViewName("register");
+            return mv;
+        }
+        System.out.println("Entering registering2");
+        User newUser = new User();
+        newUser.setFirstName(firstName);
+        newUser.setLastName(lastName);
+        newUser.setUsername(username);
+        newUser.setPassword(password);
+        newUser.setEmail(email);
+        userDetailsService.saveUser(newUser);
+        mv.setViewName("login");
+        return mv;
+    }
+
+    @GetMapping("login")
+    String login(Principal user){
+
+        if(user != null){
+            return "redirect:/menu";
+        }
+
+        return "login";
+    }
+
     @GetMapping("/")
     ModelAndView indexPage(){
         return new ModelAndView("index");
-    }
-
-    @GetMapping("/login")
-    ModelAndView loginPage(){
-        return new ModelAndView("login");
-    }
-
-    @GetMapping("/register")
-    ModelAndView registerPage(){
-        return new ModelAndView("register");
     }
 
     @GetMapping("/create")
@@ -42,6 +87,7 @@ public class ComicFlipsController {
     ModelAndView viewSingleComic(){
         return new ModelAndView("comic");
     }
+
 
 
 }

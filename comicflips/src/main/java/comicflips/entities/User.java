@@ -9,6 +9,8 @@ public class User {
 
     @Id
     private String id;
+    private String firstName;
+    private String lastName;
     private String username;
     private String password;
     private Blob avatar;
@@ -19,10 +21,21 @@ public class User {
     private ArrayList<String> subscriptions;
     private ArrayList<String> createdComponents;
 
-    public User(String id, String username, String password, Blob avatar, String email, ArrayList<String> createdComics,
-                ArrayList<String> likedComics, ArrayList<String> following, ArrayList<String> subscriptions,
-                ArrayList<String> createdComponents) {
+    public User(){
+        this.avatar = null;
+        this.createdComics = new ArrayList<String>();
+        this.likedComics = new ArrayList<String>();
+        this.following = new ArrayList<String>();
+        this.subscriptions = new ArrayList<String>();
+        this.createdComponents = new ArrayList<String>();
+    }
+
+    public User(String id, String firstName, String lastName,String username, String password, Blob avatar,
+                String email, ArrayList<String> createdComics, ArrayList<String> likedComics,
+                ArrayList<String> following, ArrayList<String> subscriptions, ArrayList<String> createdComponents) {
         this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.username = username;
         this.password = password;
         this.avatar = avatar;
@@ -40,6 +53,22 @@ public class User {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getUsername() {
