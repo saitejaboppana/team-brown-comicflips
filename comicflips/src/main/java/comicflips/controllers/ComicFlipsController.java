@@ -25,7 +25,7 @@ public class ComicFlipsController {
     String register(Principal user){
 
         if(user != null){
-            return "redirect:/menu";
+            return "redirect:/";
         }
 
         return "register";
@@ -53,22 +53,16 @@ public class ComicFlipsController {
         return mv;
     }
 
-    @GetMapping("login")
+    @GetMapping("/login")
     String login(Principal user){
 
         if(user != null){
-            return "redirect:/menu";
+            return "redirect:/";
         }
 
         return "login";
     }
 
-    @GetMapping("/menu")
-    String menu(Authentication auth, Model M){
-        String username = auth.getName();
-        M.addAttribute("username", username);
-        return "index";
-    }
 
     @GetMapping("/")
     ModelAndView indexPage(){
@@ -86,9 +80,31 @@ public class ComicFlipsController {
     }
 
     @GetMapping("/profile")
-    ModelAndView profilePage(){
-        return new ModelAndView("profile");
+    ModelAndView profilePage(Authentication auth){
+        ModelAndView mv = new ModelAndView("profile");
+        String username = auth.getName();
+        User user = userDetailsService.getUser(username);
+        mv.addObject("user", user);
+        return mv;
     }
+
+    @PostMapping("/updateUser")
+    String updateProfile(Authentication auth, @RequestParam String firstName, @RequestParam String lastName,
+                         @RequestParam String username, @RequestParam String password, @RequestParam String email) {
+        String userName = auth.getName();
+        User user = userDetailsService.getUser(userName);
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setEmail(email);
+        user.setUsername(username);
+        if(!password.equals("hidden")) {
+            user.setPassword(password);
+        }
+        userDetailsService.updateUser(user);
+        return "redirect:/profile";
+    }
+
+
 
     @GetMapping("/comic")
     ModelAndView viewSingleComic(){
