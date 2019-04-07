@@ -41,7 +41,7 @@ public class MongoUserDetailsService implements UserDetailsService{
     }
 
     public void updateUser(User user){
-        userRepository.save(user);
+        saveUser(user);
     }
 
     public User getUser(String username){

@@ -21,7 +21,27 @@
 
     <script src="https://cdn.jsdelivr.net/webjars/bootstrap/4.3.1/js/bootstrap.min.js"
             th:src="@{/webjars/bootstrap/4.3.1/js/bootstrap.min.js}"></script>
+    <script>
+        $(document).ready(function(){
+            $("#update").hide();
 
+            $("#edit").on("click", function(e){
+                e.preventDefault();
+                $(this).hide();
+                $("#update").show();
+                $("#firstName").prop("disabled", false);
+                $("#firstName").val($("#firstName").attr("placeholder"));
+                $("#lastName").prop("disabled", false);
+                $("#lastName").val($("#lastName").attr("placeholder"));
+                $("#username").prop("disabled", false);
+                $("#username").val($("#username").attr("placeholder"));
+                $("#email").prop("disabled", false);
+                $("#email").val($("#email").attr("placeholder"));
+                $("#password").prop("disabled", false);
+                $("#password").val($("#password").attr("placeholder"));
+            })
+        })
+    </script>
     <style>
         body {
             padding-top: 56px;
@@ -89,6 +109,7 @@
                                 <a class="dropdown-item" href="#" th:href="@{/login}">Login</a>
                                 <a class="dropdown-item" href="#" th:href="@{/register}">Register</a>
                                 <a class="dropdown-item" href="#" th:href="@{/profile}">View Profile(TEMP)</a>
+                                <a class="dropdown-item" href="/logout" >Logout</a>
                             </div>
                         </div>
                     </li>
@@ -112,40 +133,45 @@
                     <div class="card-body" style="text-align: center;">
                         <img src="http://placehold.it/500x400" alt="Card image cap">
                         <p></p>
-                        <form class="form-horizontal" role="form">
+                        <form th:action="@{/updateUser}" method="post" class="form-horizontal" role="form">
                             <div class="form-group">
                                 <label for="firstName" class="col-sm-3 control-label">First Name</label>
                                 <div class="col">
-                                    <input type="text" id="firstName" placeholder="John" class="form-control" autofocus disabled>
+                                    <input name="firstName" type="text" id="firstName" th:placeholder="${user.firstName}" class="form-control" autofocus disabled>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="lastName" class="col-sm-3 control-label">Last Name</label>
                                 <div class="col">
-                                    <input type="text" id="lastName" placeholder="Doe" class="form-control" disabled>
+                                    <input name="lastName" type="text" id="lastName" th:placeholder="${user.lastName}" class="form-control" disabled>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="email" class="col-sm-3 control-label">Email</label>
                                 <div class="col">
-                                    <input type="email" id="email" placeholder="john.doe@jd.com" class="form-control" disabled>
+                                    <input name="email" type="email" id="email" th:placeholder="${user.email}" class="form-control" disabled>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="username" class="col-sm-3 control-label">Username</label>
                                 <div class="col">
-                                    <input type="text" id="username" placeholder="jdoe1" class="form-control" disabled>
+                                    <input name="username" type="text" id="username" th:placeholder="${user.username}" class="form-control" disabled>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="password" class="col-sm-3 control-label">Password</label>
                                 <div class="col">
-                                    <input type="password" id="password" placeholder="hidden" class="form-control" disabled>
+                                    <input name="password"  type="password" id="password" placeholder="hidden" class="form-control" disabled>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col">
-                                    <button type="submit" class="btn btn-primary" style="width: 100%;">Edit</button>
+                                    <button id="edit" class="btn btn-primary" style="width: 100%;">Edit</button>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col">
+                                    <button type="submit" id="update" class="btn btn-primary" style="width: 100%;">Update</button>
                                 </div>
                             </div>
                         </form> <!-- /form -->
