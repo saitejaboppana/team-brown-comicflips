@@ -30,10 +30,9 @@ public class User {
         this.createdComponents = new ArrayList<String>();
     }
 
-    public User(String id, String firstName, String lastName,String username, String password, Blob avatar,
+    public User(String firstName, String lastName,String username, String password, Blob avatar,
                 String email, ArrayList<String> createdComics, ArrayList<String> likedComics,
                 ArrayList<String> following, ArrayList<String> subscriptions, ArrayList<String> createdComponents) {
-        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
