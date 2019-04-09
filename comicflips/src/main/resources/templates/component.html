@@ -154,16 +154,33 @@
                     <input type="text" id="title" style="text-align: center" placeholder="Component Title"autofocus>
                 </h3>
 
-                <div id = "tools" class="d-flex justify-content-center sticky-top" style="top:56px">
-                    <i id = "draw" class="control fas fa-pencil-alt" style="border-left: #dad7d9 solid 1px;"></i>
-                    <i id = "circle" class="control far fa-circle"></i>
-                    <i id = "square" class="control far fa-square"></i>
-                    <i id = "line" class="control fal"><img src="https://img.icons8.com/metro/26/000000/horizontal-line.png"></i>
-                    <i id = "triangle" class="control fas fa-caret-up"></i>
+                <div id = "tools" class="d-flex justify-content-center sticky-top" style="top:56px; text-align: center;">
+                    <i id = "select" class="control fas fa-mouse-pointer" style="padding-left: 23px; padding-right: 23px;border-left: #dad7d9 solid 1px;"></i>
+                    <i id = "draw" data-toggle="collapse" data-target="#drawOptions" class="control fas fa-pencil-alt"></i>
+                    <i id = "circle" data-toggle="collapse" data-target="#shapeOptions" class="control far fa-circle"></i>
+                    <span id = "rectangle" data-toggle="collapse" data-target="#shapeOptions" class="control" style='line-height: 15px;font-size: 30px;'>&#9645;</span>
+                    <span id = "line" class="control" style='line-height: 20px;'>&#8213;</span>
+                    <span id = "triangle" data-toggle="collapse" data-target="#shapeOptions" class="control" style="font-size:25px;line-height: 20px;" >&#9651;</span>
                     <i id = "image" class="control far fa-image"></i>
                     <i id = "text" class="control fas fa-font"></i>
                     <i id = "eraser" class="control fas fa-eraser"></i>
                     <i id = "clear" class="control fas fa-trash"></i>
+                </div>
+
+                <div id = "drawOptions" class="collapse sticky-top" style="top:70px;background-color: grey;border: #dad7d9 solid 1px;">
+                    <label for="drawing-line-width">Line width:</label>
+                    <span class="info">1</span><input type="range" value="1" min="0" max="150" id="drawing-line-width"><br>
+                    <label for="drawing-color">Line color:</label>
+                    <input type="color" value="#000000" id="drawing-color"><br>
+                </div>
+
+                <div id = "shapeOptions" class="collapse">
+                    <label for="shape-stroke-width">Stroke width:</label>
+                    <span class="info">1</span><input type="range" value="1" min="0" max="150" id="shape-stroke-width"><br>
+                    <label for="shape-stroke">Stroke color:</label>
+                    <input type="color" value="#000000" id="shape-stroke"><br>
+                    <label for="shape-fill">Fill:</label>
+                    <input type="color" value="#000000" id="shape-fill"><br>
                 </div>
 
                 <div class="card mb-4">
@@ -192,51 +209,243 @@
 
 
     <!--Scripts-->
-    <script>
 
+
+    <script>
         var currentCanvas;
+        var shape;
+        var toolType;
+        var fill = "transparent";
+        var stroke = "black";
+        var strokeWidth = 2;
+        var isDown = false;
+        var origX;
+        var origY;
 
         $(document).ready(function () {
             // addCanvas();
             currentCanvas = new fabric.Canvas("c1", { width: 900, height: 500 });
 
+            currentCanvas.freeDrawingBrush.width = parseInt($("#drawing-line-width").val(), 10) || 1;
+
+            $("#shape-stroke-width").change(function(){
+                strokeWidth = parseInt(this.value, 10) || 1;
+                this.previousSibling.innerHTML = this.value;
+            });
+
+            $("#shape-stroke").change(function(){
+                stroke = this.value;
+            });
+
+            $("#shape-fill").change(function(){
+                fill = this.value;
+            });
+
+            $("#drawing-color").change(function(){
+                currentCanvas.freeDrawingBrush.color = this.value;
+                stroke = this.value;
+            });
+
+            $("#drawing-line-width").change(function(){
+                currentCanvas.freeDrawingBrush.width = parseInt(this.value, 10) || 1;
+                strokeWidth = parseInt(this.value, 10) || 1;
+                this.previousSibling.innerHTML = this.value;
+            });
+
             $("#tools").children().on("click", function () {
                 staticMode();
+                removeCanvasListener();
+                var collapse = $(".selected").data("target");
+                $(collapse).collapse('hide');
+
                 $(this).addClass("selected").siblings().removeClass("selected");
+                toolType = this.id;
                 console.log(this);
-                switch (this.id) {
+                switch (toolType) {
                     case "draw":
-                        drawMode();
+                        freeDrawingMode();
                         break;
-                    case "circle":
-                        break;
-                    case "square":
-                        break;
-                    case "line":
-                        break;
-                    case "triangle":
+                    case "select":
+                        selectTool();
                         break;
                     case "image":
                         break;
                     case "eraser":
                         break;
                     case "clear":
-                        currentCanvas.clear();
+                        clearCanvas();
                         break;
                     case "text":
                         break
+                    default:
+                        initializeCanvasListener();
+                        break;
                 }
             })
 
-
         });
 
-        function drawMode(){
+        function initializeCanvasListener() {
+            currentCanvas.on('mouse:down', mouseDown);
+            currentCanvas.on('mouse:up', mouseUp);
+            currentCanvas.on('mouse:move', mouseMove);
+        }
+
+        function removeCanvasListener(){
+            currentCanvas.off('mouse:down', mouseDown);
+            currentCanvas.off('mouse:up', mouseUp);
+            currentCanvas.off('mouse:move', mouseMove);
+        }
+
+        function mouseDown() {
+            console.log("mouse down");
+            if(toolType != "circle" && toolType != "rectangle"&& toolType != "line" && toolType != "triangle"){
+                return;
+            }
+            var pointer = currentCanvas.getPointer(this.e);
+            isDown = true;
+            origX = pointer.x;
+            origY = pointer.y;
+
+            if(toolType == "circle"){
+
+                shape = new fabric.Circle({
+                    left: pointer.x,
+                    top: pointer.y,
+                    radius: 1,
+                    strokeWidth: strokeWidth,
+                    stroke: stroke,
+                    fill: fill,
+                    originX: 'center',
+                    originY: 'center',
+                    selectable: false
+                });
+
+            }else if(toolType == "rectangle"){
+
+                shape = new fabric.Rect({
+                    left:origX,
+                    top:origY,
+                    strokeWidth: strokeWidth,
+                    stroke: stroke,
+                    fill: fill,
+                    selectable: false
+                });
+
+            }else if(toolType == "line"){
+
+                var points = [origX, origY, origX, origY];
+
+                shape = new fabric.Line(points, {
+                    strokeWidth: strokeWidth,
+                    stroke: stroke
+                });
+
+            }else if(toolType == "triangle"){
+
+                shape = new fabric.Triangle({
+                    left: pointer.x,
+                    top: pointer.y,
+                    strokeWidth: strokeWidth,
+                    stroke: stroke,
+                    fill: fill,
+                    width:2,
+                    height:2,
+                    originX: 'center',
+                    selectable: false
+                });
+
+            }
+            currentCanvas.add(shape);
+        }
+
+        function mouseUp() {
+            console.log("mouse up");
+            if(toolType != "circle" && toolType != "rectangle"&& toolType != "line" && toolType != "triangle"){
+                return;
+            }
+            shape.setCoords();
+            isDown = false;
+        }
+
+        function mouseMove() {
+            console.log("mouse move");
+            if(toolType != "circle" && toolType != "rectangle" && toolType != "line" && toolType != "triangle"){
+                return;
+            }
+
+            if (!isDown) return;
+
+            var pointer = currentCanvas.getPointer(this.e);
+
+            if(toolType == "circle"){
+
+                shape.set({ radius: Math.abs(origX - pointer.x) });
+
+            }else if(toolType == "rectangle"){
+
+                if(origX>pointer.x){
+                    shape.set({ left: Math.abs(pointer.x) });
+                }
+                if(origY>pointer.y){
+                    shape.set({ top: Math.abs(pointer.y) });
+                }
+
+                shape.set({ width: Math.abs(origX - pointer.x) });
+                shape.set({ height: Math.abs(origY - pointer.y) });
+
+            }else if(toolType == "line"){
+
+                shape.set({ x2: pointer.x, y2: pointer.y });
+
+            }else if(toolType == "triangle"){
+
+                shape.set({ width: Math.abs(origX - pointer.x),height: Math.abs(origY - pointer.y)});
+
+            }
+            currentCanvas.renderAll();
+        }
+
+        function freeDrawingMode(){
             currentCanvas.isDrawingMode = true;
         }
 
         function staticMode(){
             currentCanvas.isDrawingMode = false;
+            currentCanvas.selection = false;
+            currentCanvas.hoverCursor = 'context-menu';
+            currentCanvas.forEachObject(function(object){
+                object.selectable = false;
+            })
+            currentCanvas.renderAll();
+        }
+
+        function clearCanvas(){
+            if(!currentCanvas.getActiveObject()){
+                var choice = confirm("Are You Sure You Want To Clear The Canvas?");
+                if(choice == true){
+                    currentCanvas.clear();
+                }else {
+                    return
+                }
+            }else{
+                currentCanvas.remove(currentCanvas.getActiveObject());
+            }
+        }
+
+        function selectTool(){
+            console.log("entering select tool");
+            $("#select").addClass("selected");
+            currentCanvas.selection = true;
+            currentCanvas.hoverCursor = 'move';
+            currentCanvas.forEachObject(function(object){
+                object.selectable = true;
+            })
+            currentCanvas.renderAll();
+        }
+
+        function resetControls(){
+
         }
 
     </script>
