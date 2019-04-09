@@ -83,6 +83,7 @@ public class ComicFlipsController {
     ModelAndView profilePage(Authentication auth){
         ModelAndView mv = new ModelAndView("profile");
         String username = auth.getName();
+        System.out.println("server side user" +  username);
         User user = userDetailsService.getUser(username);
         mv.addObject("user", user);
         return mv;
@@ -90,13 +91,13 @@ public class ComicFlipsController {
 
     @PostMapping("/updateUser")
     String updateProfile(Authentication auth, @RequestParam String firstName, @RequestParam String lastName,
-                         @RequestParam String username, @RequestParam String password, @RequestParam String email) {
+                         @RequestParam String password, @RequestParam String email) {
         String userName = auth.getName();
         User user = userDetailsService.getUser(userName);
         user.setFirstName(firstName);
         user.setLastName(lastName);
         user.setEmail(email);
-        user.setUsername(username);
+//        user.setUsername(username);
         if(!password.equals("hidden")) {
             user.setPassword(password);
         }
