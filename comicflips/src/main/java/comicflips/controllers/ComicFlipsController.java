@@ -21,6 +21,9 @@ public class ComicFlipsController {
     @Autowired
     private MongoUserDetailsService userDetailsService;
 
+    @Autowired
+    private ComicRepository comicRepository;
+
     @GetMapping("/register")
     String register(Principal user){
 
@@ -112,6 +115,31 @@ public class ComicFlipsController {
         return new ModelAndView("comic");
     }
 
+    @PostMapping("/comic")
+    String addComic(String title, String about, String [] canvases, Authentication auth){
+
+        Comic c = comicRepository.findByName(title);
+        if (c != null){
+            String username = auth.getName();
+            if (username == c.getUsername()){
+                return "Comic with this name already exists!";
+            }else{
+                c = new Comic();
+                c.setName(title);
+                c.setDescription(about);
+                c.setCanvases(canvases);
+                c.setUsername(username);
+            }
+        }else{
+            c = new Comic();
+            c.setName(title);
+            c.setDescription(about);
+            c.setCanvases(canvases);
+            c.setUsername(username);
+        }
+        comicRepository.save(c);
+        return "Success";
+    }
 
 
 }

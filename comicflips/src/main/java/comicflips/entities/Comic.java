@@ -10,16 +10,17 @@ public class Comic {
     private String id;
     private String group;
     private String name;
-    private ArrayList<Blob> canvases;
+    private ArrayList<String> canvases;
     private ArrayList<String> likes;
     private ArrayList<Comment>  comments;
     private ArrayList<Component> components;
-    private String visibility;
+    private boolean isPublic;
     private ArrayList<String> tags;
     private String description;
+    private String username;
 
     public Comic(){
-        canvases = new ArrayList<Blob>();
+        canvases = new ArrayList<String>();
         likes = new ArrayList<String>();
         comments = new ArrayList<Comment>();
         components = new ArrayList<Component>();
@@ -27,7 +28,7 @@ public class Comic {
     }
 
     public Comic(String group, String name, String visibility, String description,
-                 ArrayList<Blob> canvases, ArrayList<String> likes, ArrayList<Comment> comments,
+                 ArrayList<String> canvases, ArrayList<String> likes, ArrayList<Comment> comments,
                  ArrayList<Component> components, ArrayList<String> tags){
         this.group = group;
         this.name = name;
@@ -38,6 +39,22 @@ public class Comic {
         this.comments = comments;
         this.components = components;
         this.tags = tags;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public boolean isPublic() {
+        return isPublic;
+    }
+
+    public void setPublic(boolean aPublic) {
+        isPublic = aPublic;
     }
 
     public String getId() {
@@ -64,11 +81,11 @@ public class Comic {
         this.name = name;
     }
 
-    public ArrayList<Blob> getCanvases() {
+    public ArrayList<String> getCanvases() {
         return canvases;
     }
 
-    public void setCanvases(ArrayList<Blob> canvases) {
+    public void setCanvases(ArrayList<String> canvases) {
         this.canvases = canvases;
     }
 

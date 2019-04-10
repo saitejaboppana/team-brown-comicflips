@@ -9,8 +9,9 @@ public class Component {
     @Id
     private String id;
     private String name;
-    private Blob canvas;
+    private String canvas;
     private String visibility;
+    private String username;
 
     public Component(String name, Blob canvas, String visibility){
         this.setName(name);
@@ -34,7 +35,7 @@ public class Component {
         this.name = name;
     }
 
-    public Blob getCanvas() {
+    public String getCanvas() {
         return canvas;
     }
 
@@ -48,5 +49,13 @@ public class Component {
 
     public void setVisibility(String visibility) {
         this.visibility = visibility;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }
