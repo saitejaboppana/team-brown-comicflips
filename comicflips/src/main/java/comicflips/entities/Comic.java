@@ -10,7 +10,7 @@ public class Comic {
     private String id;
     private String group;
     private String name;
-    private ArrayList<String> canvases;
+    private String[] canvases;
     private ArrayList<String> likes;
     private ArrayList<Comment>  comments;
     private ArrayList<Component> components;
@@ -20,19 +20,18 @@ public class Comic {
     private String username;
 
     public Comic(){
-        canvases = new ArrayList<String>();
         likes = new ArrayList<String>();
         comments = new ArrayList<Comment>();
         components = new ArrayList<Component>();
         tags = new ArrayList<String>();
     }
 
-    public Comic(String group, String name, String visibility, String description,
-                 ArrayList<String> canvases, ArrayList<String> likes, ArrayList<Comment> comments,
+    public Comic(String group, String name, boolean isPublic, String description,
+                 String[] canvases, ArrayList<String> likes, ArrayList<Comment> comments,
                  ArrayList<Component> components, ArrayList<String> tags){
         this.group = group;
         this.name = name;
-        this.visibility = visibility;
+        this.isPublic = isPublic;
         this.description = description;
         this.canvases = canvases;
         this.likes = likes;
@@ -81,11 +80,11 @@ public class Comic {
         this.name = name;
     }
 
-    public ArrayList<String> getCanvases() {
+    public String[] getCanvases() {
         return canvases;
     }
 
-    public void setCanvases(ArrayList<String> canvases) {
+    public void setCanvases(String[] canvases) {
         this.canvases = canvases;
     }
 
@@ -111,14 +110,6 @@ public class Comic {
 
     public void setComponents(ArrayList<Component> components) {
         this.components = components;
-    }
-
-    public String getVisibility() {
-        return visibility;
-    }
-
-    public void setVisibility(String visibility) {
-        this.visibility = visibility;
     }
 
     public ArrayList<String> getTags() {

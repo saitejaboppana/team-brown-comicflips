@@ -1,7 +1,11 @@
 package comicflips.controllers;
 
 import comicflips.MongoUserDetailsService;
+import comicflips.entities.Comic;
+import comicflips.entities.Component;
 import comicflips.entities.User;
+import comicflips.repositories.ComicRepository;
+import comicflips.repositories.ComponentRepository;
 import comicflips.repositories.UserRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +27,12 @@ public class ComicFlipsController {
 
     @Autowired
     private ComicRepository comicRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private ComponentRepository componentRepository;
 
     @GetMapping("/register")
     String register(Principal user){
@@ -100,11 +110,17 @@ public class ComicFlipsController {
         user.setFirstName(firstName);
         user.setLastName(lastName);
         user.setEmail(email);
-//        user.setUsername(username);
+        user.setUsername(userName);
         if(!password.equals("hidden")) {
             user.setPassword(password);
+            userDetailsService.updateUser(user);
         }
-        userDetailsService.updateUser(user);
+        else{
+            userRepository.save(user);
+        }
+        System.out.println("Username: " + userName);
+        System.out.println("Password: " + password);
+        //userDetailsService.updateUser(user);
         return "redirect:/profile";
     }
 
@@ -115,31 +131,50 @@ public class ComicFlipsController {
         return new ModelAndView("comic");
     }
 
-    @PostMapping("/comic")
-    String addComic(String title, String about, String [] canvases, Authentication auth){
+    @PostMapping("/addComic")
+    String addComic(String title, String about, String[] canvases, Authentication auth){
 
         Comic c = comicRepository.findByName(title);
-        if (c != null){
-            String username = auth.getName();
-            if (username == c.getUsername()){
-                return "Comic with this name already exists!";
-            }else{
-                c = new Comic();
-                c.setName(title);
-                c.setDescription(about);
-                c.setCanvases(canvases);
-                c.setUsername(username);
-            }
-        }else{
+        String username = auth.getName();
+        if (c != null && username == c.getUsername()){
+            return "Comic with this name already exists!";
+        }
+        else{
             c = new Comic();
             c.setName(title);
             c.setDescription(about);
             c.setCanvases(canvases);
             c.setUsername(username);
+            c.setPublic(true);//for now, lets have this hardcoded as true
         }
         comicRepository.save(c);
         return "Success";
     }
 
+    @PostMapping("/addComponent")
+    String addComponent(String title, String canvas, Authentication auth){
+        Component c = componentRepository.findByName(title);
+        String username = auth.getName();
+        if (c != null && username == c.getUsername()){
+            return "Component with this name already exists!";
+        }
+        else{
+            c = new Component();
+            c.setName(title);
+            c.setCanvas(canvas);
+            c.setUsername(username);
+            c.setPublic(true);//for now, lets have this hardcoded as true
+        }
+        componentRepository.save(c);
+        return "Success";
+    }
+
+    @PostMapping("/deleteComponent")
+    String deleteComponent(String title, Authentication auth){
+        String userName = auth.getName();
+        Component c = componentRepository.findByNameAndUsername(title, userName);
+        componentRepository.delete(c);
+        return "Success";
+    }
 
 }
