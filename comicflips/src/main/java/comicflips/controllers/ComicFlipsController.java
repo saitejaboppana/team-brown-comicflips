@@ -125,7 +125,6 @@ public class ComicFlipsController {
     }
 
 
-
     @GetMapping("/comic")
     ModelAndView viewSingleComic(){
         return new ModelAndView("comic");

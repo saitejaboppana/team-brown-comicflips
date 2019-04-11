@@ -294,8 +294,6 @@
                 case "clear":
                     clearCanvas();
                     break;
-                case "text":
-                    break
                 case "addCanvas":
                     addCanvas();
                     break;
@@ -323,10 +321,11 @@
     }
     
     function mouseDown() {
-        console.log("mouse down");
-        if(toolType != "circle" && toolType != "rectangle"&& toolType != "line" && toolType != "triangle"){
+        if(toolType != "circle" && toolType != "rectangle"&& toolType != "line" && toolType != "triangle" && toolType != "text"){
             return;
         }
+        console.log("mouse down");
+
         var pointer = currentCanvas.getPointer(this.e);
         isDown = true;
         origX = pointer.x;
@@ -380,26 +379,37 @@
                 selectable: false
             });
 
+        }else if(toolType == "text"){
+            var text = new fabric.IText('',{
+                left: origX,
+                top: origY
+            });
+            currentCanvas.add(text).setActiveObject(text);
+            text.enterEditing();
+            isDown = false;
+            return;
         }
         currentCanvas.add(shape);
     }
     
     function mouseUp() {
-        console.log("mouse up");
         if(toolType != "circle" && toolType != "rectangle"&& toolType != "line" && toolType != "triangle"){
             return;
         }
+        console.log("mouse up");
+
         shape.setCoords();
         isDown = false;
     }
     
     function mouseMove() {
-        console.log("mouse move");
         if(toolType != "circle" && toolType != "rectangle" && toolType != "line" && toolType != "triangle"){
             return;
         }
 
         if (!isDown) return;
+
+        console.log("mouse move");
 
         var pointer = currentCanvas.getPointer(this.e);
 
