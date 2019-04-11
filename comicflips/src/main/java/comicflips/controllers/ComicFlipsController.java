@@ -126,15 +126,13 @@ public class ComicFlipsController {
     }
 
 
-
     @GetMapping("/comic")
     ModelAndView viewSingleComic(){
         return new ModelAndView("comic");
     }
 
     @PostMapping("/addComic")
-    String addComic(String title, String about, ArrayList<String> canvases, Authentication auth){
-
+    String addComic(String title, String about, String[] canvases, Authentication auth){
         Comic c = comicRepository.findByName(title);
         String username = auth.getName();
         if (c != null && username == c.getUsername()){
@@ -159,6 +157,7 @@ public class ComicFlipsController {
         comicRepository.delete(c);
         return "Success";
     }
+
 
     @PostMapping("/addComponent")
     String addComponent(String title, String canvas, Authentication auth){
