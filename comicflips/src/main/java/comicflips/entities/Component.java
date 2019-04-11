@@ -10,13 +10,16 @@ public class Component {
     private String id;
     private String name;
     private String canvas;
-    private String visibility;
+    private boolean isPublic;
     private String username;
 
-    public Component(String name, Blob canvas, String visibility){
+    public Component(){
+    }
+
+    public Component(String name, String canvas, boolean isPublic){
         this.setName(name);
         this.setCanvas(canvas);
-        this.setVisibility(visibility);
+        this.setPublic(isPublic);
     }
 
     public String getId() {
@@ -39,16 +42,16 @@ public class Component {
         return canvas;
     }
 
-    public void setCanvas(Blob canvas) {
+    public void setCanvas(String canvas) {
         this.canvas = canvas;
     }
 
-    public String getVisibility() {
-        return visibility;
+    public Boolean getPublic() {
+        return isPublic;
     }
 
-    public void setVisibility(String visibility) {
-        this.visibility = visibility;
+    public void setPublic(Boolean aPublic) {
+        isPublic = aPublic;
     }
 
     public String getUsername() {
