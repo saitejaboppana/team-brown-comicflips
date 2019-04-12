@@ -141,4 +141,20 @@ public class User {
     public void setCreatedComponents(ArrayList<String> createdComponents) {
         this.createdComponents = createdComponents;
     }
+
+    public void addComicId(String id){
+        createdComics.add(id);
+    }
+
+    public void deleteComicId(String id){
+        createdComics.remove(id);
+    }
+
+    public void addComponentId(String id){
+        createdComponents.add(id);
+    }
+
+    public void deleteComponentId(String id){
+        createdComponents.remove(id);
+    }
 }
