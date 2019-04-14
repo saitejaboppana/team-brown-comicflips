@@ -141,8 +141,11 @@ public class ComicFlipsController {
 
 
     @PostMapping("/addComic")
-    String addComic(@RequestParam String title, @RequestParam String about,
-                    @RequestParam String[] canvases, @RequestParam  Authentication auth){
+    @ResponseBody
+    String addComic(@RequestParam("title") String title,
+                    @RequestParam("about") String about,
+                    @RequestParam("canvases[]") String[] canvases,
+                    Authentication auth){
         Comic c = comicRepository.findByName(title);
         String username = auth.getName();
         if (c != null && username == c.getUsername()){
@@ -155,8 +158,12 @@ public class ComicFlipsController {
             c.setCanvases(canvases);
             c.setUsername(username);
             c.setPublic(true);//for now, lets have this hardcoded as true
+
         }
         comicRepository.save(c);
+        User author = userRepository.findByUsername(username);
+        author.addComicId(c.getId());
+        userRepository.save(author);
         return "Success";
     }
 
@@ -170,6 +177,7 @@ public class ComicFlipsController {
 
 
     @PostMapping("/addComponent")
+    @ResponseBody
     String addComponent(@RequestParam String title, @RequestParam String canvas, Authentication auth){
         Component c = componentRepository.findByName(title);
         String username = auth.getName();
@@ -184,6 +192,9 @@ public class ComicFlipsController {
             c.setPublic(true);//for now, lets have this hardcoded as true
         }
         componentRepository.save(c);
+        User author = userRepository.findByUsername(username);
+        author.addComponentId(c.getId());
+        userRepository.save(author);
         return "Success";
     }
 
