@@ -131,8 +131,18 @@ public class ComicFlipsController {
         return new ModelAndView("comic");
     }
 
+    @GetMapping("/comic/{id}")
+    ModelAndView getComic(@PathVariable String id){
+        Comic c = comicRepository.findById(id).get();
+        ModelAndView mv = new ModelAndView("comic");
+        mv.addObject("comic", c);
+        return mv;
+    }
+
+
     @PostMapping("/addComic")
-    String addComic(String title, String about, String[] canvases, Authentication auth){
+    String addComic(@RequestParam String title, @RequestParam String about,
+                    @RequestParam String[] canvases, @RequestParam  Authentication auth){
         Comic c = comicRepository.findByName(title);
         String username = auth.getName();
         if (c != null && username == c.getUsername()){
@@ -151,7 +161,7 @@ public class ComicFlipsController {
     }
 
     @PostMapping("/deleteComic")
-    String deleteComic(String title, Authentication auth){
+    String deleteComic(@RequestParam String title, Authentication auth){
         String userName = auth.getName();
         Comic c = comicRepository.findByNameAndUsername(title, userName);
         comicRepository.delete(c);
@@ -160,7 +170,7 @@ public class ComicFlipsController {
 
 
     @PostMapping("/addComponent")
-    String addComponent(String title, String canvas, Authentication auth){
+    String addComponent(@RequestParam String title, @RequestParam String canvas, Authentication auth){
         Component c = componentRepository.findByName(title);
         String username = auth.getName();
         if (c != null && username == c.getUsername()){
@@ -178,7 +188,7 @@ public class ComicFlipsController {
     }
 
     @PostMapping("/deleteComponent")
-    String deleteComponent(String title, Authentication auth){
+    String deleteComponent(@RequestParam String title, Authentication auth){
         String userName = auth.getName();
         Component c = componentRepository.findByNameAndUsername(title, userName);
         componentRepository.delete(c);

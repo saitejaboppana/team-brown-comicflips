@@ -8,13 +8,15 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Comic</title>
+    <title th:text="${comic.name}">Comic</title>
 
     <link href="https://cdn.jsdelivr.net/webjars/bootstrap/4.3.1/css/bootstrap.min.css"
           th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}"
           rel="stylesheet" media="screen"/>
 
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" th:href="@{https://use.fontawesome.com/releases/v5.7.0/css/all.css}" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <script src="https://cdn.jsdelivr.net/webjars/jquery/3.3.1/jquery.min.js"
             th:src="@{/webjars/jquery/3.3.1/jquery.min.js}"></script>
@@ -47,6 +49,33 @@
 
 
     </style>
+
+    <script>
+        $(document).ready(function(){
+            $("#like").click(function(){
+                console.log($(this).css("color"));
+                if($(this).css("color")== "rgb(33, 37, 41)") {
+                    $(this).css("color", "blue");
+                }
+                else{
+                    $(this).css("color", "rgb(33, 37, 41)");
+                }
+            });
+            $("#comment").click(function(){
+                $("#commentbox").removeAttr('hidden');
+                $("#commenttext").focus();
+            });
+
+            $("#cancelComment").click(function(){
+                $("#commentbox").prop("hidden", "true");
+                $("#commenttext").blur();
+            });
+
+            $("#share").click(function(){
+
+            });
+        });
+    </script>
 
 </head>
 
@@ -98,17 +127,13 @@
             <!-- Blog Entries Column -->
             <div class="col">
 
-                <h3 style="text-align:center; margin-top: 1.5rem;margin-bottom: 0">
-                    Comic Title
-                </h3>
+                <h3 style="text-align:center; margin-top: 1.5rem;margin-bottom: 0" th:text="${comic.name}"></h3>
 
                 <!--<h3 class="my-4">-->
                     <!--Comic Title by User-->
                 <!--</h3>-->
 
-                <h4 style="text-align:center; margin-bottom: 1.5rem;top: 0">
-                    by User
-                </h4>
+                <h4 style="text-align:center; margin-bottom: 1.5rem;top: 0" th:text="by ${comic.username}"></h4>
 
                 <!-- Blog Post -->
                 <div class="card mb-4">
@@ -132,41 +157,44 @@
                     <hr>
 
                     <div class = "card-body">
-                        <h3>About</h3>
+                        <h3 th:text="${comic.description}" ></h3>
                     </div>
 
                     <hr>
-                    <span style="padding: 5px 10px 5px 10px;font-size: small;">2 Likes, 5 Comments</span>
+                    <span style="padding: 5px 10px 5px 10px;font-size: small;" th:text="${comic.likes.size} Likes, ${comic.likes.comments) Comments"></span>
                     <div class="card-footer">
                         <div class="row" style="text-align: center">
                             <div class="col">
-                                <i class="far fa-thumbs-up" style="font-size:20px;"><span style="padding: 10px;">Like</span></i>
+                                <i class="far fa-thumbs-up" style="font-size:20px;" id="like"><span style="padding: 10px;">Like</span></i>
                             </div>
 
                             <div class="col">
-                                <i class="far fa-comment" style="font-size:20px;"><span style="padding: 10px;">Comment</span></i>
+                                <i class="far fa-comment" style="font-size:20px;" id="comment"><span style="padding: 10px;">Comment</span></i>
                             </div>
 
                             <div class="col">
-                                <i class="fas fa-share" style="font-size:20px;"><span style="padding: 10px;font-weight: normal">Share</span></i>
+                                <i class="fas fa-share" style="font-size:20px;"><span style="padding: 10px;font-weight: normal" id="share">Share</span></i>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="card my-4">
-                    <h5 class="card-header">Leave a Comment:</h5>
+                <div class="card my-4" id="commentbox" hidden="true">
+                    <span class="card-header">
+                        <i style="float: right; cursor:pointer;"  class="fa fa-close" id="cancelComment" ></i>
+                        <h5>Leave a Comment:</h5>
+                    </span>
                     <div class="card-body">
                         <div class="media mb-4">
                             <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
                             <div class="media-body">
-                                <h5 class="mt-0">User</h5>
+                                <h5 class="mt-0" th:text="${comic.username}"></h5>
                                 Comment
                             </div>
                         </div>
                         <form>
                             <div class="form-group">
-                                <textarea class="form-control" rows="3"></textarea>
+                                <textarea class="form-control" rows="3" id="commenttext"></textarea>
                             </div>
                             <button type="submit" class="btn btn-primary">Submit</button>
                         </form>
