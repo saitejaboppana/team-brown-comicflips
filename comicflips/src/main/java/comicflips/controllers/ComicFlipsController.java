@@ -80,7 +80,9 @@ public class ComicFlipsController {
 
     @GetMapping("/")
     ModelAndView indexPage(){
-        return new ModelAndView("index");
+        ModelAndView mv = new ModelAndView("index");
+        mv.addObject("comics",comicRepository.findAll());
+        return mv;
     }
 
     @GetMapping("/create")
