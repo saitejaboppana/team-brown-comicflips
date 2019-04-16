@@ -93,7 +93,9 @@ public class ComicFlipsController {
 
     @GetMapping("/create")
     ModelAndView createComicPage(){
-        return new ModelAndView("create");
+        ModelAndView mv = new ModelAndView("create");
+        mv.addObject("components",componentRepository.findAll());
+        return mv;
     }
 
     @GetMapping("/component")

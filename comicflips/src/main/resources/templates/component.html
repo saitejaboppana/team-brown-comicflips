@@ -228,6 +228,34 @@
 
             currentCanvas.freeDrawingBrush.width = parseInt($("#drawing-line-width").val(), 10) || 1;
 
+            $("#publish").on("click", function () {
+                var title = $("#title").val();
+                var about = $("#about").val();
+
+                if(title == '' || about ==''){
+                    alert("Please Fill Out All The Fields");
+                    return;
+                }
+
+                var canvas = createComponentJson();
+                if(canvas == "empty"){
+                    alert("Please Create Content on the canvas");
+                    return;
+                }
+
+                console.log(title);
+                console.log(about);
+                console.log(canvas);
+
+                $.post('/addComic',   // url
+                    { title: title, canvas: canvas }, // data to be submit
+                    function(data, status, jqXHR) {// success callback
+                        console.log('status: ' + status + ', data: ' + data);
+                        window.location = "/";
+                    });
+
+            })
+
             $("#shape-stroke-width").change(function(){
                 strokeWidth = parseInt(this.value, 10) || 1;
                 this.previousSibling.innerHTML = this.value;
@@ -444,8 +472,13 @@
             currentCanvas.renderAll();
         }
 
-        function resetControls(){
-
+        function createComponentJson(){
+            var json = currentCanvas.toJSON();
+            if(json['objects'].length == 0){
+                return "empty";
+            }
+            json = JSON.stringify(currentCanvas);
+            return json;
         }
 
     </script>
