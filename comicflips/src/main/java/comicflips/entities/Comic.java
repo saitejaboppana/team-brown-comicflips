@@ -11,7 +11,7 @@ public class Comic {
     private String group;
     private String name;
     private String[] canvases;
-    private ArrayList<String> likes;
+    private int likes;
     private ArrayList<Comment>  comments;
     private ArrayList<Component> components;
     private boolean isPublic;
@@ -20,14 +20,14 @@ public class Comic {
     private String username;
 
     public Comic(){
-        likes = new ArrayList<String>();
+        likes = 0;
         comments = new ArrayList<Comment>();
         components = new ArrayList<Component>();
         tags = new ArrayList<String>();
     }
 
     public Comic(String group, String name, boolean isPublic, String description,
-                 String[] canvases, ArrayList<String> likes, ArrayList<Comment> comments,
+                 String[] canvases, int likes, ArrayList<Comment> comments,
                  ArrayList<Component> components, ArrayList<String> tags){
         this.group = group;
         this.name = name;
@@ -88,11 +88,11 @@ public class Comic {
         this.canvases = canvases;
     }
 
-    public ArrayList<String> getLikes() {
+    public int getLikes() {
         return likes;
     }
 
-    public void setLikes(ArrayList<String> likes) {
+    public void setLikes(int likes) {
         this.likes = likes;
     }
 

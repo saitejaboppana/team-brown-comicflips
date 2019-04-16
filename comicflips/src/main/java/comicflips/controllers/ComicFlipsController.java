@@ -79,8 +79,14 @@ public class ComicFlipsController {
 
 
     @GetMapping("/")
-    ModelAndView indexPage(){
+    ModelAndView indexPage(Authentication auth){
         ModelAndView mv = new ModelAndView("index");
+        String username= "";
+        if(auth != null){
+            username = auth.getName();
+        }
+        System.out.println("username:" + username);
+        mv.addObject("user", username);
         mv.addObject("comics",comicRepository.findAll());
         return mv;
     }
