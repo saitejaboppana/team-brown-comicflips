@@ -133,7 +133,7 @@
                     <!--Comic Title by User-->
                 <!--</h3>-->
 
-                <h4 style="text-align:center; margin-bottom: 1.5rem;top: 0" th:text="by ${comic.username}"></h4>
+                <h4 style="text-align:center; margin-bottom: 1.5rem;top: 0" th:text="${'by ' + comic.username}"></h4>
 
                 <!-- Blog Post -->
                 <div class="card mb-4">
@@ -161,7 +161,7 @@
                     </div>
 
                     <hr>
-                    <span style="padding: 5px 10px 5px 10px;font-size: small;" th:text="${comic.likes.size} Likes, ${comic.likes.comments) Comments"></span>
+                    <span style="padding: 5px 10px 5px 10px;font-size: small;" th:text="${comic.likes + ' likes, ' + #lists.size(comic.comments) + ' comments'}"></span>
                     <div class="card-footer">
                         <div class="row" style="text-align: center">
                             <div class="col">
