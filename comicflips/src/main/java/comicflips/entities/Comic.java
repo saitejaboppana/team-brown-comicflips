@@ -1,5 +1,6 @@
 package comicflips.entities;
-
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import org.springframework.data.annotation.Id;
 import java.sql.Blob;
 import java.util.ArrayList;
@@ -18,12 +19,15 @@ public class Comic {
     private ArrayList<String> tags;
     private String description;
     private String username;
+    private String dateTime;
 
     public Comic(){
         likes = new ArrayList<String>();
         comments = new ArrayList<Comment>();
         components = new ArrayList<Component>();
         tags = new ArrayList<String>();
+        dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));
+
     }
 
     public Comic(String group, String name, boolean isPublic, String description,
