@@ -194,7 +194,7 @@
 
                     <div class = "card-body">
                         <input type="text" id="about" style="text-align: center; width:100%; height: 50px;" placeholder="About">
-                        <button type="button" class="btn btn-primary btn-block" style="margin-top:10px;">Publish</button>
+                        <button id = "publish" type="button" class="btn btn-primary btn-block" style="margin-top:10px;">Publish</button>
                     </div>
 
                     <hr>
@@ -247,7 +247,7 @@
                 console.log(about);
                 console.log(canvas);
 
-                $.post('/addComic',   // url
+                $.post('/addComponent',   // url
                     { title: title, canvas: canvas }, // data to be submit
                     function(data, status, jqXHR) {// success callback
                         console.log('status: ' + status + ', data: ' + data);

@@ -152,7 +152,7 @@
                 <span id = "rectangle" data-toggle="collapse" data-target="#shapeOptions" class="control" style='line-height: 15px;font-size: 30px;'>&#9645;</span>
                 <span id = "line" class="control" style='line-height: 20px;'>&#8213;</span>
                 <span id = "triangle" data-toggle="collapse" data-target="#shapeOptions" class="control" style="font-size:25px;line-height: 20px;" >&#9651;</span>
-                <i id = "image" data-toggle="collapse" data-target="#components" class="control" class="control far fa-image"></i>
+                <i id = "image" data-toggle="collapse" data-target="#components" class="control far fa-image"></i>
                 <i id = "text" class="control fas fa-font"></i>
                 <i id = "eraser" class="control fas fa-eraser"></i>
                 <i id = "clear" class="control fas fa-trash"></i>
@@ -175,7 +175,7 @@
                 <input type="color" value="#000000" id="shape-fill"><br>
             </div>
 
-            <div id = "components" class="d-flex flex-wrap collapse" style="display: block;text-align: center;">
+            <div id = "components" class="collapse" style="display: block;text-align: center;">
                 <div th:each="component : ${components}">
                     <canvas th:value="${component.canvas}"></canvas>
                 </div>

@@ -323,7 +323,7 @@
         $(document).ready(function(){
             $("canvas").each(function(e) {
                 var firstCanvas = $(this).attr("value");
-                $(this).attr("value", "");
+                // $(this).attr("value", "");
                 var canvas = new fabric.StaticCanvas(this);
                 canvas.loadFromJSON(firstCanvas);
             });
