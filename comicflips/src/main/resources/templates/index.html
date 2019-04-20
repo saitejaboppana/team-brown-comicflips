@@ -52,6 +52,10 @@
             margin: 0;
         }
 
+        canvas {
+            border: 1px solid black;
+        }
+
 
     </style>
 
@@ -91,7 +95,7 @@
                             <a class="dropdown-item" href="#" th:href="@{/login}" th:style="${user == '' ? '' : 'display:none'}">Login</a>
                             <a class="dropdown-item" href="#" th:href="@{/register}" th:style="${user == '' ? '' : 'display:none'}">Register</a>
                             <a class="dropdown-item" href="#" th:href="@{/profile}" th:style="${user == '' ? 'display:none' : ''}">View Profile</a>
-                            <a class="dropdown-item" href="/logout" th:href="@{/profile}" th:style="${user == '' ? 'display:none' : ''}">Logout</a>
+                            <a class="dropdown-item" href="/logout" th:style="${user == '' ? 'display:none' : ''}">Logout</a>
                         </div>
                     </div>
                 </li>
@@ -121,7 +125,7 @@
                             </div>
                             <div class="col col-sm-2" style="float: left">
                                 <h5 th:text="${comic.username}">User</h5>
-                                <span>Time Stamp</span>
+                                <span th:text = "${comic.dateTime}">Time Stamp</span>
                             </div>
                         </div>
                     </div>
@@ -149,86 +153,12 @@
                     </div>
                 </div>
 
-                <!-- Blog Post -->
-                <div class="card mb-4">
-                    <div class="card-header">
-                        <div class="row">
-                            <div class="col col-md-1" style="margin: 0px;">
-                                <i class="fas fa-user-circle" style="font-size:50px"></i>
-                            </div>
-                            <div class="col col-sm-2" style="float: left">
-                                <h5>User</h5>
-                                <span>Time Stamp</span>
-                            </div>
-                        </div>
-                    </div>
-                    <a href="#" th:href="@{/comic}"><canvas class="card-img-top" height="100"></canvas></a>
-                    <hr>
-                    <div class="card-body blogBody">
-                        <h5><strong>Post Title</strong></h5>
-                    </div>
-                    <hr>
-                    <span style="padding: 5px 10px 5px 10px;font-size: small;">2 Likes, 5 Comments</span>
-                    <div class="card-footer">
-                        <div class="row" style="text-align: center">
-                            <div class="col">
-                                <i class="far fa-thumbs-up" style="font-size:20px;"><span style="padding: 10px;">Like</span></i>
-                            </div>
-
-                            <div class="col">
-                                <i class="far fa-comment" style="font-size:20px;"><span style="padding: 10px;">Comment</span></i>
-                            </div>
-
-                            <div class="col">
-                                <i class="fas fa-share" style="font-size:20px;"><span style="padding: 10px;font-weight: normal">Share</span></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Blog Post -->
-                <div class="card mb-4">
-                    <div class="card-header">
-                        <div class="row">
-                            <div class="col col-md-1" style="margin: 0px;">
-                                <i class="fas fa-user-circle" style="font-size:50px"></i>
-                            </div>
-                            <div class="col col-sm-2" style="float: left">
-                                <h5>User</h5>
-                                <span>Time Stamp</span>
-                            </div>
-                        </div>
-                    </div>
-                    <a href="#" th:href="@{/comic}"><canvas class="card-img-top" height="100"></canvas></a>
-                    <hr>
-                    <div class="card-body blogBody">
-                        <h5><strong>Post Title</strong></h5>
-                    </div>
-                    <hr>
-                    <span style="padding: 5px 10px 5px 10px;font-size: small;">2 Likes, 5 Comments</span>
-                    <div class="card-footer">
-                        <div class="row" style="text-align: center">
-                            <div class="col">
-                                <i class="far fa-thumbs-up" style="font-size:20px;"><span style="padding: 10px;">Like</span></i>
-                            </div>
-
-                            <div class="col">
-                                <i class="far fa-comment" style="font-size:20px;"><span style="padding: 10px;">Comment</span></i>
-                            </div>
-
-                            <div class="col">
-                                <i class="fas fa-share" style="font-size:20px;"><span style="padding: 10px;font-weight: normal">Share</span></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- Pagination -->
-                <ul class="pagination justify-content-center mb-4">
-                    <li class="page-item">
-                        <button class="btn btn-primary" type="button">Load More</button>
-                    </li>
-                </ul>
+                <!--<ul class="pagination justify-content-center mb-4">-->
+                    <!--<li class="page-item">-->
+                        <!--<button class="btn btn-primary" type="button">Load More</button>-->
+                    <!--</li>-->
+                <!--</ul>-->
 
             </div>
 
@@ -324,7 +254,7 @@
             $("canvas").each(function(e) {
                 var firstCanvas = $(this).attr("value");
                 // $(this).attr("value", "");
-                var canvas = new fabric.StaticCanvas(this);
+                var canvas = new fabric.StaticCanvas(this, { width: 350, height: 350 });
                 canvas.loadFromJSON(firstCanvas);
             });
         });

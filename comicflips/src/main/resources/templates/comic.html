@@ -14,15 +14,20 @@
           th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}"
           rel="stylesheet" media="screen"/>
 
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" th:href="@{https://use.fontawesome.com/releases/v5.7.0/css/all.css}" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+          th:href="@{https://use.fontawesome.com/releases/v5.7.0/css/all.css}" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
 
     <script src="https://cdn.jsdelivr.net/webjars/jquery/3.3.1/jquery.min.js"
             th:src="@{/webjars/jquery/3.3.1/jquery.min.js}"></script>
 
     <script src="https://cdn.jsdelivr.net/webjars/bootstrap/4.3.1/js/bootstrap.min.js"
             th:src="@{/webjars/bootstrap/4.3.1/js/bootstrap.min.js}"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            th:src="@{https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js}" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+
+    <script src="https://cdn.bootcss.com/fabric.js/2.7.0/fabric.min.js"
+            th:src="@{https://cdn.bootcss.com/fabric.js/2.7.0/fabric.min.js}"></script>
 
     <style>
         body {
@@ -45,6 +50,12 @@
 
         hr{
             margin: 0;
+        }
+
+        canvas {
+            border: 1px solid black;
+            margin: 5px;
+            /*z-index: 1;*/
         }
 
 
@@ -129,28 +140,16 @@
 
                 <h3 style="text-align:center; margin-top: 1.5rem;margin-bottom: 0" th:text="${comic.name}"></h3>
 
-                <!--<h3 class="my-4">-->
-                    <!--Comic Title by User-->
-                <!--</h3>-->
-
                 <h4 style="text-align:center; margin-bottom: 1.5rem;top: 0" th:text="${'by ' + comic.username}"></h4>
 
                 <!-- Blog Post -->
                 <div class="card mb-4">
-                    <!--<div class="card-header">-->
-                        <!--<div class="row">-->
-                            <!--<div class="col" style="text-align: center;">-->
-                                <!--<h5>User</h5>-->
-                                <!--<span>Time Stamp</span>-->
-                            <!--</div>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                    <!--<canvas class="card-img-top" height="100"></canvas>-->
+
                     <div class="card-body">
-                        <div id = "comic" style="display: block;text-align: center;">
-                            <img height="300" width="300">
-                            <img height="300" width="300" style="margin-left: 20px;margin-right: 20px;">
-                            <img height="300" width="300">
+                        <div id="canvasContainer" class="d-flex flex-wrap" style="display: block;text-align: center;">
+                            <th:block th:each="canvas : ${comic.canvases}">
+                                <canvas height="350" width="350" th:value="${canvas}"></canvas>
+                            </th:block>
                         </div>
                     </div>
 
@@ -207,6 +206,17 @@
 
     </div>
     <!-- /.container -->
+
+    <script>
+        $(document).ready(function(){
+            $("canvas").each(function(e) {
+                var firstCanvas = $(this).attr("value");
+                // $(this).attr("value", "");
+                var canvas = new fabric.StaticCanvas(this, { width: 350, height: 350 });
+                canvas.loadFromJSON(firstCanvas);
+            });
+        });
+    </script>
 
 </body>
 

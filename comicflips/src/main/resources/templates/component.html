@@ -224,7 +224,7 @@
 
         $(document).ready(function () {
             // addCanvas();
-            currentCanvas = new fabric.Canvas("c1", { width: 900, height: 500 });
+            currentCanvas = new fabric.Canvas("c1", { width: 900, height: 900 });
 
             currentCanvas.freeDrawingBrush.width = parseInt($("#drawing-line-width").val(), 10) || 1;
 
@@ -236,6 +236,15 @@
                     alert("Please Fill Out All The Fields");
                     return;
                 }
+
+                // var objs = currentCanvas.getObjects();
+                // var group = new fabric.Group(objs);
+                //
+                // for (obj in objs){
+                //     currentCanvas.remove(obj);
+                // }
+                //
+                // currentCanvas.add(group).renderAll();
 
                 var canvas = createComponentJson();
                 if(canvas == "empty"){

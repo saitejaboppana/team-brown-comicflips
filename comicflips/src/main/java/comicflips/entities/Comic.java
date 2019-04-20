@@ -26,7 +26,7 @@ public class Comic {
         comments = new ArrayList<Comment>();
         components = new ArrayList<Component>();
         tags = new ArrayList<String>();
-        dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));
+        dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm:ss"));
 
     }
 
@@ -42,6 +42,14 @@ public class Comic {
         this.comments = comments;
         this.components = components;
         this.tags = tags;
+    }
+
+    public String getDateTime() {
+        return dateTime;
+    }
+
+    public void setDateTime(String dateTime) {
+        this.dateTime = dateTime;
     }
 
     public String getUsername() {

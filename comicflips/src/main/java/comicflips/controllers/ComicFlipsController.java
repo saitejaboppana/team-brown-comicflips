@@ -7,6 +7,7 @@ import comicflips.entities.User;
 import comicflips.repositories.ComicRepository;
 import comicflips.repositories.ComponentRepository;
 import comicflips.repositories.UserRepository;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -87,7 +88,7 @@ public class ComicFlipsController {
         }
         System.out.println("username:" + username);
         mv.addObject("user", username);
-        mv.addObject("comics",comicRepository.findAll());
+        mv.addObject("comics",comicRepository.findAll(new Sort(Sort.Direction.DESC, "dateTime")));
         return mv;
     }
 
