@@ -27,7 +27,6 @@ public class Comic {
         components = new ArrayList<Component>();
         tags = new ArrayList<String>();
         dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm:ss"));
-
     }
 
     public Comic(String group, String name, boolean isPublic, String description,

@@ -18,6 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.security.core.Authentication;
 
 import javax.jws.WebParam;
+import javax.websocket.server.PathParam;
 import java.security.Principal;
 import java.util.ArrayList;
 
@@ -111,6 +112,8 @@ public class ComicFlipsController {
         System.out.println("server side user" +  username);
         User user = userDetailsService.getUser(username);
         mv.addObject("user", user);
+        mv.addObject("comics", comicRepository.findAll());
+        mv.addObject("components", componentRepository.findAll());
         return mv;
     }
 
@@ -186,6 +189,12 @@ public class ComicFlipsController {
         return "Success";
     }
 
+    @PostMapping("/deleteComic/{id}")
+    String deleteComicById(@PathVariable String id){
+        Comic c = comicRepository.findById(id).get();
+        comicRepository.delete(c);
+        return "redirect:/profile";
+    }
 
     @PostMapping("/addComponent")
     @ResponseBody
