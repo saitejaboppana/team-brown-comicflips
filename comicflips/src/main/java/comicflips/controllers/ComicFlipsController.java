@@ -21,6 +21,7 @@ import javax.jws.WebParam;
 import javax.websocket.server.PathParam;
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class ComicFlipsController {
@@ -158,8 +159,12 @@ public class ComicFlipsController {
     @ResponseBody
     String addComic(@RequestParam("title") String title,
                     @RequestParam("about") String about,
-                    @RequestParam("canvases[]") String[] canvases,
+                    @RequestParam("canvases[]") List<String> canvases,
                     Authentication auth){
+        System.out.println(canvases.size());
+        if(canvases.get(1).equals("bug")){
+            canvases.remove(1);
+        }
         Comic c = comicRepository.findByName(title);
         String username = auth.getName();
         if (c != null && username == c.getUsername()){

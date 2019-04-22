@@ -255,7 +255,7 @@
                 <div class="card-body">
                     <h4 class="card-title" th:text="${component.name}"></h4>
                 </div>
-                <form method="post" th:action="@{/deleteComic/{id}(id=${comic.id})}">
+                <form method="post" th:action="@{/deleteComponent/{id}(id=${component.id})}">
                     <button type="submit" class="btn btn-sm btn-outline-secondary">Delete</button>
                 </form>
             </div>

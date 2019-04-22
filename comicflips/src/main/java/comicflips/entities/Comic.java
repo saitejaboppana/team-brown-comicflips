@@ -4,6 +4,7 @@ import java.time.format.DateTimeFormatter;
 import org.springframework.data.annotation.Id;
 import java.sql.Blob;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Comic {
 
@@ -11,7 +12,7 @@ public class Comic {
     private String id;
     private String group;
     private String name;
-    private String[] canvases;
+    private List<String> canvases;
     private int likes;
     private ArrayList<Comment>  comments;
     private ArrayList<Component> components;
@@ -30,7 +31,7 @@ public class Comic {
     }
 
     public Comic(String group, String name, boolean isPublic, String description,
-                 String[] canvases, int likes, ArrayList<Comment> comments,
+                 List<String> canvases, int likes, ArrayList<Comment> comments,
                  ArrayList<Component> components, ArrayList<String> tags){
         this.group = group;
         this.name = name;
@@ -91,11 +92,11 @@ public class Comic {
         this.name = name;
     }
 
-    public String[] getCanvases() {
+    public List<String> getCanvases() {
         return canvases;
     }
 
-    public void setCanvases(String[] canvases) {
+    public void setCanvases(List<String> canvases) {
         this.canvases = canvases;
     }
 

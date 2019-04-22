@@ -371,12 +371,15 @@
             console.log(title);
             console.log(about);
             console.log(canvases);
+            if(canvases.length == 1){
+                canvases.push("bug");
+            }
 
             $.post('/addComic',   // url
                 { title: title, about: about, canvases: canvases }, // data to be submit
                 function(data, status, jqXHR) {// success callback
                     console.log('status: ' + status + ', data: ' + data);
-                    window.location = "/";
+                    // window.location = "/";
             });
 
         })
@@ -621,9 +624,10 @@
 
     function createComicJsonArray(){
         var comicJsonArray= [];
-        for(var i = 1; i < count; i++){
+        for(var i = 1; i <= count; i++){
             var key = "c" + i;
             if(key in comicSlides){
+                console.log("key: " + key);
                 var json = comicSlides[key].toJSON();
                 if(json['objects'].length == 0){
                     return "empty";
