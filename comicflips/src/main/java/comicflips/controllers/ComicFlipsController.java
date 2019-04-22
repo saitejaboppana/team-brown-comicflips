@@ -100,7 +100,6 @@ public class ComicFlipsController {
         mv.addObject("components",componentRepository.findAll());
         return mv;
     }
-
     @GetMapping("/component")
     ModelAndView createComponentPage(){
         return new ModelAndView("component");
