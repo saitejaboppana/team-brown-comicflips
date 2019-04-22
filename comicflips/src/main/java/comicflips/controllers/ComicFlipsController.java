@@ -112,8 +112,8 @@ public class ComicFlipsController {
         System.out.println("server side user" +  username);
         User user = userDetailsService.getUser(username);
         mv.addObject("user", user);
-        mv.addObject("comics", comicRepository.findAll());
-        mv.addObject("components", componentRepository.findAll());
+        mv.addObject("comics",comicRepository.findByUsername(username));
+        mv.addObject("components",componentRepository.findByUsername(username));
         return mv;
     }
 
@@ -224,6 +224,13 @@ public class ComicFlipsController {
         Component c = componentRepository.findByNameAndUsername(title, userName);
         componentRepository.delete(c);
         return "Success";
+    }
+
+    @PostMapping("/deleteComponent/{id}")
+    String deleteComponentById(@PathVariable String id){
+        Component c = componentRepository.findById(id).get();
+        componentRepository.delete(c);
+        return "redirect:/profile";
     }
 
 }
