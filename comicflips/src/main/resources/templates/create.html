@@ -199,6 +199,12 @@
 
                 <div class = "card-body">
                     <input type="text" id="about" style="text-align: center; width:100%; height: 50px;" placeholder="About">
+
+                    <div class="d-flex justify-content-center">
+                        <span>Make Comic Public<span>
+                        <input type="checkbox" id = "isPublic">
+                    </div>
+
                     <button id = "publish" type="button" class="btn btn-primary btn-block" style="margin-top:10px;">Publish</button>
                     <i class="import fas fa-upload" style="border-left: #dad7d9 solid 1px;margin-top:10px;width:100%;text-align: center;">
                         <p>Import</p>
@@ -375,11 +381,16 @@
                 canvases.push("bug");
             }
 
+            var isPublic = false;
+            if($('#isPublic').is(':checked')){
+                isPublic = true;
+            }
+
             $.post('/addComic',   // url
-                { title: title, about: about, canvases: canvases }, // data to be submit
+                { title: title, about: about, canvases: canvases, isPublic: isPublic }, // data to be submit
                 function(data, status, jqXHR) {// success callback
                     console.log('status: ' + status + ', data: ' + data);
-                    // window.location = "/";
+                    window.location = "/";
             });
 
         })

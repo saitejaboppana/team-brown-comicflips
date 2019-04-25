@@ -1,6 +1,7 @@
 package comicflips.repositories;
 
 import comicflips.entities.Comic;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
@@ -16,4 +17,6 @@ public interface ComicRepository extends MongoRepository<Comic, String>{
     public Comic findByNameAndUsername(String name, String username);
 
     public List<Comic> findByUsername(String username);
+
+    public List<Comic> findByIsPublic(boolean isPublic, Sort sort);
 }

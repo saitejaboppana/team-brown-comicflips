@@ -88,9 +88,11 @@ public class ComicFlipsController {
         if(auth != null){
             username = auth.getName();
         }
+
         System.out.println("username:" + username);
         mv.addObject("user", username);
-        mv.addObject("comics",comicRepository.findAll(new Sort(Sort.Direction.DESC, "dateTime")));
+        mv.addObject("comics",comicRepository.findByIsPublic(true, new Sort(Sort.Direction.DESC, "dateTime")));
+//        mv.addObject("comics",comicRepository.findAll(new Sort(Sort.Direction.DESC, "dateTime")));
         return mv;
     }
 
@@ -153,12 +155,12 @@ public class ComicFlipsController {
         return mv;
     }
 
-
     @PostMapping("/addComic")
     @ResponseBody
     String addComic(@RequestParam("title") String title,
                     @RequestParam("about") String about,
                     @RequestParam("canvases[]") List<String> canvases,
+                    @RequestParam("isPublic") boolean isPublic,
                     Authentication auth){
         System.out.println(canvases.size());
         if(canvases.get(1).equals("bug")){
@@ -175,7 +177,7 @@ public class ComicFlipsController {
             c.setDescription(about);
             c.setCanvases(canvases);
             c.setUsername(username);
-            c.setPublic(true);//for now, lets have this hardcoded as true
+            c.setPublic(isPublic);//for now, lets have this hardcoded as true
 
         }
         comicRepository.save(c);

@@ -232,7 +232,23 @@
         </div>
 
         <h4 style="text-align: center;">My Comics</h4>
-        <div id="comics" class="d-flex justify-content-center" style="overflow: auto;  white-space: nowrap;">
+        <!--<div id="comics" class="d-flex justify-content-center" style="overflow: auto;  white-space: nowrap;">-->
+            <!--<div class="card" style="width: 360px; text-align: center; margin: 5px;" th:each="comic : ${comics}">-->
+                <!--<canvas class="border border-secondary" style="margin: 5px;" th:value="${comic.canvases[0]}"></canvas>-->
+                <!--<div class="card-body">-->
+                    <!--<h4 class="card-title" th:text="${comic.name}"></h4>-->
+                <!--</div>-->
+                <!--<div class="btn-group">-->
+                    <!--<a th:href="@{/comic/{id}(id=${comic.id})}"><button type="button" class="btn btn-sm btn-outline-secondary">View</button></a>-->
+                    <!--<a><button type="button" class="btn btn-sm btn-outline-secondary">Edit</button></a>-->
+                    <!--<form method="post" th:action="@{/deleteComic/{id}(id=${comic.id})}">-->
+                        <!--<button type="submit" class="btn btn-sm btn-outline-secondary">Delete</button>-->
+                    <!--</form>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+
+        <div id="comics" style="overflow: auto;  white-space: nowrap;">
             <div class="card" style="width: 360px; text-align: center; margin: 5px;" th:each="comic : ${comics}">
                 <canvas class="border border-secondary" style="margin: 5px;" th:value="${comic.canvases[0]}"></canvas>
                 <div class="card-body">
