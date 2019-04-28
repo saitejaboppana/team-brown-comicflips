@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
 import org.springframework.security.core.Authentication;
 
-import javax.jws.WebParam;
 import javax.websocket.server.PathParam;
 import java.security.Principal;
 import java.util.ArrayList;
