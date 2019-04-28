@@ -155,6 +155,38 @@ public class ComicFlipsController {
         return mv;
     }
 
+    //Used to edit the liked comics arraylist in the user object. Takes a boolean
+    //telling whether the user liked the comic and the comicID of the comic that was
+    //liked/unliked.
+    @PostMapping("/editLike")
+    @ResponseBody
+    String editLike(@RequestParam("liked") boolean liked,
+                  @RequestParam("comicID") String comicID,
+                  Authentication auth){
+        System.out.println("liked: "  + liked + " comicID: " + comicID);
+        String userName = auth.getName();
+        User user = userDetailsService.getUser(userName);
+        boolean checkWithinComic = user.getLikedComics().contains(comicID);
+        if(liked != checkWithinComic){
+            System.out.println("Entering if statement editlike");
+            ArrayList<String> newLikedList= user.getLikedComics();
+            if(liked){
+                //System.out.println("liked");
+                newLikedList.add(comicID);
+                //System.out.println(newLikedList);
+                user.setLikedComics(newLikedList);
+                userDetailsService.updateUser(user);
+            }
+            else{
+                //System.out.println("not liked");
+                newLikedList.remove(comicID);
+                user.setLikedComics(newLikedList);
+                userDetailsService.updateUser(user);
+            }
+        }
+        return "success";
+    }
+
     @PostMapping("/addComic")
     @ResponseBody
     String addComic(@RequestParam("title") String title,

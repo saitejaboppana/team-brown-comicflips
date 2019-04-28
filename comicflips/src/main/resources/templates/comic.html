@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title th:text="${comic.name}">Comic</title>
+    <title id="comicTitle" th:value="${comic.id}" th:text="${comic.name}">Comic</title>
 
     <link href="https://cdn.jsdelivr.net/webjars/bootstrap/4.3.1/css/bootstrap.min.css"
           th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}"
@@ -65,11 +65,31 @@
         $(document).ready(function(){
             $("#like").click(function(){
                 console.log($(this).css("color"));
+                var id = $("#comicTitle").attr("value")
+                //When pressing the like button, the colors should alternate between black and blue. Also,
+                //if the like button is clicked, the like counter should go up by one, and vice versa if
+                //clicked again.
                 if($(this).css("color")== "rgb(33, 37, 41)") {
                     $(this).css("color", "blue");
+                    //console.log(document.getElementById("likeCommentCount").innerText)
+                    var text = document.getElementById("likeCommentCount").innerText.split(" ");
+                    text[0] = (parseInt(text[0]) + 1).toString();
+                    var newtext = text.join(" ");
+                    document.getElementById("likeCommentCount").innerText = newtext;
+                    $.post('/editLike',   // url
+                        { liked: true, comicID: id}); // data to be submit
+                    //console.log(document.getElementById("likeCommentCount").innerText)
                 }
                 else{
                     $(this).css("color", "rgb(33, 37, 41)");
+                    //console.log(document.getElementById("likeCommentCount").innerText)
+                    var text = document.getElementById("likeCommentCount").innerText.split(" ");
+                    text[0] = (parseInt(text[0]) - 1).toString();
+                    var newtext = text.join(" ");
+                    document.getElementById("likeCommentCount").innerText = newtext;
+                    $.post('/editLike',   // url
+                        { liked: false, comicID: id}); // data to be submit
+                    //console.log(document.getElementById("likeCommentCount").innerText)
                 }
             });
             $("#comment").click(function(){
@@ -86,6 +106,18 @@
 
             });
         });
+
+        // $(window).bind('beforeunload', function(){
+        //     var id = $("#comicTitle").attr("value")
+        //     if($("#like").css("color") == "rgb(0, 0, 255)"){
+        //         $.post('/editLike',   // url
+        //             { liked: true, comicID: id}); // data to be submit
+        //     }
+        //     else{
+        //         $.post('/editLike',   // url
+        //             { liked: false, comicID: id}); // data to be submit
+        //     }
+        // });
     </script>
 
 </head>
@@ -161,7 +193,7 @@
                     </div>
 
                     <hr>
-                    <span style="padding: 5px 10px 5px 10px;font-size: small;" th:text="${comic.likes + ' likes, ' + #lists.size(comic.comments) + ' comments'}"></span>
+                    <span id="likeCommentCount" style="padding: 5px 10px 5px 10px;font-size: small;" th:text= "${comic.likes + ' likes, ' + #lists.size(comic.comments) + ' comments'}"></span>
                     <div class="card-footer">
                         <div class="row" style="text-align: center">
                             <div class="col">
