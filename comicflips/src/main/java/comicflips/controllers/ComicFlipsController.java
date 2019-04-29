@@ -120,6 +120,7 @@ public class ComicFlipsController {
         mv.addObject("components",componentRepository.findAll());
         return mv;
     }
+
     @GetMapping("/component")
     ModelAndView createComponentPage(){
         return new ModelAndView("component");
@@ -304,6 +305,17 @@ public class ComicFlipsController {
         Component c = componentRepository.findById(id).get();
         componentRepository.delete(c);
         return "redirect:/profile";
+    }
+
+    @GetMapping("/editComic/{id}")
+    ModelAndView editComicPage(@PathVariable String id){
+        ModelAndView mv = new ModelAndView("create");
+        Comic comicToEdit = comicRepository.findById(id).get();
+        mv.addObject("title", comicToEdit.getName());
+        mv.addObject("about",comicToEdit.getDescription());
+        mv.addObject("canvases", comicToEdit.getCanvases());
+        mv.addObject("components",componentRepository.findAll());
+        return mv;
     }
 
 }

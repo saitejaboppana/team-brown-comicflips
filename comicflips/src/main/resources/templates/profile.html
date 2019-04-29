@@ -256,7 +256,7 @@
                 </div>
                 <div class="btn-group">
                     <a th:href="@{/comic/{id}(id=${comic.id})}"><button type="button" class="btn btn-sm btn-outline-secondary">View</button></a>
-                    <a><button type="button" class="btn btn-sm btn-outline-secondary">Edit</button></a>
+                    <a th:href="@{/editComic/{id}(id=${comic.id})}"><button type="button" class="btn btn-sm btn-outline-secondary">Edit</button></a>
                     <form method="post" th:action="@{/deleteComic/{id}(id=${comic.id})}">
                         <button type="submit" class="btn btn-sm btn-outline-secondary">Delete</button>
                     </form>

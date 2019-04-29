@@ -143,7 +143,7 @@
     <div class="row">
         <div class="col">
             <h3 style="text-align:center; margin-top: 1.5rem;   margin-bottom: 1.5rem;">
-                <input type="text" id="title" style="text-align: center" placeholder="Comic Title"autofocus>
+                <input type="text" id="title" style="text-align: center" placeholder="Comic Title"autofocus th:value="${title}">
             </h3>
 
             <div id = "tools" class="d-flex justify-content-center sticky-top" style="top:56px; text-align: center;">
@@ -198,10 +198,10 @@
                 <hr>
 
                 <div class = "card-body">
-                    <input type="text" id="about" style="text-align: center; width:100%; height: 50px;" placeholder="About">
+                    <input type="text" id="about" style="text-align: center; width:100%; height: 50px;" placeholder="About" th:value="${about}">
 
                     <div class="d-flex justify-content-center">
-                        <span>Make Comic Public<span>
+                        <span>Make Comic Public</span>
                         <input type="checkbox" id = "isPublic">
                     </div>
 
