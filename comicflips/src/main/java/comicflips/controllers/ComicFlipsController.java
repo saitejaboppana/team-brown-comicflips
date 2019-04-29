@@ -118,6 +118,7 @@ public class ComicFlipsController {
     ModelAndView createComicPage(){
         ModelAndView mv = new ModelAndView("create");
         mv.addObject("components",componentRepository.findAll());
+        mv.addObject("button", "Publish");
         return mv;
     }
 
@@ -255,6 +256,29 @@ public class ComicFlipsController {
         return "Success";
     }
 
+    @PostMapping("/updateComic")
+    @ResponseBody
+    String updateComic(@RequestParam("oldTitle") String oldTitle,
+                       @RequestParam("title") String title,
+                       @RequestParam("about") String about,
+                       @RequestParam("canvases[]") List<String> canvases,
+                       @RequestParam("isPublic") boolean isPublic,
+                       Authentication auth){
+
+        if(canvases.get(1).equals("bug")){
+            canvases.remove(1);
+        }
+
+        String username = auth.getName();
+        Comic c = comicRepository.findByNameAndUsername(oldTitle, username);
+        c.setName(title);
+        c.setDescription(about);
+        c.setCanvases(canvases);
+        c.setPublic(isPublic);
+        comicRepository.save(c);
+        return "update complete";
+    }
+
     @PostMapping("/deleteComic")
     String deleteComic(@RequestParam String title, Authentication auth){
         String userName = auth.getName();
@@ -314,6 +338,8 @@ public class ComicFlipsController {
         mv.addObject("title", comicToEdit.getName());
         mv.addObject("about",comicToEdit.getDescription());
         mv.addObject("canvases", comicToEdit.getCanvases());
+        mv.addObject("isPublic", comicToEdit.getIsPublic());
+        mv.addObject("button", "Update");
         mv.addObject("components",componentRepository.findAll());
         return mv;
     }
