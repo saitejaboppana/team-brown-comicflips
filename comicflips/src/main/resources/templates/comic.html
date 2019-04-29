@@ -167,8 +167,10 @@
                     <div class="dropdown dropdown">
                         <i class="fas fa-user-circle" style="font-size: 30px; color:white;" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                            <a class="dropdown-item" href="#" th:href="@{/profile}">View Profile</a>
-                            <a class="dropdown-item" href="/logout" >Logout</a>
+                            <a class="dropdown-item" href="#" th:href="@{/login}" th:style="${user == '' ? '' : 'display:none'}">Login</a>
+                            <a class="dropdown-item" href="#" th:href="@{/register}" th:style="${user == '' ? '' : 'display:none'}">Register</a>
+                            <a class="dropdown-item" href="#" th:href="@{/profile}" th:style="${user == '' ? 'display:none' : ''}">View Profile</a>
+                            <a class="dropdown-item" href="/logout" th:style="${user == '' ? 'display:none' : ''}">Logout</a>
                         </div>
                     </div>
                 </li>
@@ -231,19 +233,19 @@
                         <h5>Leave a Comment:</h5>
                     </span>
                     <div class="card-body">
-                        <div class="media mb-4">
-                            <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
-                            <div class="media-body">
-                                <h5 class="mt-0" th:text="${comic.username}"></h5>
-                                Comment
+                        <div id = "comments">
+                            <div class="media mb-4" th:each="comment : ${comic.comments}">
+                                <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
+                                <div class="media-body">
+                                    <h5 class="mt-0" th:text="${comment.user}"></h5>
+                                    <span th:text="${comment.comment}"></span>
+                                </div>
                             </div>
                         </div>
-                        <form>
-                            <div class="form-group">
-                                <textarea class="form-control" rows="3" id="commenttext"></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                        </form>
+                        <div class="form-group">
+                            <textarea class="form-control" rows="3" id="commenttext"></textarea>
+                        </div>
+                        <button id = "submit" type="submit" class="btn btn-primary" th:value="${user}">Submit</button>
                     </div>
                 </div>
 
@@ -263,6 +265,47 @@
                 canvas.loadFromJSON(firstCanvas);
             });
         });
+
+        $("#submit").on("click", function (e) {
+            var user = $(this).val();
+            if(user == ""){
+                alert("You Must Be Logged in to Comment");
+                return;
+            }
+            var comment = $("#commenttext").val();
+            var comicId = $("#comicTitle").attr("value");
+            if (comment == ""){
+                alert("Please Enter a Comment!");
+                return;
+            }
+
+            var mainDiv = document.createElement("div");
+            mainDiv.className = "media mb-4";
+            // mainDiv.attr("class", "media mb-4");
+
+            var img = document.createElement("img");
+            img.className = "d-flex mr-3 rounded-circle";
+            img.src = "http://placehold.it/50x50";
+            mainDiv.appendChild(img);
+            // comments.appendChild(img);
+
+            var div = document.createElement("div");
+            div.className = "media-body";
+            var h5 = document.createElement("h5");
+            h5.className = "mt-0";
+            h5.textContent = user;
+            div.appendChild(h5);
+            var span = document.createElement("span");
+            span.textContent = comment;
+            div.appendChild(span);
+            mainDiv.appendChild(div);
+            $("#comments").append(mainDiv);
+
+
+            console.log(comment);
+            $("#commenttext").val("");
+            $.post('/addComment', {comment: comment,id: comicId})
+        })
     </script>
 
 </body>

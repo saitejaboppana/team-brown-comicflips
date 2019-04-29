@@ -147,4 +147,12 @@ public class Comic {
     public void decLikesByOne(){
         likes -= 1;
     }
+
+    public void addComment(Comment c){
+        comments.add(c);
+    }
+
+    public void deleteComment(Comment c){
+        comments.remove(c);
+    }
 }

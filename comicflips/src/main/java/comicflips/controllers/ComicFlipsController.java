@@ -2,6 +2,7 @@ package comicflips.controllers;
 
 import comicflips.MongoUserDetailsService;
 import comicflips.entities.Comic;
+import comicflips.entities.Comment;
 import comicflips.entities.Component;
 import comicflips.entities.User;
 import comicflips.repositories.ComicRepository;
@@ -172,15 +173,17 @@ public class ComicFlipsController {
         ModelAndView mv = new ModelAndView("comic");
         mv.addObject("comic", c);
         String isLiked;
+        String userName= "";
         if(auth == null){
             isLiked = "";
         }
         else {
-            String userName = auth.getName();
+            userName = auth.getName();
             User user = userDetailsService.getUser(userName);
             isLiked = Boolean.toString(user.getLikedComics().contains(id));
         }
         mv.addObject("liked", isLiked);
+        mv.addObject("user", userName);
         return mv;
     }
 
@@ -304,6 +307,23 @@ public class ComicFlipsController {
         Component c = componentRepository.findById(id).get();
         componentRepository.delete(c);
         return "redirect:/profile";
+    }
+
+    @PostMapping("/addComment")
+    @ResponseBody
+    String addComment(@RequestParam("comment") String comment,@RequestParam("id") String comicID ,Authentication auth){
+        Comment c = new Comment(auth.getName(),comment);
+        Comic comic = comicRepository.findById(comicID).get();
+        comic.addComment(c);
+        comicRepository.save(comic);
+        return "Success!";
+    }
+
+    @PostMapping("/deleteComment")
+    String deleteComponent(@RequestParam String comment,@RequestParam String comicID ,Authentication auth){
+        Comic comic = comicRepository.findById(comicID).get();
+        comic.deleteComment(new Comment(auth.getName(),comment));
+        return "Success!";
     }
 
 }
