@@ -61,7 +61,7 @@ public class Comic {
         this.username = username;
     }
 
-    public boolean isPublic() {
+    public boolean getIsPublic() {
         return isPublic;
     }
 

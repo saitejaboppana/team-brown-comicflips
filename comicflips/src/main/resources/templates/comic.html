@@ -300,8 +300,6 @@
             div.appendChild(span);
             mainDiv.appendChild(div);
             $("#comments").append(mainDiv);
-
-
             console.log(comment);
             $("#commenttext").val("");
             $.post('/addComment', {comment: comment,id: comicId})

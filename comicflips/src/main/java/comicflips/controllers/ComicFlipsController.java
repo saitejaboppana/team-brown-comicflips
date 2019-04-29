@@ -119,8 +119,10 @@ public class ComicFlipsController {
     ModelAndView createComicPage(){
         ModelAndView mv = new ModelAndView("create");
         mv.addObject("components",componentRepository.findAll());
+        mv.addObject("button", "Publish");
         return mv;
     }
+
     @GetMapping("/component")
     ModelAndView createComponentPage(){
         return new ModelAndView("component");
@@ -257,6 +259,29 @@ public class ComicFlipsController {
         return "Success";
     }
 
+    @PostMapping("/updateComic")
+    @ResponseBody
+    String updateComic(@RequestParam("oldTitle") String oldTitle,
+                       @RequestParam("title") String title,
+                       @RequestParam("about") String about,
+                       @RequestParam("canvases[]") List<String> canvases,
+                       @RequestParam("isPublic") boolean isPublic,
+                       Authentication auth){
+
+        if(canvases.get(1).equals("bug")){
+            canvases.remove(1);
+        }
+
+        String username = auth.getName();
+        Comic c = comicRepository.findByNameAndUsername(oldTitle, username);
+        c.setName(title);
+        c.setDescription(about);
+        c.setCanvases(canvases);
+        c.setPublic(isPublic);
+        comicRepository.save(c);
+        return "update complete";
+    }
+
     @PostMapping("/deleteComic")
     String deleteComic(@RequestParam String title, Authentication auth){
         String userName = auth.getName();
@@ -309,6 +334,7 @@ public class ComicFlipsController {
         return "redirect:/profile";
     }
 
+
     @PostMapping("/addComment")
     @ResponseBody
     String addComment(@RequestParam("comment") String comment,@RequestParam("id") String comicID ,Authentication auth){
@@ -320,10 +346,23 @@ public class ComicFlipsController {
     }
 
     @PostMapping("/deleteComment")
-    String deleteComponent(@RequestParam String comment,@RequestParam String comicID ,Authentication auth){
+    String deleteComponent(@RequestParam String comment,@RequestParam String comicID ,Authentication auth) {
         Comic comic = comicRepository.findById(comicID).get();
-        comic.deleteComment(new Comment(auth.getName(),comment));
+        comic.deleteComment(new Comment(auth.getName(), comment));
         return "Success!";
     }
 
+    @GetMapping("/editComic/{id}")
+    ModelAndView editComicPage(@PathVariable String id){
+        ModelAndView mv = new ModelAndView("create");
+        Comic comicToEdit = comicRepository.findById(id).get();
+        mv.addObject("title", comicToEdit.getName());
+        mv.addObject("about",comicToEdit.getDescription());
+        mv.addObject("canvases", comicToEdit.getCanvases());
+        mv.addObject("isPublic", comicToEdit.getIsPublic());
+        mv.addObject("button", "Update");
+        mv.addObject("components",componentRepository.findAll());
+        return mv;
+
+    }
 }

@@ -143,7 +143,7 @@
     <div class="row">
         <div class="col">
             <h3 style="text-align:center; margin-top: 1.5rem;   margin-bottom: 1.5rem;">
-                <input type="text" id="title" style="text-align: center" placeholder="Comic Title"autofocus>
+                <input type="text" id="title" style="text-align: center" placeholder="Comic Title"autofocus th:value="${title}">
             </h3>
 
             <div id = "tools" class="d-flex justify-content-center sticky-top" style="top:56px; text-align: center;">
@@ -187,25 +187,33 @@
             </div>
 
             <div class="card mb-4">
+                <!--<div class="card-body">-->
+                    <!--<div id="canvasContainer" class="d-flex flex-wrap" style="display: block;text-align: center;">-->
+                        <!--&lt;!&ndash;<canvas id = "c1"></canvas>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<canvas id = "c2"></canvas>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<canvas id = "c3"></canvas>&ndash;&gt;-->
+                    <!--</div>-->
+                <!--</div>-->
+
                 <div class="card-body">
                     <div id="canvasContainer" class="d-flex flex-wrap" style="display: block;text-align: center;">
-                        <canvas id = "c1"></canvas>
-                        <canvas id = "c2"></canvas>
-                        <canvas id = "c3"></canvas>
+                        <th:block th:each="canvas, iterStat:${canvases}">
+                            <canvas width="350" height="350" th:id = "${'c' + (iterStat.index + 1)}" th:value="${canvas}"></canvas>
+                        </th:block>
                     </div>
                 </div>
 
                 <hr>
 
                 <div class = "card-body">
-                    <input type="text" id="about" style="text-align: center; width:100%; height: 50px;" placeholder="About">
+                    <input type="text" id="about" style="text-align: center; width:100%; height: 50px;" placeholder="About" th:value="${about}">
 
                     <div class="d-flex justify-content-center">
-                        <span>Make Comic Public<span>
-                        <input type="checkbox" id = "isPublic">
+                        <span>Make Comic Public</span>
+                        <input type="checkbox" id = "isPublic" th:checked="${isPublic == true ? 'true' : 'false'}">
                     </div>
 
-                    <button id = "publish" type="button" class="btn btn-primary btn-block" style="margin-top:10px;">Publish</button>
+                    <button id = "publish" type="button" class="btn btn-primary btn-block" style="margin-top:10px;" th:text="${button}">Publish</button>
                     <i class="import fas fa-upload" style="border-left: #dad7d9 solid 1px;margin-top:10px;width:100%;text-align: center;">
                         <p>Import</p>
                     </i>
@@ -226,7 +234,7 @@
 <script>
     var comicSlides = {};
     var currentCanvas;
-    var count = 4;
+    var count = 1;
     var shape;
     var toolType;
     var fill = "transparent";
@@ -238,12 +246,32 @@
 
     $(document).ready(function () {
         // addCanvas();
-        comicSlides["c1"] = new fabric.Canvas("c1", { width: 350, height: 350 });
-        comicSlides["c2"] = new fabric.Canvas("c2", { width: 350, height: 350 });
-        comicSlides["c3"] = new fabric.Canvas("c3", { width: 350, height: 350 });
+
+        // comicSlides["c1"] = new fabric.Canvas("c1", { width: 350, height: 350 });
+        // comicSlides["c2"] = new fabric.Canvas("c2", { width: 350, height: 350 });
+        // comicSlides["c3"] = new fabric.Canvas("c3", { width: 350, height: 350 });
+
+        var oldTitle = $("#title").val();
+
+        if(oldTitle != ""){
+            console.log("title:" + title);
+            $("#canvasContainer > canvas").each(function (e) {
+                var canvas = $(this).attr("value");
+                var id = $(this).attr("id");
+                comicSlides[id] = new fabric.Canvas(id, { width: 350, height: 350 });
+                comicSlides[id].loadFromJSON(canvas);
+                count++;
+            })
+
+        }else{
+            addCanvas();
+            addCanvas();
+            addCanvas();
+        }
 
         setCurrentCanvas("c1");
         removeCanvasListener();
+        console.log("count: " + count);
 
         $("#components > .card").on("click", function(event){
             console.log($(this).children()[0]);
@@ -362,6 +390,9 @@
         $("#publish").on("click", function () {
             var title = $("#title").val();
             var about = $("#about").val();
+            var button = $(this).text();
+
+            console.log("button name: " + button);
 
             if(title == '' || about ==''){
                 alert("Please Fill Out All The Fields");
@@ -386,13 +417,23 @@
                 isPublic = true;
             }
 
-            $.post('/addComic',   // url
-                { title: title, about: about, canvases: canvases, isPublic: isPublic }, // data to be submit
-                function(data, status, jqXHR) {// success callback
-                    console.log('status: ' + status + ', data: ' + data);
-                    window.location = "/";
-            });
+            if(button == "Publish"){
+                $.post('/addComic',   // url
+                    { title: title, about: about, canvases: canvases, isPublic: isPublic }, // data to be submit
+                    function(data, status, jqXHR) {// success callback
+                        console.log('status: ' + status + ', data: ' + data);
+                        window.location = "/";
+                });
+            }else{
 
+                $.post('/updateComic',   // url
+                    { oldTitle : oldTitle, title: title, about: about, canvases: canvases, isPublic: isPublic }, // data to be submit
+                    function(data, status, jqXHR) {// success callback
+                        console.log('status: ' + status + ', data: ' + data);
+                        window.location = "/";
+                });
+
+            }
         })
 
     });

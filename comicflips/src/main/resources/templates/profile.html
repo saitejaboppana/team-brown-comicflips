@@ -232,21 +232,6 @@
         </div>
 
         <h4 style="text-align: center;">My Comics</h4>
-        <!--<div id="comics" class="d-flex justify-content-center" style="overflow: auto;  white-space: nowrap;">-->
-            <!--<div class="card" style="width: 360px; text-align: center; margin: 5px;" th:each="comic : ${comics}">-->
-                <!--<canvas class="border border-secondary" style="margin: 5px;" th:value="${comic.canvases[0]}"></canvas>-->
-                <!--<div class="card-body">-->
-                    <!--<h4 class="card-title" th:text="${comic.name}"></h4>-->
-                <!--</div>-->
-                <!--<div class="btn-group">-->
-                    <!--<a th:href="@{/comic/{id}(id=${comic.id})}"><button type="button" class="btn btn-sm btn-outline-secondary">View</button></a>-->
-                    <!--<a><button type="button" class="btn btn-sm btn-outline-secondary">Edit</button></a>-->
-                    <!--<form method="post" th:action="@{/deleteComic/{id}(id=${comic.id})}">-->
-                        <!--<button type="submit" class="btn btn-sm btn-outline-secondary">Delete</button>-->
-                    <!--</form>-->
-                <!--</div>-->
-            <!--</div>-->
-        <!--</div>-->
 
         <div id="comics" style="overflow: auto;  white-space: nowrap;">
             <div class="card" style="width: 360px; text-align: center; margin: 5px;" th:each="comic : ${comics}">
@@ -256,7 +241,7 @@
                 </div>
                 <div class="btn-group">
                     <a th:href="@{/comic/{id}(id=${comic.id})}"><button type="button" class="btn btn-sm btn-outline-secondary">View</button></a>
-                    <a><button type="button" class="btn btn-sm btn-outline-secondary">Edit</button></a>
+                    <a th:href="@{/editComic/{id}(id=${comic.id})}" th:style="${comic.isPublic == true ? 'display:none' : ''}"><button type="button" class="btn btn-sm btn-outline-secondary">Edit</button></a>
                     <form method="post" th:action="@{/deleteComic/{id}(id=${comic.id})}">
                         <button type="submit" class="btn btn-sm btn-outline-secondary">Delete</button>
                     </form>
@@ -276,61 +261,6 @@
                 </form>
             </div>
         </div>
-
-        <!--<div class="row">-->
-            <!--<div class="col">-->
-                <!--<div class="card text-center">-->
-                    <!--<div class="card-header">-->
-                        <!--<h5>My Comics</h5>-->
-                    <!--</div>-->
-                    <!--<div class="card-body" style="max-height:200px;overflow: scroll">-->
-                        <!--<p>-->
-                            <!--<a href = "#"><button type="button" class="btn btn-secondary">My Comic 1</button></a>-->
-                        <!--</p>-->
-                        <!--<p>-->
-                            <!--<a href = "#"><button type="button" class="btn btn-secondary">My Comic 2</button></a>-->
-                        <!--</p>-->
-                        <!--<p>-->
-                            <!--<a href = "#"><button type="button" class="btn btn-secondary">My Comic 3</button></a>-->
-                        <!--</p>-->
-                        <!--<p>-->
-                            <!--<a href = "#"><button type="button" class="btn btn-secondary">My Comic 4</button></a>-->
-                        <!--</p>-->
-                        <!--<p>-->
-                            <!--<a href = "#"><button type="button" class="btn btn-secondary">My Comic 5</button></a>-->
-                        <!--</p>-->
-                    <!--</div>-->
-                <!--</div>-->
-
-            <!--</div>-->
-
-            <!--<div class="col">-->
-
-                <!--<div class="card text-center">-->
-                    <!--<div class="card-header">-->
-                        <!--<h5>Subscribed Comics</h5>-->
-                    <!--</div>-->
-                    <!--<div class="card-body" style="max-height:200px;overflow: scroll">-->
-                        <!--<p>-->
-                            <!--<a href = "#"><button type="button" class="btn btn-secondary">Subscribed Comic 1</button></a>-->
-                        <!--</p>-->
-                        <!--<p>-->
-                            <!--<a href = "#"><button type="button" class="btn btn-secondary">Subscribed Comic 2</button></a>-->
-                        <!--</p>-->
-                        <!--<p>-->
-                            <!--<a href = "#"><button type="button" class="btn btn-secondary">Subscribed Comic 3</button></a>-->
-                        <!--</p>-->
-                        <!--<p>-->
-                            <!--<a href = "#"><button type="button" class="btn btn-secondary">Subscribed Comic 4</button></a>-->
-                        <!--</p>-->
-                        <!--<p>-->
-                            <!--<a href = "#"><button type="button" class="btn btn-secondary">Subscribed Comic 5</button></a>-->
-                        <!--</p>-->
-                    <!--</div>-->
-                <!--</div>-->
-
-            <!--</div>-->
-        <!--</div>-->
     </div>
 
 </body>
