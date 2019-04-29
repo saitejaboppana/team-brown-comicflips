@@ -140,4 +140,11 @@ public class Comic {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public void incLikesByOne(){
+        likes += 1;
+    }
+    public void decLikesByOne(){
+        likes -= 1;
+    }
 }

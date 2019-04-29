@@ -117,7 +117,7 @@
                 </h3>
 
                 <!-- Blog Post -->
-                <div class="card mb-4" th:each="comic : ${comics}">
+                <div class="card mb-4" th:each="comic, iterStat : ${comics}">
                     <div class="card-header">
                         <div class="row">
                             <div class="col col-md-1" style="margin: 0px;">
@@ -135,11 +135,11 @@
                         <h5><strong th:text="${comic.name}">Post Title</strong></h5>
                     </div>
                     <hr>
-                    <span style="padding: 5px 10px 5px 10px;font-size: small;" th:text="${comic.likes + ' likes, ' + #lists.size(comic.comments) + ' comments'}">2 Likes, 5 Comments</span>
+                    <span th:id="${comic.id}" style="padding: 5px 10px 5px 10px;font-size: small;" th:text="${comic.likes + ' likes, ' + #lists.size(comic.comments) + ' comments'}">2 Likes, 5 Comments</span>
                     <div class="card-footer">
                         <div class="row" style="text-align: center">
                             <div class="col">
-                                <i class="far fa-thumbs-up" style="font-size:20px;"><span style="padding: 10px;">Like</span></i>
+                                <i class="far fa-thumbs-up" style="font-size:20px;" th:style="${user != '' && likes[iterStat.index] == true ? 'color:blue' : 'color:rgb(33, 37, 41)'}" th:value="${comic.id}"><span style="padding: 10px;">Like</span></i>
                             </div>
 
                             <div class="col">
@@ -264,6 +264,49 @@
                 var timeStamp = timeSince(new Date(dateString));
                 $(this).text(timeStamp + " ago");
             })
+
+            $(".fa-thumbs-up").on("click", function (e) {
+                console.log($(this).attr("value"));
+                var id = $(this).attr("value");
+                var ex = $(this);
+                if($(this).css("color")== "rgb(33, 37, 41)") {
+                    $.post('/editLike',   // url
+                        { liked: true, comicID: id},
+                         function(data, status, jqXHR) {// success callback
+                            console.log('status: ' + status + " data: " + data);
+                            if(data == "success"){
+                                console.log(ex)
+                                ex.css("color", "blue");
+                                var text = document.getElementById(id).innerText.split(" ");
+                                text[0] = (parseInt(text[0]) + 1).toString();
+                                var newtext = text.join(" ");
+                                document.getElementById(id).innerText = newtext;
+                                //console.log(document.getElementById("likeCommentCount").innerText)
+                            }
+                            else{
+                                alert("You cannot like the comic.")
+                            }
+                        });
+                    // $(this).css("color", "blue");
+                    // var text = document.getElementById(id).innerText.split(" ");
+                    // text[0] = (parseInt(text[0]) + 1).toString();
+                    // var newtext = text.join(" ");
+                    // document.getElementById(id).innerText = newtext;
+                    // $.post('/editLike',   // url
+                    //     { liked: true, comicID: id}); // data to be submit
+                }
+                else{
+                    $(this).css("color", "rgb(33, 37, 41)");
+                    var text = document.getElementById(id).innerText.split(" ");
+                    text[0] = (parseInt(text[0]) - 1).toString();
+                    var newtext = text.join(" ");
+                    document.getElementById(id).innerText = newtext;
+                    $.post('/editLike',   // url
+                        { liked: false, comicID: id}); // data to be submit
+                }
+            })
+
+
         });
 
         var timeSince = function(date) {

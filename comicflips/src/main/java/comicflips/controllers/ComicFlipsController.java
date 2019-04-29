@@ -20,6 +20,8 @@ import org.springframework.security.core.Authentication;
 import javax.websocket.server.PathParam;
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Controller
@@ -84,13 +86,30 @@ public class ComicFlipsController {
     ModelAndView indexPage(Authentication auth){
         ModelAndView mv = new ModelAndView("index");
         String username= "";
+        List <Comic> comics = comicRepository.findByIsPublic(true, new Sort(Sort.Direction.DESC, "dateTime"));
+        List<Boolean> likes = Arrays.asList(new Boolean[comics.size()]);
+        Collections.fill(likes, Boolean.FALSE);
+        System.out.println("before if");
         if(auth != null){
             username = auth.getName();
+            User user = userDetailsService.getUser(username);
+            List <String> userLikedComics = user.getLikedComics();
+            likes = new ArrayList<Boolean>();
+
+            for (Comic c: comics) {
+                if(userLikedComics.contains(c.getId())){
+                    likes.add(true);
+                }else{
+                    likes.add(false);
+                }
+            }
+
         }
 
         System.out.println("username:" + username);
         mv.addObject("user", username);
-        mv.addObject("comics",comicRepository.findByIsPublic(true, new Sort(Sort.Direction.DESC, "dateTime")));
+        mv.addObject("comics",comics);
+        mv.addObject("likes", likes);
 //        mv.addObject("comics",comicRepository.findAll(new Sort(Sort.Direction.DESC, "dateTime")));
         return mv;
     }
@@ -147,10 +166,21 @@ public class ComicFlipsController {
     }
 
     @GetMapping("/comic/{id}")
-    ModelAndView getComic(@PathVariable String id){
+    ModelAndView getComic(@PathVariable String id,
+                          Authentication auth){
         Comic c = comicRepository.findById(id).get();
         ModelAndView mv = new ModelAndView("comic");
         mv.addObject("comic", c);
+        String isLiked;
+        if(auth == null){
+            isLiked = "";
+        }
+        else {
+            String userName = auth.getName();
+            User user = userDetailsService.getUser(userName);
+            isLiked = Boolean.toString(user.getLikedComics().contains(id));
+        }
+        mv.addObject("liked", isLiked);
         return mv;
     }
 
@@ -162,25 +192,31 @@ public class ComicFlipsController {
     String editLike(@RequestParam("liked") boolean liked,
                   @RequestParam("comicID") String comicID,
                   Authentication auth){
+        System.out.println("edit");
+        if(auth == null){
+            System.out.println("Not logged in");
+            return "You must be logged in";
+        }
+        System.out.println("Logged in");
         System.out.println("liked: "  + liked + " comicID: " + comicID);
         String userName = auth.getName();
         User user = userDetailsService.getUser(userName);
         boolean checkWithinComic = user.getLikedComics().contains(comicID);
         if(liked != checkWithinComic){
-            System.out.println("Entering if statement editlike");
-            ArrayList<String> newLikedList= user.getLikedComics();
+            Comic c = comicRepository.findById(comicID).get();
             if(liked){
                 //System.out.println("liked");
-                newLikedList.add(comicID);
-                //System.out.println(newLikedList);
-                user.setLikedComics(newLikedList);
+                user.addToLikes(comicID);
                 userDetailsService.updateUser(user);
+                c.incLikesByOne();
+                comicRepository.save(c);
             }
             else{
                 //System.out.println("not liked");
-                newLikedList.remove(comicID);
-                user.setLikedComics(newLikedList);
+                user.removeFromLikes(comicID);
                 userDetailsService.updateUser(user);
+                c.decLikesByOne();
+                comicRepository.save(c);
             }
         }
         return "success";

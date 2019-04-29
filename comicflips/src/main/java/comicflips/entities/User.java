@@ -157,4 +157,12 @@ public class User {
     public void deleteComponentId(String id){
         createdComponents.remove(id);
     }
+
+    public void addToLikes(String id){
+        likedComics.add(id);
+    }
+
+    public void removeFromLikes(String id){
+        likedComics.remove(id);
+    }
 }

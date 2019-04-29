@@ -70,15 +70,29 @@
                 //if the like button is clicked, the like counter should go up by one, and vice versa if
                 //clicked again.
                 if($(this).css("color")== "rgb(33, 37, 41)") {
-                    $(this).css("color", "blue");
-                    //console.log(document.getElementById("likeCommentCount").innerText)
-                    var text = document.getElementById("likeCommentCount").innerText.split(" ");
-                    text[0] = (parseInt(text[0]) + 1).toString();
-                    var newtext = text.join(" ");
-                    document.getElementById("likeCommentCount").innerText = newtext;
+                    // $(this).css("color", "blue");
+                    // //console.log(document.getElementById("likeCommentCount").innerText)
+                    // var text = document.getElementById("likeCommentCount").innerText.split(" ");
+                    // text[0] = (parseInt(text[0]) + 1).toString();
+                    // var newtext = text.join(" ");
+                    // document.getElementById("likeCommentCount").innerText = newtext;
                     $.post('/editLike',   // url
-                        { liked: true, comicID: id}); // data to be submit
-                    //console.log(document.getElementById("likeCommentCount").innerText)
+                        { liked: true, comicID: id},
+                        function(data, status, jqXHR) {// success callback
+                            console.log('status: ' + status + " data: " + data);
+                            if(data == "success"){
+                                $("#like").css("color", "blue");
+                                //console.log(document.getElementById("likeCommentCount").innerText)
+                                var text = document.getElementById("likeCommentCount").innerText.split(" ");
+                                text[0] = (parseInt(text[0]) + 1).toString();
+                                var newtext = text.join(" ");
+                                document.getElementById("likeCommentCount").innerText = newtext;
+                                //console.log(document.getElementById("likeCommentCount").innerText)
+                            }
+                            else{
+                                alert("You cannot like the comic.")
+                            }
+                        }); // data to be submit
                 }
                 else{
                     $(this).css("color", "rgb(33, 37, 41)");
@@ -197,7 +211,7 @@
                     <div class="card-footer">
                         <div class="row" style="text-align: center">
                             <div class="col">
-                                <i class="far fa-thumbs-up" style="font-size:20px;" id="like"><span style="padding: 10px;">Like</span></i>
+                                <i class="far fa-thumbs-up" th:style="${liked == 'true' ? 'color:blue' : 'color:rgb(33, 37, 41)'}" style="font-size:20px;" id="like"><span style="padding: 10px;">Like</span></i>
                             </div>
 
                             <div class="col">
