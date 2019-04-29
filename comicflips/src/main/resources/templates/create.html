@@ -651,6 +651,12 @@
         return comicJsonArray;
     }
 
+    //Onbeforeunload is used in in single-page applications when there is some unsaved data in the browser.
+    //You use this to make sure that the user does not accidentally leave the page. This will prompt the user
+    //with the option to leave or stay on the page.
+    window.onbeforeunload = function() {
+        return "Do you want to leave the page without saving your progress?";
+    };
 </script>
 
 </body>
