@@ -20,6 +20,7 @@ public class User {
     private ArrayList<String> following;
     private ArrayList<String> subscriptions;
     private ArrayList<String> createdComponents;
+    private ArrayList<String> createdGroups;
 
     public User(){
         this.avatar = null;
@@ -28,6 +29,7 @@ public class User {
         this.following = new ArrayList<String>();
         this.subscriptions = new ArrayList<String>();
         this.createdComponents = new ArrayList<String>();
+        this.createdGroups = new ArrayList<String>();
     }
 
     public User(String firstName, String lastName,String username, String password, Blob avatar,
@@ -164,5 +166,23 @@ public class User {
 
     public void removeFromLikes(String id){
         likedComics.remove(id);
+    }
+
+    public ArrayList<String> getCreatedGroups() {
+        return createdGroups;
+    }
+
+    public void setCreatedGroups(ArrayList<String> createdGroups) {
+        this.createdGroups = createdGroups;
+    }
+
+    public void addToCreatedGroups(String group){
+        if(!createdGroups.contains(group)){
+            createdGroups.add(group);
+        }
+    }
+
+    public void deleteFromCreatedGroups(String group){
+        createdGroups.remove(group);
     }
 }

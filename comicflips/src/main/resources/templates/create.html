@@ -213,6 +213,17 @@
                         <input type="checkbox" id = "isPublic" th:checked="${isPublic == true ? 'true' : 'false'}">
                     </div>
 
+                    <label for="series">Comic Series: </label>
+                    <select id = "series">
+                        <th:block th:each="group : ${groups}">
+                            <option th:value="${group}" th:text="${group}"></option>
+                        </th:block>
+                        <option value="new">Enter my own</option>
+                        <option value="none">None</option>
+                    </select>
+
+                    <input id = "customSeries" type="text" style="display: none;">
+
                     <button id = "publish" type="button" class="btn btn-primary btn-block" style="margin-top:10px;" th:text="${button}">Publish</button>
                     <i class="import fas fa-upload" style="border-left: #dad7d9 solid 1px;margin-top:10px;width:100%;text-align: center;">
                         <p>Import</p>
@@ -272,6 +283,16 @@
         setCurrentCanvas("c1");
         removeCanvasListener();
         console.log("count: " + count);
+
+        $("#series").on("change", function (event) {
+            var option = $(this).val();
+            if(option == "new"){
+                $("#customSeries").css("display", "");
+            }else{
+                $("#customSeries").css("display", "none");
+            }
+            console.log(option);
+        })
 
         $("#components > .card").on("click", function(event){
             console.log($(this).children()[0]);
@@ -390,6 +411,12 @@
         $("#publish").on("click", function () {
             var title = $("#title").val();
             var about = $("#about").val();
+            var comicGroup = $("#series").val();
+            if(comicGroup == "new"){
+                comicGroup = $("#customSeries").val();
+            }else if(comicGroup == "none"){
+                comicGroup = "";
+            }
             var button = $(this).text();
 
             console.log("button name: " + button);
@@ -419,7 +446,7 @@
 
             if(button == "Publish"){
                 $.post('/addComic',   // url
-                    { title: title, about: about, canvases: canvases, isPublic: isPublic }, // data to be submit
+                    { title: title, about: about, canvases: canvases, isPublic: isPublic, group:comicGroup }, // data to be submit
                     function(data, status, jqXHR) {// success callback
                         console.log('status: ' + status + ', data: ' + data);
                         window.location = "/";

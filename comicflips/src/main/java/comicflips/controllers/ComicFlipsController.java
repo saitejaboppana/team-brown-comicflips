@@ -116,9 +116,11 @@ public class ComicFlipsController {
     }
 
     @GetMapping("/create")
-    ModelAndView createComicPage(){
+    ModelAndView createComicPage(Authentication auth){
         ModelAndView mv = new ModelAndView("create");
+        User currentUser = userDetailsService.getUser(auth.getName());
         mv.addObject("components",componentRepository.findAll());
+        mv.addObject("groups", currentUser.getCreatedGroups());
         mv.addObject("button", "Publish");
         return mv;
     }
@@ -233,6 +235,7 @@ public class ComicFlipsController {
                     @RequestParam("about") String about,
                     @RequestParam("canvases[]") List<String> canvases,
                     @RequestParam("isPublic") boolean isPublic,
+                    @RequestParam("group") String group,
                     Authentication auth){
         System.out.println(canvases.size());
         if(canvases.get(1).equals("bug")){
@@ -249,12 +252,14 @@ public class ComicFlipsController {
             c.setDescription(about);
             c.setCanvases(canvases);
             c.setUsername(username);
+            c.setGroup(group);
             c.setPublic(isPublic);//for now, lets have this hardcoded as true
 
         }
         comicRepository.save(c);
         User author = userRepository.findByUsername(username);
         author.addComicId(c.getId());
+        author.addToCreatedGroups(group);
         userRepository.save(author);
         return "Success";
     }
@@ -334,7 +339,6 @@ public class ComicFlipsController {
         return "redirect:/profile";
     }
 
-
     @PostMapping("/addComment")
     @ResponseBody
     String addComment(@RequestParam("comment") String comment,@RequestParam("id") String comicID ,Authentication auth){
@@ -363,6 +367,5 @@ public class ComicFlipsController {
         mv.addObject("button", "Update");
         mv.addObject("components",componentRepository.findAll());
         return mv;
-
     }
 }
