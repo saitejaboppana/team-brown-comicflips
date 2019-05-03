@@ -261,6 +261,26 @@
                 </form>
             </div>
         </div>
+
+        <h4 style="text-align: center;">My Subscriptions</h4>
+        <table class="table table-bordered" bgcolor="white">
+            <tbody>
+                <tr th:each="group : ${user.subscriptions}">
+                    <td style="text-align:center;" th:text="${group}">
+                    </td>
+
+                    <td style="text-align:center;">
+                        <a th:href="@{/subscribed/{group}(group=${group})}"><button type="button" class="btn btn-sm btn-outline-secondary">View</button></a>
+                    </td>
+
+                    <td style="text-align:center;">
+                        <button type="button" class="btn btn-sm btn-danger" th:value="${group}">Unsubscribe</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+
     </div>
 
 </body>

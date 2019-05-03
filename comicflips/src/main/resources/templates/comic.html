@@ -61,79 +61,6 @@
 
     </style>
 
-    <script>
-        $(document).ready(function(){
-            $("#like").click(function(){
-                console.log($(this).css("color"));
-                var id = $("#comicTitle").attr("value")
-                //When pressing the like button, the colors should alternate between black and blue. Also,
-                //if the like button is clicked, the like counter should go up by one, and vice versa if
-                //clicked again.
-                if($(this).css("color")== "rgb(33, 37, 41)") {
-                    // $(this).css("color", "blue");
-                    // //console.log(document.getElementById("likeCommentCount").innerText)
-                    // var text = document.getElementById("likeCommentCount").innerText.split(" ");
-                    // text[0] = (parseInt(text[0]) + 1).toString();
-                    // var newtext = text.join(" ");
-                    // document.getElementById("likeCommentCount").innerText = newtext;
-                    $.post('/editLike',   // url
-                        { liked: true, comicID: id},
-                        function(data, status, jqXHR) {// success callback
-                            console.log('status: ' + status + " data: " + data);
-                            if(data == "success"){
-                                $("#like").css("color", "blue");
-                                //console.log(document.getElementById("likeCommentCount").innerText)
-                                var text = document.getElementById("likeCommentCount").innerText.split(" ");
-                                text[0] = (parseInt(text[0]) + 1).toString();
-                                var newtext = text.join(" ");
-                                document.getElementById("likeCommentCount").innerText = newtext;
-                                //console.log(document.getElementById("likeCommentCount").innerText)
-                            }
-                            else{
-                                alert("You cannot like the comic.")
-                            }
-                        }); // data to be submit
-                }
-                else{
-                    $(this).css("color", "rgb(33, 37, 41)");
-                    //console.log(document.getElementById("likeCommentCount").innerText)
-                    var text = document.getElementById("likeCommentCount").innerText.split(" ");
-                    text[0] = (parseInt(text[0]) - 1).toString();
-                    var newtext = text.join(" ");
-                    document.getElementById("likeCommentCount").innerText = newtext;
-                    $.post('/editLike',   // url
-                        { liked: false, comicID: id}); // data to be submit
-                    //console.log(document.getElementById("likeCommentCount").innerText)
-                }
-            });
-            $("#comment").click(function(){
-                $("#commentbox").removeAttr('hidden');
-                $("#commenttext").focus();
-            });
-
-            $("#cancelComment").click(function(){
-                $("#commentbox").prop("hidden", "true");
-                $("#commenttext").blur();
-            });
-
-            $("#share").click(function(){
-
-            });
-        });
-
-        // $(window).bind('beforeunload', function(){
-        //     var id = $("#comicTitle").attr("value")
-        //     if($("#like").css("color") == "rgb(0, 0, 255)"){
-        //         $.post('/editLike',   // url
-        //             { liked: true, comicID: id}); // data to be submit
-        //     }
-        //     else{
-        //         $.post('/editLike',   // url
-        //             { liked: false, comicID: id}); // data to be submit
-        //     }
-        // });
-    </script>
-
 </head>
 
 <body>
@@ -191,6 +118,11 @@
 
                 <h4 style="text-align:center; margin-bottom: 1.5rem;top: 0" th:text="${'by ' + comic.username}"></h4>
 
+                <h3 id = "group" style="text-align: center" th:text="${'Comic Series: ' + group}"></h3>
+
+                <div class="row justify-content-center">
+                    <button id = "subscribe" type="button" th:class="${subButton == 'Subscribe' ? 'btn btn-success' : 'btn btn-danger'}" th:style="${user == '' || group == '' ? 'display:none' : ''}" th:value="${group}" th:text="${subButton}">Subscribe</button>
+                </div>
                 <!-- Blog Post -->
                 <div class="card mb-4">
 
@@ -264,46 +196,136 @@
                 var canvas = new fabric.StaticCanvas(this, { width: 350, height: 350 });
                 canvas.loadFromJSON(firstCanvas);
             });
+
+            $("#like").click(function(){
+                console.log($(this).css("color"));
+                var id = $("#comicTitle").attr("value")
+                //When pressing the like button, the colors should alternate between black and blue. Also,
+                //if the like button is clicked, the like counter should go up by one, and vice versa if
+                //clicked again.
+                if($(this).css("color")== "rgb(33, 37, 41)") {
+                    // $(this).css("color", "blue");
+                    // //console.log(document.getElementById("likeCommentCount").innerText)
+                    // var text = document.getElementById("likeCommentCount").innerText.split(" ");
+                    // text[0] = (parseInt(text[0]) + 1).toString();
+                    // var newtext = text.join(" ");
+                    // document.getElementById("likeCommentCount").innerText = newtext;
+                    $.post('/editLike',   // url
+                        { liked: true, comicID: id},
+                        function(data, status, jqXHR) {// success callback
+                            console.log('status: ' + status + " data: " + data);
+                            if(data == "success"){
+                                $("#like").css("color", "blue");
+                                //console.log(document.getElementById("likeCommentCount").innerText)
+                                var text = document.getElementById("likeCommentCount").innerText.split(" ");
+                                text[0] = (parseInt(text[0]) + 1).toString();
+                                var newtext = text.join(" ");
+                                document.getElementById("likeCommentCount").innerText = newtext;
+                                //console.log(document.getElementById("likeCommentCount").innerText)
+                            }
+                            else{
+                                alert("You cannot like the comic.")
+                            }
+                        }); // data to be submit
+                }
+                else{
+                    $(this).css("color", "rgb(33, 37, 41)");
+                    //console.log(document.getElementById("likeCommentCount").innerText)
+                    var text = document.getElementById("likeCommentCount").innerText.split(" ");
+                    text[0] = (parseInt(text[0]) - 1).toString();
+                    var newtext = text.join(" ");
+                    document.getElementById("likeCommentCount").innerText = newtext;
+                    $.post('/editLike',   // url
+                        { liked: false, comicID: id}); // data to be submit
+                    //console.log(document.getElementById("likeCommentCount").innerText)
+                }
+            });
+            $("#comment").click(function(){
+                $("#commentbox").removeAttr('hidden');
+                $("#commenttext").focus();
+            });
+
+            $("#cancelComment").click(function(){
+                $("#commentbox").prop("hidden", "true");
+                $("#commenttext").blur();
+            });
+
+            $("#share").click(function(){
+
+            });
+
+            $("#subscribe").on("click", function (e) {
+                var buttonName = $(this).text();
+                var group = $(this).attr("value");
+                console.log("button name: " + buttonName);
+                console.log("group: " + group);
+
+                if(buttonName == "Subscribe"){
+
+                    $.post('/subscribe',   // url
+                        { group: group}, // data to be submit
+                        function(data, status, jqXHR) {// success callback
+                            console.log('status: ' + status + ', data: ' + data);
+                            $("#subscribe").text("Unsubscribe");
+                            $("#subscribe").removeClass("btn-success")
+                            $("#subscribe").addClass("btn-danger");
+                        });
+
+                }else{
+
+                    $.post('/unsubscribe',   // url
+                        { group: group}, // data to be submit
+                        function(data, status, jqXHR) {// success callback
+                            console.log('status: ' + status + ', data: ' + data);
+                            $("#subscribe").text("Subscribe");
+                            $("#subscribe").removeClass("btn-danger")
+                            $("#subscribe").addClass("btn-success");
+                        });
+
+                }
+
+            });
+
+            $("#submit").on("click", function (e) {
+                var user = $(this).val();
+                if(user == ""){
+                    alert("You Must Be Logged in to Comment");
+                    return;
+                }
+                var comment = $("#commenttext").val();
+                var comicId = $("#comicTitle").attr("value");
+                if (comment == ""){
+                    alert("Please Enter a Comment!");
+                    return;
+                }
+
+                var mainDiv = document.createElement("div");
+                mainDiv.className = "media mb-4";
+                // mainDiv.attr("class", "media mb-4");
+
+                var img = document.createElement("img");
+                img.className = "d-flex mr-3 rounded-circle";
+                img.src = "http://placehold.it/50x50";
+                mainDiv.appendChild(img);
+                // comments.appendChild(img);
+
+                var div = document.createElement("div");
+                div.className = "media-body";
+                var h5 = document.createElement("h5");
+                h5.className = "mt-0";
+                h5.textContent = user;
+                div.appendChild(h5);
+                var span = document.createElement("span");
+                span.textContent = comment;
+                div.appendChild(span);
+                mainDiv.appendChild(div);
+                $("#comments").append(mainDiv);
+                console.log(comment);
+                $("#commenttext").val("");
+                $.post('/addComment', {comment: comment,id: comicId})
+            })
+
         });
-
-        $("#submit").on("click", function (e) {
-            var user = $(this).val();
-            if(user == ""){
-                alert("You Must Be Logged in to Comment");
-                return;
-            }
-            var comment = $("#commenttext").val();
-            var comicId = $("#comicTitle").attr("value");
-            if (comment == ""){
-                alert("Please Enter a Comment!");
-                return;
-            }
-
-            var mainDiv = document.createElement("div");
-            mainDiv.className = "media mb-4";
-            // mainDiv.attr("class", "media mb-4");
-
-            var img = document.createElement("img");
-            img.className = "d-flex mr-3 rounded-circle";
-            img.src = "http://placehold.it/50x50";
-            mainDiv.appendChild(img);
-            // comments.appendChild(img);
-
-            var div = document.createElement("div");
-            div.className = "media-body";
-            var h5 = document.createElement("h5");
-            h5.className = "mt-0";
-            h5.textContent = user;
-            div.appendChild(h5);
-            var span = document.createElement("span");
-            span.textContent = comment;
-            div.appendChild(span);
-            mainDiv.appendChild(div);
-            $("#comments").append(mainDiv);
-            console.log(comment);
-            $("#commenttext").val("");
-            $.post('/addComment', {comment: comment,id: comicId})
-        })
     </script>
 
 </body>

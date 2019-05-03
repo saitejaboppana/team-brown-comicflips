@@ -185,4 +185,16 @@ public class User {
     public void deleteFromCreatedGroups(String group){
         createdGroups.remove(group);
     }
+
+    public void addToSubscribed(String group){
+        if(!subscriptions.contains(group)){
+            subscriptions.add(group);
+        }
+    }
+
+    public void removeFromSubscribed(String group){
+        if(subscriptions.contains(group)){
+            subscriptions.remove(group);
+        }
+    }
 }

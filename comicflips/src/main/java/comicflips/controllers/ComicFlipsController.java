@@ -111,7 +111,7 @@ public class ComicFlipsController {
         mv.addObject("user", username);
         mv.addObject("comics",comics);
         mv.addObject("likes", likes);
-//        mv.addObject("comics",comicRepository.findAll(new Sort(Sort.Direction.DESC, "dateTime")));
+        mv.addObject("title", "All Comics");
         return mv;
     }
 
@@ -178,6 +178,8 @@ public class ComicFlipsController {
         mv.addObject("comic", c);
         String isLiked;
         String userName= "";
+        String group = c.getGroup();
+        String subscribeButton = "Subscribe";
         if(auth == null){
             isLiked = "";
         }
@@ -185,9 +187,14 @@ public class ComicFlipsController {
             userName = auth.getName();
             User user = userDetailsService.getUser(userName);
             isLiked = Boolean.toString(user.getLikedComics().contains(id));
+            if(user.getSubscriptions().contains(group)){
+                subscribeButton = "Unsubscribe";
+            }
         }
         mv.addObject("liked", isLiked);
         mv.addObject("user", userName);
+        mv.addObject("group", group);
+        mv.addObject("subButton", subscribeButton);
         return mv;
     }
 
@@ -367,5 +374,55 @@ public class ComicFlipsController {
         mv.addObject("button", "Update");
         mv.addObject("components",componentRepository.findAll());
         return mv;
+    }
+
+    @PostMapping("/subscribe")
+    @ResponseBody
+    String subscribeToGroup(@RequestParam String group, Authentication auth){
+        String username = auth.getName();
+        User currentUser = userDetailsService.getUser(username);
+        currentUser.addToSubscribed(group);
+        userDetailsService.updateUser(currentUser);
+        return "subscription success";
+    }
+
+    @PostMapping("/unsubscribe")
+    @ResponseBody
+    String unsubscribeFromGroup(@RequestParam String group, Authentication auth){
+        String username = auth.getName();
+        User currentUser = userDetailsService.getUser(username);
+        currentUser.removeFromSubscribed(group);
+        userDetailsService.updateUser(currentUser);
+        return "unsubscribe success";
+    }
+
+    @GetMapping("/subscribed/{group}")
+    String getSubscribedPage(@PathVariable String group, Authentication auth, Model mv){
+        String username = auth.getName();
+        User user = userDetailsService.getUser(username);
+        if(!user.getSubscriptions().contains(group)){
+            return "redirect:/";
+        }
+        List <Comic> comics = comicRepository.findByGroup(group, new Sort(Sort.Direction.ASC, "dateTime"));
+        List<Boolean> likes = Arrays.asList(new Boolean[comics.size()]);
+        Collections.fill(likes, Boolean.FALSE);
+        List <String> userLikedComics = user.getLikedComics();
+        likes = new ArrayList<Boolean>();
+
+        for (Comic c: comics) {
+            if(userLikedComics.contains(c.getId())){
+                likes.add(true);
+            }else{
+                likes.add(false);
+            }
+        }
+
+
+        System.out.println("username:" + username);
+        mv.addAttribute("user", username);
+        mv.addAttribute("comics",comics);
+        mv.addAttribute("likes", likes);
+        mv.addAttribute("title", group);
+        return "index";
     }
 }

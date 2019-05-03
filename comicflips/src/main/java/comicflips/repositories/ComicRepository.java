@@ -19,4 +19,6 @@ public interface ComicRepository extends MongoRepository<Comic, String>{
     public List<Comic> findByUsername(String username);
 
     public List<Comic> findByIsPublic(boolean isPublic, Sort sort);
+
+    public List<Comic> findByGroup(String group, Sort sort);
 }
