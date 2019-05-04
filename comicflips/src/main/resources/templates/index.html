@@ -110,7 +110,7 @@
         <div class="row">
 
             <!-- Blog Entries Column -->
-            <div class="col-md-8">
+            <div id = "posts" class="col-md-8">
 
                 <h3 class="my-4" style="text-align: center;" th:text="${title}">
                     All Comics
@@ -129,7 +129,7 @@
                             </div>
                         </div>
                     </div>
-                    <a style="display: block; text-align: center;" th:href="@{/comic/{id}(id=${comic.id})}"><canvas class="card-img-top" height="350" th:value="${comic.canvases[0]}"></canvas></a>
+                    <a style="display: block; text-align: center;" th:href="@{/comic/{id}(id=${comic.id})}"><canvas class="card-img-top" width = "350" height="350" th:value="${comic.canvases[0]}"></canvas></a>
                     <hr>
                     <div class="card-body blogBody">
                         <h5><strong th:text="${comic.name}">Post Title</strong></h5>
@@ -194,9 +194,9 @@
                         <h5 class="card-header">Search</h5>
                         <div class="card-body">
                             <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Search">
+                                <input id = "searchFilter" type="text" class="form-control" placeholder="Search">
                                 <span class="input-group-btn">
-                                <button class="btn btn-primary" type="button">Search</button>
+                                <button id = "searchButton" class="btn btn-primary" type="button">Search</button>
                             </span>
                             </div>
                         </div>
@@ -256,6 +256,13 @@
                 // $(this).attr("value", "");
                 var canvas = new fabric.StaticCanvas(this, { width: 350, height: 350 });
                 canvas.loadFromJSON(firstCanvas);
+            });
+
+            $("#searchButton").on("click", function() {
+                var value = $("#searchFilter").val().toLowerCase();
+                $("#posts > .card").filter(function() {
+                    $(this).toggle($(this).find(".card-body").text().toLowerCase().indexOf(value) > -1)
+                });
             });
 
             $(".date").each(function (e) {
