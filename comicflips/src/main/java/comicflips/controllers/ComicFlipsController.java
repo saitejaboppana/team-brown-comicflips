@@ -50,6 +50,18 @@ public class ComicFlipsController {
         return "register";
     }
 
+    /**
+     * When a user registers, this endpoint will get called. This method will create a new user object and set all
+     * of the provided information from the register page. This method will then redirect the user to the login
+     * page. However, if the username already exists, the end user will not be able to create the account and the
+     * page will not redirect.
+     * @param firstName The first name of the user
+     * @param lastName The last name of the user
+     * @param username The username that the user wants to have for the account
+     * @param password The password for the account
+     * @param email The users email
+     * @return The model and view that will redirect the user either to the register page or the login page
+     */
     @PostMapping("/addUser")
     ModelAndView addUser(@RequestParam String firstName, @RequestParam String lastName, @RequestParam String username,
                          @RequestParam String password, @RequestParam String email){
@@ -72,6 +84,12 @@ public class ComicFlipsController {
         return mv;
     }
 
+    /**
+     * When logging in, if the user info exists, the user will be redirected to the home page. Otherwise, they will
+     * be sent back to the login page
+     * @param user The user info for the person trying to login
+     * @return The login page or the index page
+     */
     @GetMapping("/login")
     String login(Principal user){
 
@@ -82,7 +100,12 @@ public class ComicFlipsController {
         return "login";
     }
 
-
+    /**
+     * Loads all of the comics to the index page, regardless of whether the user is logged in or not. This gets the
+     * comics from the database, puts in the the modelandview object, and returns it.
+     * @param auth The Spring Authentication object
+     * @return THe ModelAndView object with all the necessary info to display the comics and to create the index page.
+     */
     @GetMapping("/")
     ModelAndView indexPage(Authentication auth){
         ModelAndView mv = new ModelAndView("index");
@@ -115,6 +138,12 @@ public class ComicFlipsController {
         return mv;
     }
 
+    /**
+     * Takes logged in user to the create comic page. Also sends components from the database and the users
+     * previously made groups to help ease the comic creating process.
+     * @param auth The Spring Authentication object
+     * @return The ModelAndView with the components, groups, and buttons. Directs to the create html.
+     */
     @GetMapping("/create")
     ModelAndView createComicPage(Authentication auth){
         ModelAndView mv = new ModelAndView("create");
@@ -125,11 +154,21 @@ public class ComicFlipsController {
         return mv;
     }
 
+    /**
+     * Takes logged in user to create a comic component
+     * @return ModelAndView that takes user to the create component page
+     */
     @GetMapping("/component")
     ModelAndView createComponentPage(){
         return new ModelAndView("component");
     }
 
+    /**
+     * Endpoint for displaying user profile page. This page will show user info, comics made by user, and
+     * comic components made by user.
+     * @param auth  The Spring Authentication object
+     * @return ModelAndView
+     */
     @GetMapping("/profile")
     ModelAndView profilePage(Authentication auth){
         ModelAndView mv = new ModelAndView("profile");
@@ -142,6 +181,16 @@ public class ComicFlipsController {
         return mv;
     }
 
+    /**
+     * When the user makes edits to their profile,this method will update the database with the corresponding edits.
+     * It is important to note that the user cannot change the username.
+     * @param auth The Spring Authentication object
+     * @param firstName The first name of the user
+     * @param lastName The last name of the user
+     * @param password The password for the account
+     * @param email The users email
+     * @return The string that will redirect user back to the user profile with all the changes they made.
+     */
     @PostMapping("/updateUser")
     String updateProfile(Authentication auth, @RequestParam String firstName, @RequestParam String lastName,
                          @RequestParam String password, @RequestParam String email) {
@@ -170,6 +219,13 @@ public class ComicFlipsController {
         return new ModelAndView("comic");
     }
 
+    /**
+     * When user clicks a comic, this endpoint will direct the user to the comic page that will contain all the
+     * info for that comic.
+     * @param id The id for the comic
+     * @param auth The Spring Authentication object
+     * @return ModelAndView will all of the comic information.
+     */
     @GetMapping("/comic/{id}")
     ModelAndView getComic(@PathVariable String id,
                           Authentication auth){
@@ -198,9 +254,16 @@ public class ComicFlipsController {
         return mv;
     }
 
-    //Used to edit the liked comics arraylist in the user object. Takes a boolean
-    //telling whether the user liked the comic and the comicID of the comic that was
-    //liked/unliked.
+    /**
+     * Used to edit the liked comics arraylist in the user object. Takes a boolean
+     * telling whether the user liked the comic and the comicID of the comic that was
+     * liked/unliked.
+     * @param liked Boolean for whether the user liked or disliked the comic
+     * @param comicID The id for the comic
+     * @param auth The Spring Authentication object
+     * @return Success string if POST request was successful, and error message if
+     * user is not logged in.
+     */
     @PostMapping("/editLike")
     @ResponseBody
     String editLike(@RequestParam("liked") boolean liked,
@@ -236,6 +299,17 @@ public class ComicFlipsController {
         return "success";
     }
 
+    /**
+     * When user makes the comic, a post request will be performed that will add the comic and all of its other
+     * info into the database
+     * @param title Title of the comic
+     * @param about Description of the comic
+     * @param canvases All of the canvases for the comic
+     * @param isPublic Boolean for whether the comic was made public or not
+     * @param group The comic's group
+     * @param auth The Spring Authentication object
+     * @return Success string if POST request was successful, and error message if user is not logged in.
+     */
     @PostMapping("/addComic")
     @ResponseBody
     String addComic(@RequestParam("title") String title,
@@ -271,6 +345,17 @@ public class ComicFlipsController {
         return "Success";
     }
 
+    /**
+     * Updates a previously made comic. User supplies any new information, and a POST request will be sent to the
+     * database and will update the comic accordingly.
+     * @param oldTitle The old title for the comic
+     * @param title The new title for the comic
+     * @param about The description for the comic
+     * @param canvases The comic's canvases
+     * @param isPublic Boolean for whether the comic is public or not
+     * @param auth The Spring Authentication object
+     * @return Update Complete message
+     */
     @PostMapping("/updateComic")
     @ResponseBody
     String updateComic(@RequestParam("oldTitle") String oldTitle,
@@ -294,6 +379,12 @@ public class ComicFlipsController {
         return "update complete";
     }
 
+    /**
+     * Deletes comic from the database using the title of the comic
+     * @param title Title of the comic
+     * @param auth The Spring Authentication object
+     * @return Success message
+     */
     @PostMapping("/deleteComic")
     String deleteComic(@RequestParam String title, Authentication auth){
         String userName = auth.getName();
@@ -302,6 +393,11 @@ public class ComicFlipsController {
         return "Success";
     }
 
+    /**
+     * Deletes comic from the database using the id of the comic.
+     * @param id Id of the comic
+     * @return String that redirects user to the profile page.
+     */
     @PostMapping("/deleteComic/{id}")
     String deleteComicById(@PathVariable String id){
         Comic c = comicRepository.findById(id).get();
@@ -309,6 +405,13 @@ public class ComicFlipsController {
         return "redirect:/profile";
     }
 
+    /**
+     * Adds component to the database. This component can be in the comics themselves.
+     * @param title Title of the Component
+     * @param canvas The canvas for the component
+     * @param auth The Spring Authentication object
+     * @return Success message
+     */
     @PostMapping("/addComponent")
     @ResponseBody
     String addComponent(@RequestParam String title, @RequestParam String canvas, Authentication auth){
@@ -331,6 +434,12 @@ public class ComicFlipsController {
         return "Success";
     }
 
+    /**
+     * Deletes component from the database using the component title
+     * @param title Title of the component
+     * @param auth The Spring Authentication object
+     * @return Success message
+     */
     @PostMapping("/deleteComponent")
     String deleteComponent(@RequestParam String title, Authentication auth){
         String userName = auth.getName();
@@ -339,6 +448,11 @@ public class ComicFlipsController {
         return "Success";
     }
 
+    /**
+     * Deletes component from the database using the component id
+     * @param id The id of the component
+     * @return String to redirect to profile page
+     */
     @PostMapping("/deleteComponent/{id}")
     String deleteComponentById(@PathVariable String id){
         Component c = componentRepository.findById(id).get();
@@ -346,6 +460,13 @@ public class ComicFlipsController {
         return "redirect:/profile";
     }
 
+    /**
+     * Adds comment to the comic object in the database.
+     * @param comment Comment message
+     * @param comicID Id of the comic
+     * @param auth The Spring Authentication object
+     * @return Success message
+     */
     @PostMapping("/addComment")
     @ResponseBody
     String addComment(@RequestParam("comment") String comment,@RequestParam("id") String comicID ,Authentication auth){
@@ -356,6 +477,13 @@ public class ComicFlipsController {
         return "Success!";
     }
 
+    /**
+     * Deletes comment from the comic object in the database.
+     * @param comment Comment message
+     * @param comicID Id of the comic
+     * @param auth The Spring Authentication object
+     * @return Success message
+     */
     @PostMapping("/deleteComment")
     String deleteComponent(@RequestParam String comment,@RequestParam String comicID ,Authentication auth) {
         Comic comic = comicRepository.findById(comicID).get();
@@ -363,6 +491,12 @@ public class ComicFlipsController {
         return "Success!";
     }
 
+    /**
+     * Takes user to the create page, where they can edit a previously created comic.
+     * @param id Id for the comic
+     * @return ModelAndView that will redirect to the create page, with all of the info for comic the user
+     * wants to edit.
+     */
     @GetMapping("/editComic/{id}")
     ModelAndView editComicPage(@PathVariable String id){
         ModelAndView mv = new ModelAndView("create");
@@ -376,6 +510,12 @@ public class ComicFlipsController {
         return mv;
     }
 
+    /**
+     * Subscribes user to the group
+     * @param group Group that the user wants to subscribe to.
+     * @param auth The Spring Authentication object
+     * @return Subscription complete message
+     */
     @PostMapping("/subscribe")
     @ResponseBody
     String subscribeToGroup(@RequestParam String group, Authentication auth){
@@ -386,6 +526,12 @@ public class ComicFlipsController {
         return "subscription success";
     }
 
+    /**
+     * Unsubscribe user from the group
+     * @param group The comic group the user wants to unsubscribe to.
+     * @param auth The Spring Authentication object
+     * @return Unsubscription complete message
+     */
     @PostMapping("/unsubscribe")
     @ResponseBody
     String unsubscribeFromGroup(@RequestParam String group, Authentication auth){
@@ -396,6 +542,13 @@ public class ComicFlipsController {
         return "unsubscribe success";
     }
 
+    /**
+     * Shows the subscribed comics for the particular group to the user.
+     * @param group The comic group
+     * @param auth The Spring Authentication object
+     * @param mv Index page ModelAndView
+     * @return String that will take user to the index page
+     */
     @GetMapping("/subscribed/{group}")
     String getSubscribedPage(@PathVariable String group, Authentication auth, Model mv){
         String username = auth.getName();
@@ -416,8 +569,7 @@ public class ComicFlipsController {
                 likes.add(false);
             }
         }
-
-
+        
         System.out.println("username:" + username);
         mv.addAttribute("user", username);
         mv.addAttribute("comics",comics);

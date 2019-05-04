@@ -254,6 +254,7 @@
     var isDown = false;
     var origX;
     var origY;
+    var warn_on_unload = "You have unsaved changes!"
 
     $(document).ready(function () {
         // addCanvas();
@@ -719,11 +720,18 @@
         return comicJsonArray;
     }
 
+    //WHen the publish button is clicked, the onbeforeunload will be set to null. This is because the user does
+    //not need to be notified anymore when leaving the page.
+    document.getElementById('publish').onclick = function () {
+        window.onbeforeunload = null;
+    };
+
     //Onbeforeunload is used in in single-page applications when there is some unsaved data in the browser.
     //You use this to make sure that the user does not accidentally leave the page. This will prompt the user
     //with the option to leave or stay on the page.
     window.onbeforeunload = function() {
-        return "Do you want to leave the page without saving your progress?";
+        console.log(warn_on_unload)
+        return warn_on_unload;
     };
 </script>
 
