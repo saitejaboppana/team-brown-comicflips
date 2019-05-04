@@ -32,6 +32,18 @@
     <script>
         $(document).ready(function(){
             $("#update").hide();
+            
+            $(".btn-danger").on("click", function () {
+                var group = $(this).val();
+                var parent = $(this).parent().parent();
+                console.log(group);
+                $.post('/unsubscribe',   // url
+                    { group: group}, // data to be submit
+                    function(data, status, jqXHR) {// success callback
+                        console.log('status: ' + status + ', data: ' + data);
+                        parent.remove();
+                    });
+            })
 
             $("#edit").on("click", function(e){
                 e.preventDefault();
@@ -263,7 +275,7 @@
         </div>
 
         <h4 style="text-align: center;">My Subscriptions</h4>
-        <table class="table table-bordered" bgcolor="white">
+        <table id = "subscriptionTable" class="table table-bordered" bgcolor="white">
             <tbody>
                 <tr th:each="group : ${user.subscriptions}">
                     <td style="text-align:center;" th:text="${group}">
@@ -279,8 +291,6 @@
                 </tr>
             </tbody>
         </table>
-
-
     </div>
 
 </body>
