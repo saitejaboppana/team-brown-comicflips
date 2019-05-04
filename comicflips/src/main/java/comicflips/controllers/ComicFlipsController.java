@@ -363,6 +363,7 @@ public class ComicFlipsController {
                        @RequestParam("about") String about,
                        @RequestParam("canvases[]") List<String> canvases,
                        @RequestParam("isPublic") boolean isPublic,
+                       @RequestParam("group") String group,
                        Authentication auth){
 
         if(canvases.get(1).equals("bug")){
@@ -375,6 +376,7 @@ public class ComicFlipsController {
         c.setDescription(about);
         c.setCanvases(canvases);
         c.setPublic(isPublic);
+        c.setGroup(group);
         comicRepository.save(c);
         return "update complete";
     }
@@ -498,16 +500,23 @@ public class ComicFlipsController {
      * wants to edit.
      */
     @GetMapping("/editComic/{id}")
-    ModelAndView editComicPage(@PathVariable String id){
-        ModelAndView mv = new ModelAndView("create");
+    String editComicPage(@PathVariable String id, Authentication auth, Model mv){
         Comic comicToEdit = comicRepository.findById(id).get();
-        mv.addObject("title", comicToEdit.getName());
-        mv.addObject("about",comicToEdit.getDescription());
-        mv.addObject("canvases", comicToEdit.getCanvases());
-        mv.addObject("isPublic", comicToEdit.getIsPublic());
-        mv.addObject("button", "Update");
-        mv.addObject("components",componentRepository.findAll());
-        return mv;
+        User currentUser = userDetailsService.getUser(auth.getName());
+        if(!currentUser.getUsername().equals(comicToEdit.getUsername())){
+            return "redirect:/";
+        }
+//        ModelAndView mv = new ModelAndView("create");
+        mv.addAttribute("title", comicToEdit.getName());
+        mv.addAttribute("about",comicToEdit.getDescription());
+        mv.addAttribute("canvases", comicToEdit.getCanvases());
+        mv.addAttribute("isPublic", comicToEdit.getIsPublic());
+        mv.addAttribute("button", "Update");
+        mv.addAttribute("groups", currentUser.getCreatedGroups());
+        mv.addAttribute("selectedGroup", comicToEdit.getGroup());
+        mv.addAttribute("components",componentRepository.findAll());
+        System.out.println("****selectedGroup : " + comicToEdit.getGroup());
+        return "create";
     }
 
     /**

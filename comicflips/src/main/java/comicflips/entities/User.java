@@ -177,7 +177,7 @@ public class User {
     }
 
     public void addToCreatedGroups(String group){
-        if(!createdGroups.contains(group)){
+        if(!createdGroups.contains(group) && !group.equals("")){
             createdGroups.add(group);
         }
     }
