@@ -162,9 +162,9 @@
                 <i id = "deleteCanvas" class="control fas fa-minus-circle"></i>
             </div>
 
-            <div id = "drawOptions" class="collapse sticky-top" style="top:70px;background-color: grey;border: #dad7d9 solid 1px;">
+            <div id = "drawOptions" class="collapse sticky-top">
                 <label for="drawing-line-width">Line width:</label>
-                <span class="info">1</span><input type="range" value="1" min="0" max="150" id="drawing-line-width"><br>
+                <span class="info">1</span><input type="range" value="1" min="0" max="150" id="drawing-line-width" class="custom-range" style="width: 50%;"><br>
                 <label for="drawing-color">Line color:</label>
                 <input type="color" value="#000000" id="drawing-color"><br>
             </div>
@@ -188,13 +188,6 @@
             </div>
 
             <div class="card mb-4">
-                <!--<div class="card-body">-->
-                    <!--<div id="canvasContainer" class="d-flex flex-wrap" style="display: block;text-align: center;">-->
-                        <!--&lt;!&ndash;<canvas id = "c1"></canvas>&ndash;&gt;-->
-                        <!--&lt;!&ndash;<canvas id = "c2"></canvas>&ndash;&gt;-->
-                        <!--&lt;!&ndash;<canvas id = "c3"></canvas>&ndash;&gt;-->
-                    <!--</div>-->
-                <!--</div>-->
 
                 <div class="card-body">
                     <div id="canvasContainer" class="d-flex flex-wrap" style="display: block;text-align: center;">
@@ -209,22 +202,114 @@
                 <div class = "card-body">
                     <input type="text" id="about" style="text-align: center; width:100%; height: 50px;" placeholder="About" th:value="${about}">
 
-                    <div class="d-flex justify-content-center">
+                    <div class="row justify-content-center">
                         <span>Make Comic Public</span>
                         <input type="checkbox" id = "isPublic" th:checked="${isPublic == true ? 'true' : 'false'}">
                     </div>
 
-                    <label for="series">Comic Series: </label>
-                    <select id = "series">
-                        <option value="new">Enter my own</option>
-                        <option value="" selected>None</option>
-                        <option disabled>──────────</option>
-                        <th:block th:each="group : ${groups}">
-                            <option th:value="${group}" th:text="${group}" th:selected="${group} eq ${selectedGroup}"></option>
-                        </th:block>
-                    </select>
+                    <div class="row justify-content-center">
+                        <label for="series">Comic Series: </label>
+                        <select id = "series">
+                            <option value="new">Enter my own</option>
+                            <option value="" selected>None</option>
+                            <option disabled>──────────</option>
+                            <th:block th:each="group : ${groups}">
+                                <option th:value="${group}" th:text="${group}" th:selected="${group} eq ${selectedGroup}"></option>
+                            </th:block>
+                        </select>
+                        <input id = "customSeries" type="text" style="display: none;">
+                    </div>
 
-                    <input id = "customSeries" type="text" style="display: none;">
+                    <div class="row justify-content-center">
+                        <div class="custom-control custom-checkbox mb-3">
+                            <input type="checkbox" class="custom-control-input" id="action" value="Action" th:checked="${#lists.contains(genres, 'Action')}">
+                            <label class="custom-control-label" for="action">Action</label>
+                        </div>
+                    </div>
+
+                    <div class="row justify-content-center">
+                        <div class="custom-control custom-checkbox mb-3">
+                            <input type="checkbox" class="custom-control-input" id="adventure" value="Adventure" th:checked="${#lists.contains(genres, 'Adventure')}">
+                            <label class="custom-control-label" for="adventure">Adventure</label>
+                        </div>
+                    </div>
+
+                    <div class="row justify-content-center">
+                        <div class="custom-control custom-checkbox mb-3">
+                            <input type="checkbox" class="custom-control-input" id="comedy" value="Comedy" th:checked="${#lists.contains(genres, 'Comedy')}">
+                            <label class="custom-control-label" for="comedy">Comedy</label>
+                        </div>
+                    </div>
+
+                    <div class="row justify-content-center">
+                        <div class="custom-control custom-checkbox mb-3">
+                            <input type="checkbox" class="custom-control-input" id="crime" value="Crime" th:checked="${#lists.contains(genres, 'Crime')}">
+                            <label class="custom-control-label" for="crime">Crime</label>
+                        </div>
+                    </div>
+
+                    <div class="row justify-content-center">
+                        <div class="custom-control custom-checkbox mb-3">
+                            <input type="checkbox" class="custom-control-input" id="drama" value="Drama" th:checked="${#lists.contains(genres, 'Drama')}">
+                            <label class="custom-control-label" for="drama">Drama</label>
+                        </div>
+                    </div>
+
+                    <div class="row justify-content-center">
+                        <div class="custom-control custom-checkbox mb-3">
+                            <input type="checkbox" class="custom-control-input" id="fantasy" value="Fantasy" th:checked="${#lists.contains(genres, 'Fantasy')}">
+                            <label class="custom-control-label" for="fantasy">Fantasy</label>
+                        </div>
+                    </div>
+
+                    <div class="row justify-content-center">
+                        <div class="custom-control custom-checkbox mb-3">
+                            <input type="checkbox" class="custom-control-input" id="historical" value="Historical" th:checked="${#lists.contains(genres, 'Historical')}">
+                            <label class="custom-control-label" for="historical">Historical</label>
+                        </div>
+                    </div>
+
+                    <div class="row justify-content-center">
+                        <div class="custom-control custom-checkbox mb-3">
+                            <input type="checkbox" class="custom-control-input" id="horror" value="Horror" th:checked="${#lists.contains(genres, 'Horror')}">
+                            <label class="custom-control-label" for="horror">Horror</label>
+                        </div>
+                    </div>
+
+                    <div class="row justify-content-center">
+                        <div class="custom-control custom-checkbox mb-3">
+                            <input type="checkbox" class="custom-control-input" id="mystery" value="Mystery" th:checked="${#lists.contains(genres, 'Mystery')}">
+                            <label class="custom-control-label" for="mystery">Mystery</label>
+                        </div>
+                    </div>
+
+                    <div class="row justify-content-center">
+                        <div class="custom-control custom-checkbox mb-3">
+                            <input type="checkbox" class="custom-control-input" id="nonFiction" value="Non-Fiction" th:checked="${#lists.contains(genres, 'Non-Fiction')}">
+                            <label class="custom-control-label" for="nonFiction">Non-Fiction</label>
+                        </div>
+                    </div>
+
+                    <div class="row justify-content-center">
+                        <div class="custom-control custom-checkbox mb-3">
+                            <input type="checkbox" class="custom-control-input" id="political" value="Political" th:checked="${#lists.contains(genres, 'Political')}">
+                            <label class="custom-control-label" for="political">Political</label>
+                        </div>
+                    </div>
+
+                    <div class="row justify-content-center">
+                        <div class="custom-control custom-checkbox mb-3">
+                            <input type="checkbox" class="custom-control-input" id="scifi" value="Science Fiction" th:checked="${#lists.contains(genres, 'Science Fiction')}">
+                            <label class="custom-control-label" for="scifi">Science Fiction</label>
+                        </div>
+                    </div>
+
+                    <div class="row justify-content-center">
+                        <div class="custom-control custom-checkbox mb-3">
+                            <input type="checkbox" class="custom-control-input" id="suspense" value = "Suspense" th:checked="${#lists.contains(genres, 'Suspense')}">
+                            <label class="custom-control-label" for="suspense">Suspense</label>
+                        </div>
+                    </div>
 
                     <button id = "publish" type="button" class="btn btn-primary btn-block" style="margin-top:10px;" th:text="${button}">Publish</button>
                     <i class="import fas fa-upload" style="border-left: #dad7d9 solid 1px;margin-top:10px;width:100%;text-align: center;">
@@ -412,6 +497,7 @@
         });
 
         $("#publish").on("click", function () {
+
             var title = $("#title").val();
             var about = $("#about").val();
             var comicGroup = $("#series").val();
@@ -449,19 +535,33 @@
                 isPublic = true;
             }
 
+            var tags = [];
+            $(".custom-control-input").each(function () {
+                if($(this).is(":checked")){
+                    tags.push($(this).val());
+                }
+            });
+
+            if(tags.length == 0){
+                alert("Please choose atleast one genre");
+                return;
+            }
+
             if(button == "Publish"){
                 $.post('/addComic',   // url
-                    { title: title, about: about, canvases: canvases, isPublic: isPublic, group:comicGroup }, // data to be submit
+                    { title: title, about: about, canvases: canvases, isPublic: isPublic, group:comicGroup, tags:tags }, // data to be submit
                     function(data, status, jqXHR) {// success callback
                         console.log('status: ' + status + ', data: ' + data);
+                        window.onbeforeunload = null;
                         window.location = "/";
                 });
             }else{
 
                 $.post('/updateComic',   // url
-                    { oldTitle : oldTitle, title: title, about: about, canvases: canvases, isPublic: isPublic, group:comicGroup }, // data to be submit
+                    { oldTitle : oldTitle, title: title, about: about, canvases: canvases, isPublic: isPublic, group:comicGroup, tags:tags }, // data to be submit
                     function(data, status, jqXHR) {// success callback
                         console.log('status: ' + status + ', data: ' + data);
+                        window.onbeforeunload = null;
                         window.location = "/";
                 });
 
@@ -723,12 +823,6 @@
 
         return comicJsonArray;
     }
-
-    //WHen the publish button is clicked, the onbeforeunload will be set to null. This is because the user does
-    //not need to be notified anymore when leaving the page.
-    document.getElementById('publish').onclick = function () {
-        window.onbeforeunload = null;
-    };
 
     //Onbeforeunload is used in in single-page applications when there is some unsaved data in the browser.
     //You use this to make sure that the user does not accidentally leave the page. This will prompt the user

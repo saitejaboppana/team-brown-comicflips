@@ -150,6 +150,7 @@ public class ComicFlipsController {
         User currentUser = userDetailsService.getUser(auth.getName());
         mv.addObject("components",componentRepository.findAll());
         mv.addObject("groups", currentUser.getCreatedGroups());
+        mv.addObject("genres", "");
         mv.addObject("button", "Publish");
         return mv;
     }
@@ -317,6 +318,7 @@ public class ComicFlipsController {
                     @RequestParam("canvases[]") List<String> canvases,
                     @RequestParam("isPublic") boolean isPublic,
                     @RequestParam("group") String group,
+                    @RequestParam("tags[]") ArrayList<String> tags,
                     Authentication auth){
         System.out.println(canvases.size());
         if(canvases.get(1).equals("bug")){
@@ -335,6 +337,7 @@ public class ComicFlipsController {
             c.setUsername(username);
             c.setGroup(group);
             c.setPublic(isPublic);//for now, lets have this hardcoded as true
+            c.setTags(tags);
 
         }
         comicRepository.save(c);
@@ -364,6 +367,7 @@ public class ComicFlipsController {
                        @RequestParam("canvases[]") List<String> canvases,
                        @RequestParam("isPublic") boolean isPublic,
                        @RequestParam("group") String group,
+                       @RequestParam("tags[]") ArrayList<String> tags,
                        Authentication auth){
 
         if(canvases.get(1).equals("bug")){
@@ -377,6 +381,7 @@ public class ComicFlipsController {
         c.setCanvases(canvases);
         c.setPublic(isPublic);
         c.setGroup(group);
+        c.setTags(tags);
         comicRepository.save(c);
         return "update complete";
     }
@@ -515,6 +520,7 @@ public class ComicFlipsController {
         mv.addAttribute("groups", currentUser.getCreatedGroups());
         mv.addAttribute("selectedGroup", comicToEdit.getGroup());
         mv.addAttribute("components",componentRepository.findAll());
+        mv.addAttribute("genres", comicToEdit.getTags());
         System.out.println("****selectedGroup : " + comicToEdit.getGroup());
         return "create";
     }
