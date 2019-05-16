@@ -299,6 +299,13 @@
 
                     <div class="row justify-content-center">
                         <div class="custom-control custom-checkbox mb-3">
+                            <input type="checkbox" class="custom-control-input" id="romance" value="Romance" th:checked="${#lists.contains(genres, 'Romance')}">
+                            <label class="custom-control-label" for="political">Romance</label>
+                        </div>
+                    </div>
+
+                    <div class="row justify-content-center">
+                        <div class="custom-control custom-checkbox mb-3">
                             <input type="checkbox" class="custom-control-input" id="scifi" value="Science Fiction" th:checked="${#lists.contains(genres, 'Science Fiction')}">
                             <label class="custom-control-label" for="scifi">Science Fiction</label>
                         </div>
@@ -543,7 +550,7 @@
             });
 
             if(tags.length == 0){
-                alert("Please choose atleast one genre");
+                alert("Please choose at least one genre");
                 return;
             }
 

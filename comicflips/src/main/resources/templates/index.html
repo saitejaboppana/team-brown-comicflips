@@ -56,6 +56,10 @@
             border: 1px solid black;
         }
 
+        .selectedGenre{
+            font-weight: bold;
+        }
+
 
     </style>
 
@@ -135,6 +139,14 @@
                         <h5><strong th:text="${comic.name}">Post Title</strong></h5>
                     </div>
                     <hr>
+                    <span style="padding: 5px 10px 5px 10px;">
+                        <div class="d-flex">
+                            <div class="genre" th:each="genre : ${comic.tags}">
+                                <span th:text="${genre + ', '}">Temp genre</span>
+                            </div>
+                        </div>
+                    </span>
+                    <hr>
                     <span th:id="${comic.id}" style="padding: 5px 10px 5px 10px;font-size: small;" th:text="${comic.likes + ' likes, ' + #lists.size(comic.comments) + ' comments'}">2 Likes, 5 Comments</span>
                     <div class="card-footer">
                         <div class="row" style="text-align: center">
@@ -143,7 +155,7 @@
                             </div>
 
                             <div class="col">
-                                <i class="far fa-comment" style="font-size:20px;"><span style="padding: 10px;">Comment</span></i>
+                                <i class="far fa-comment" style="font-size:20px;" th:href="@{/comic/{id}(id=${comic.id})}"><span style="padding: 10px;">Comment</span></i>
                             </div>
 
                             <div class="col">
@@ -167,9 +179,9 @@
 
                 <div class="sticky-top" style="top:65px;">
                     <!-- Side Widget -->
-                    <div class="card my-4" style="text-align: center;">
+                    <div class="card my-3" style="text-align: center;">
                         <h5 class="card-header">Top Comics</h5>
-                        <div class="card-body">
+                        <div class="card-body" style="font-size: 14px;">
                             <div class="row">
                                 <div class="col">
                                     <a href = "#">Comic 1</a>
@@ -190,7 +202,7 @@
                     </div>
 
                     <!-- Search Widget -->
-                    <div class="card my-4" style="text-align: center;">
+                    <div class="card my-3" style="text-align: center;">
                         <h5 class="card-header">Search</h5>
                         <div class="card-body">
                             <div class="input-group">
@@ -203,33 +215,64 @@
                     </div>
 
                     <!-- Categories Widget -->
-                    <div class="card my-4" style="text-align: center">
+                    <div class="card my-3" style="text-align: center">
                         <h5 class="card-header">Categories</h5>
                         <div class="card-body">
-                            <div class="row">
-                                <div class="col-lg-6">
+                            <div class="row" style="font-size: 14px;">
+                                <div class="col">
                                     <ul class="list-unstyled mb-0">
                                         <li>
-                                            <a href="#">Web Design</a>
+                                            <a href="">Action</a>
                                         </li>
                                         <li>
-                                            <a href="#">Classic</a>
+                                            <a href="">Adventure</a>
                                         </li>
                                         <li>
-                                            <a href="#">Political</a>
+                                            <a href="">Comedy</a>
+                                        </li>
+                                        <li>
+                                            <a href="">Crime</a>
+                                        </li>
+                                        <li>
+                                            <a href="">Drama</a>
                                         </li>
                                     </ul>
                                 </div>
-                                <div class="col-lg-6">
+                                <div class="col">
                                     <ul class="list-unstyled mb-0">
                                         <li>
-                                            <a href="#">Comedy</a>
+                                            <a href="">Fantasy</a>
                                         </li>
                                         <li>
-                                            <a href="#">World</a>
+                                            <a href="">Historical</a>
                                         </li>
                                         <li>
-                                            <a href="#">Space</a>
+                                            <a href="">Horror</a>
+                                        </li>
+                                        <li>
+                                            <a href="">Mystery</a>
+                                        </li>
+                                        <li>
+                                            <a href="">Non-Fiction</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="col">
+                                    <ul class="list-unstyled mb-0">
+                                        <li>
+                                            <a href="#">Political</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Romance</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Sci-Fi</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Suspense</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Thriller</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -264,6 +307,24 @@
                     $(this).toggle($(this).find(".card-body").text().toLowerCase().indexOf(value) > -1)
                 });
             });
+            var genre = [];
+            $(".list-unstyled").children().on("click", function (e) {
+                e.preventDefault();
+                genre.push($(this).text().trim().toLowerCase());
+                console.log(genre);
+                if($(this).hasClass("selectedGenre")){
+                    $(this).removeClass("selectedGenre");
+                }else{
+                    $(this).addClass("selectedGenre");
+                }
+                // $(".selectedGenre").removeClass("selectedGenre");
+                for(g in genre){
+
+                }
+                $("#posts > .card").filter(function() {
+                    $(this).toggle($(this).find(".genre").text().trim().toLowerCase().indexOf(genre) > -1)
+                });
+            })
 
             $(".date").each(function (e) {
                 var dateString = $(this).text();
