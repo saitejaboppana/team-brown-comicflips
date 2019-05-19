@@ -419,7 +419,9 @@
             if (interval > 1 || interval === 0) {
                 intervalType += 's';
             }
-
+            if(interval < 0){
+                interval = 0;
+            }
             return interval + ' ' + intervalType;
         };
     </script>

@@ -22,7 +22,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
                 .antMatchers("/").permitAll()
                 .antMatchers("/login").permitAll()
                 .antMatchers("/register").permitAll()
+                .antMatchers("/forgot").permitAll()
+                .antMatchers("/securityQuestion").permitAll()
                 .antMatchers("/addUser").permitAll()
+                .antMatchers("/securityAnswer").permitAll()
+                .antMatchers("/changePassword").permitAll()
                 .antMatchers("/comic/**").permitAll()
                 .antMatchers(
                         "/css/**",

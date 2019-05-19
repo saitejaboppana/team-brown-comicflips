@@ -50,6 +50,16 @@ public class ComicFlipsController {
         return "register";
     }
 
+    @GetMapping("/forgot")
+    String forgotPass(Principal user){
+
+        if(user != null){
+            return "redirect:/";
+        }
+
+        return "forgotpass";
+    }
+
     /**
      * When a user registers, this endpoint will get called. This method will create a new user object and set all
      * of the provided information from the register page. This method will then redirect the user to the login
@@ -598,15 +608,34 @@ public class ComicFlipsController {
         return "index";
     }
 
+    /**
+     * Gets the security question that the user put in upon registering
+     * @param username The user's username
+     * @return The user's security question
+     */
     @GetMapping("/securityQuestion")
+    @ResponseBody
     String getSecurityQuestion(@RequestParam String username){
+        //System.out.println("entering here");
         User user = userDetailsService.getUser(username);
+        if(user == null){
+            //System.out.println("Entering if statement");
+            return "Invalid Username";
+        }
         String question = user.getQuestion();
         return question;
     }
 
+    /**
+     * Checks that the answer to the security question is correct.
+     * @param username The user's username
+     * @param answer The answer that the user put in
+     * @return String that tells if the user put the right answer or not.
+     */
     @GetMapping("/securityAnswer")
+    @ResponseBody
     String checkSecurityQuestion(@RequestParam String username, @RequestParam String answer){
+        //System.out.println("entering answer");
         User user = userDetailsService.getUser(username);
         String ans = user.getAnswer();
         if(ans.equals(answer)){
@@ -617,11 +646,18 @@ public class ComicFlipsController {
         }
     }
 
+    /**
+     * Changes the password of the user account
+     * @param username The user's username
+     * @param password The user's new password
+     * @return Success String
+     */
     @PostMapping("/changePassword")
+    @ResponseBody
     String changePassword(@RequestParam String username, @RequestParam String password){
         User user = userDetailsService.getUser(username);
         user.setPassword(password);
-        userDetailsService.updateUser(user);
+        userDetailsService.saveUser(user);
         return "Success";
     }
 }
