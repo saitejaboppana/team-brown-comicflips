@@ -58,6 +58,10 @@
                 $("#email").val($("#email").attr("placeholder"));
                 $("#password").prop("disabled", false);
                 $("#password").val($("#password").attr("placeholder"));
+                //$("#question").prop("disabled", false);
+                $("#question").val($("#question").attr("placeholder"));
+                //$("#answer").prop("disabled", false);
+                $("#answer").val($("#answer").attr("placeholder"));
             })
 
             $("#comics > div > canvas").each(function(e) {
@@ -225,6 +229,18 @@
                                 <label for="password" class="col-sm-3 control-label">Password</label>
                                 <div class="col">
                                     <input name="password"  type="password" id="password" placeholder="hidden" class="form-control" disabled>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="question" class="col-sm-3 control-label">Password</label>
+                                <div class="col">
+                                    <input name="question"  type="text" id="question" th:placeholder="${user.question}" class="form-control" disabled>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="password" class="col-sm-3 control-label">Password</label>
+                                <div class="col">
+                                    <input name="password"  type="password" id="answer" placeholder="hidden" class="form-control" disabled>
                                 </div>
                             </div>
                             <div class="form-group">

@@ -21,6 +21,8 @@ public class User {
     private ArrayList<String> subscriptions;
     private ArrayList<String> createdComponents;
     private ArrayList<String> createdGroups;
+    private String question;
+    private String answer;
 
     public User(){
         this.avatar = null;
@@ -46,6 +48,8 @@ public class User {
         this.following = following;
         this.subscriptions = subscriptions;
         this.createdComponents = createdComponents;
+        this.question = question;
+        this.answer = answer;
     }
 
     public String getId() {
@@ -196,5 +200,21 @@ public class User {
         if(subscriptions.contains(group)){
             subscriptions.remove(group);
         }
+    }
+
+    public String getQuestion() {
+        return question;
+    }
+
+    public void setQuestion(String question) {
+        this.question = question;
+    }
+
+    public String getAnswer() {
+        return answer;
+    }
+
+    public void setAnswer(String answer) {
+        this.answer = answer;
     }
 }

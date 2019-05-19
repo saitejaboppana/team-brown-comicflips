@@ -60,11 +60,14 @@ public class ComicFlipsController {
      * @param username The username that the user wants to have for the account
      * @param password The password for the account
      * @param email The users email
+     * @param question The users security question
+     * @param answer The users security answer
      * @return The model and view that will redirect the user either to the register page or the login page
      */
     @PostMapping("/addUser")
     ModelAndView addUser(@RequestParam String firstName, @RequestParam String lastName, @RequestParam String username,
-                         @RequestParam String password, @RequestParam String email){
+                         @RequestParam String password, @RequestParam String email, @RequestParam String question,
+                         @RequestParam String answer){
         System.out.println("Entering registering1");
         ModelAndView mv = new ModelAndView();
         if(userDetailsService.loadUserByUsername(username) != null){
@@ -79,6 +82,8 @@ public class ComicFlipsController {
         newUser.setUsername(username);
         newUser.setPassword(password);
         newUser.setEmail(email);
+        newUser.setQuestion(question);
+        newUser.setAnswer(answer);
         userDetailsService.saveUser(newUser);
         mv.setViewName("login");
         return mv;
@@ -591,5 +596,32 @@ public class ComicFlipsController {
         mv.addAttribute("likes", likes);
         mv.addAttribute("title", group);
         return "index";
+    }
+
+    @GetMapping("/securityQuestion")
+    String getSecurityQuestion(@RequestParam String username){
+        User user = userDetailsService.getUser(username);
+        String question = user.getQuestion();
+        return question;
+    }
+
+    @GetMapping("/securityAnswer")
+    String checkSecurityQuestion(@RequestParam String username, @RequestParam String answer){
+        User user = userDetailsService.getUser(username);
+        String ans = user.getAnswer();
+        if(ans.equals(answer)){
+            return "Success";
+        }
+        else{
+            return "Incorrect Answer";
+        }
+    }
+
+    @PostMapping("/changePassword")
+    String changePassword(@RequestParam String username, @RequestParam String password){
+        User user = userDetailsService.getUser(username);
+        user.setPassword(password);
+        userDetailsService.updateUser(user);
+        return "Success";
     }
 }
