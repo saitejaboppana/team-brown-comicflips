@@ -142,7 +142,7 @@
                     <span style="padding: 5px 10px 5px 10px;">
                         <div class="d-flex">
                             <div class="genre" th:each="genre : ${comic.tags}">
-                                <span th:text="${genre + ', '}">Temp genre</span>
+                                <span th:text="${genre + ', '}">Action, Comedy, Mystery</span>
                             </div>
                         </div>
                     </span>
@@ -307,22 +307,25 @@
                     $(this).toggle($(this).find(".card-body").text().toLowerCase().indexOf(value) > -1)
                 });
             });
-            var genre = [];
+            //var genre = [];
             $(".list-unstyled").children().on("click", function (e) {
                 e.preventDefault();
-                genre.push($(this).text().trim().toLowerCase());
+                //genre.push($(this).text().trim().toLowerCase());
+                var genre = $(this).text().trim().toLowerCase();
                 console.log(genre);
                 if($(this).hasClass("selectedGenre")){
                     $(this).removeClass("selectedGenre");
+                    genre = "";
                 }else{
+                    $(".selectedGenre").removeClass("selectedGenre");
                     $(this).addClass("selectedGenre");
                 }
-                // $(".selectedGenre").removeClass("selectedGenre");
-                for(g in genre){
 
-                }
                 $("#posts > .card").filter(function() {
-                    $(this).toggle($(this).find(".genre").text().trim().toLowerCase().indexOf(genre) > -1)
+                    // if($(this).is(':visible')){
+                    //     $(this).toggle($(this).find(".genre").text().trim().toLowerCase().indexOf(genre) > -1);
+                    // }
+                    $(this).toggle($(this).find(".genre").text().trim().toLowerCase().indexOf(genre) > -1);
                 });
             })
 
