@@ -20,11 +20,10 @@
     <script src="https://cdn.jsdelivr.net/webjars/jquery/3.3.1/jquery.min.js"
             th:src="@{/webjars/jquery/3.3.1/jquery.min.js}"></script>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+
     <script src="https://cdn.jsdelivr.net/webjars/bootstrap/4.3.1/js/bootstrap.min.js"
             th:src="@{/webjars/bootstrap/4.3.1/js/bootstrap.min.js}"></script>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-            th:src="@{https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js}" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 
     <script src="https://cdn.bootcss.com/fabric.js/2.7.0/fabric.min.js"
             th:src="@{https://cdn.bootcss.com/fabric.js/2.7.0/fabric.min.js}"></script>
@@ -94,6 +93,10 @@
 
         #components > .card {display:inline-block;}
 
+        .toolOptions{
+            background-color: lightskyblue;
+        }
+
     </style>
 
 </head>
@@ -147,45 +150,98 @@
                 <input type="text" id="title" style="text-align: center" placeholder="Comic Title"autofocus th:value="${title}">
             </h3>
 
-            <div id = "tools" class="d-flex justify-content-center sticky-top" style="top:56px; text-align: center;">
-                <i id = "addCanvas" class="control fas fa-plus-circle" style="border-left: #dad7d9 solid 1px;"></i>
-                <i id = "select" class="control fas fa-mouse-pointer" style="padding-left: 23px; padding-right: 23px;"></i>
-                <i id = "draw" data-toggle="collapse" data-target="#drawOptions" class="control fas fa-pencil-alt"></i>
-                <i id = "circle" data-toggle="collapse" data-target="#shapeOptions" class="control far fa-circle"></i>
-                <span id = "rectangle" data-toggle="collapse" data-target="#shapeOptions" class="control" style='line-height: 15px;font-size: 30px;'>&#9645;</span>
-                <span id = "line" class="control" style='line-height: 20px;'>&#8213;</span>
-                <span id = "triangle" data-toggle="collapse" data-target="#shapeOptions" class="control" style="font-size:25px;line-height: 20px;" >&#9651;</span>
-                <i id = "image" data-toggle="collapse" data-target="#components" class="control far fa-image"></i>
-                <i id = "text" class="control fas fa-font"></i>
-                <i id = "eraser" class="control fas fa-eraser"></i>
-                <i id = "clear" class="control fas fa-trash"></i>
-                <i id = "deleteCanvas" class="control fas fa-minus-circle"></i>
-            </div>
+            <div class="sticky-top" style="top: 56px;">
+                <div id = "tools" class="d-flex justify-content-center" style="top:56px; text-align: center;">
+                    <i id = "addCanvas" data-toggle="collapse" title="Add a canvas" class="control fas fa-plus-circle" style="border-left: #dad7d9 solid 1px;"></i>
+                    <i id = "select" data-toggle="collapse" title="Select tool" data-target="#selectOptions" class="control fas fa-mouse-pointer" style="padding-left: 23px; padding-right: 23px;"></i>
+                    <i id = "draw" data-toggle="collapse" title="Drawing tool" data-target="#drawOptions" class="control fas fa-pencil-alt"></i>
+                    <i id = "circle" data-toggle="collapse" title="Circle tool" data-target="#shapeOptions" class="control far fa-circle"></i>
+                    <span id = "rectangle" data-toggle="collapse" title="Rectangle tool" data-target="#shapeOptions" class="control" style='line-height: 15px;font-size: 30px;'>&#9645;</span>
+                    <span id = "line" data-toggle="collapse" title="Line tool" data-target="#drawOptions" class="control" style='line-height: 20px;'>&#8213;</span>
+                    <span id = "triangle" data-toggle="collapse" title="Triangle tool" data-target="#shapeOptions" class="control" style="font-size:25px;line-height: 20px;" >&#9651;</span>
+                    <i id = "image" data-toggle="collapse" title="Components tool" data-target="#components" class="control far fa-image"></i>
+                    <i id = "text" data-toggle="collapse" title="Text tool" class="control fas fa-font"></i>
+                    <i id = "eraser" data-toggle="collapse" title="Remove Objects tool" class="control fas fa-eraser"></i>
+                    <i id = "clear" data-toggle="collapse" title="Clear Canvas" class="control fas fa-trash"></i>
+                    <i id = "deleteCanvas" data-toggle="collapse" title="Delete selected canvas" class="control fas fa-minus-circle"></i>
+                </div>
 
-            <div id = "drawOptions" class="collapse sticky-top">
-                <label for="drawing-line-width">Line width:</label>
-                <span class="info">1</span><input type="range" value="1" min="0" max="150" id="drawing-line-width" class="custom-range" style="width: 50%;"><br>
-                <label for="drawing-color">Line color:</label>
-                <input type="color" value="#000000" id="drawing-color"><br>
-            </div>
+                <div id = "selectOptions" class="collapse toolOptions">
+                    <button id = "groupButton">Group Selected Objects</button>
+                    <button id = "ungroupButton">Ungroup Selected Objects</button>
+                    <button id = "discardSelectionButton">Discard Selection</button>
+                    <button id = "backward">Send Backwards</button>
+                    <button id = "forward">Bring forward</button>
+                    <button id = "back">Send to back</button>
+                    <button id = "front">Bring to front</button>
+                </div>
 
-            <div id = "shapeOptions" class="collapse">
-                <label for="shape-stroke-width">Stroke width:</label>
-                <span class="info">1</span><input type="range" value="1" min="0" max="150" id="shape-stroke-width"><br>
-                <label for="shape-stroke">Stroke color:</label>
-                <input type="color" value="#000000" id="shape-stroke"><br>
-                <label for="shape-fill">Fill:</label>
-                <input type="color" value="#000000" id="shape-fill"><br>
-            </div>
+                <div id = "drawOptions" class="collapse toolOptions" style="text-align: center;">
+                    <label for="drawing-line-width">Line width:</label>
+                    <span class="info">1</span><input type="range" value="1" min="0" max="150" id="drawing-line-width" class="custom-range" style="width: 50%;"><br>
+                    <label for="drawing-color">Line color:</label>
+                    <input type="color" value="#000000" id="drawing-color"><br>
+                </div>
 
-            <div id="components" class="collapse" style="overflow: auto;  white-space: nowrap;">
-                <div class="card" style="width: 250px;text-align: center" th:each="component : ${components}">
-                    <canvas th:value="${component.canvas}"></canvas>
-                    <div class="card-body">
-                        <h4 class="card-title" th:text="${component.name}"></h4>
+                <div id = "shapeOptions" class="collapse toolOptions" style="text-align: center;">
+                    <label for="shape-stroke-width">Stroke width:</label>
+                    <span class="info">1</span><input type="range" value="1" min="0" max="150" id="shape-stroke-width"><br>
+                    <label for="shape-stroke">Stroke color:</label>
+                    <input type="color" value="#000000" id="shape-stroke"><br>
+                    <label for="shape-fill">Fill:</label>
+                    <input type="color" value="#000000" id="shape-fill"><br>
+                </div>
+
+                <div id="components" class="collapse" style="overflow: auto;  white-space: nowrap;">
+                    <div class="card" style="width: 250px;text-align: center" th:each="component : ${components}">
+                        <canvas th:value="${component.canvas}"></canvas>
+                        <div class="card-body">
+                            <h4 class="card-title" th:text="${component.name}"></h4>
+                        </div>
                     </div>
                 </div>
+
             </div>
+
+            <!--<div id = "tools" class="d-flex justify-content-center sticky-top" style="top:56px; text-align: center;">-->
+                <!--<i id = "addCanvas" class="control fas fa-plus-circle" style="border-left: #dad7d9 solid 1px;"></i>-->
+                <!--<i id = "select" class="control fas fa-mouse-pointer" style="padding-left: 23px; padding-right: 23px;"></i>-->
+                <!--<i id = "draw" data-toggle="collapse" data-target="#drawOptions" class="control fas fa-pencil-alt"></i>-->
+                <!--<i id = "circle" data-toggle="collapse" data-target="#shapeOptions" class="control far fa-circle"></i>-->
+                <!--<span id = "rectangle" data-toggle="collapse" data-target="#shapeOptions" class="control" style='line-height: 15px;font-size: 30px;'>&#9645;</span>-->
+                <!--<span id = "line" class="control" style='line-height: 20px;'>&#8213;</span>-->
+                <!--<span id = "triangle" data-toggle="collapse" data-target="#shapeOptions" class="control" style="font-size:25px;line-height: 20px;" >&#9651;</span>-->
+                <!--<i id = "image" data-toggle="collapse" data-target="#components" class="control far fa-image"></i>-->
+                <!--<i id = "text" class="control fas fa-font"></i>-->
+                <!--<i id = "eraser" class="control fas fa-eraser"></i>-->
+                <!--<i id = "clear" class="control fas fa-trash"></i>-->
+                <!--<i id = "deleteCanvas" class="control fas fa-minus-circle"></i>-->
+            <!--</div>-->
+
+            <!--<div id = "drawOptions" class="collapse sticky-top">-->
+                <!--<label for="drawing-line-width">Line width:</label>-->
+                <!--<span class="info">1</span><input type="range" value="1" min="0" max="150" id="drawing-line-width" class="custom-range" style="width: 50%;"><br>-->
+                <!--<label for="drawing-color">Line color:</label>-->
+                <!--<input type="color" value="#000000" id="drawing-color"><br>-->
+            <!--</div>-->
+
+            <!--<div id = "shapeOptions" class="collapse">-->
+                <!--<label for="shape-stroke-width">Stroke width:</label>-->
+                <!--<span class="info">1</span><input type="range" value="1" min="0" max="150" id="shape-stroke-width"><br>-->
+                <!--<label for="shape-stroke">Stroke color:</label>-->
+                <!--<input type="color" value="#000000" id="shape-stroke"><br>-->
+                <!--<label for="shape-fill">Fill:</label>-->
+                <!--<input type="color" value="#000000" id="shape-fill"><br>-->
+            <!--</div>-->
+
+            <!--<div id="components" class="collapse" style="overflow: auto;  white-space: nowrap;">-->
+                <!--<div class="card" style="width: 250px;text-align: center" th:each="component : ${components}">-->
+                    <!--<canvas th:value="${component.canvas}"></canvas>-->
+                    <!--<div class="card-body">-->
+                        <!--<h4 class="card-title" th:text="${component.name}"></h4>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
 
             <div class="card mb-4">
 
@@ -357,6 +413,8 @@
         // comicSlides["c2"] = new fabric.Canvas("c2", { width: 350, height: 350 });
         // comicSlides["c3"] = new fabric.Canvas("c3", { width: 350, height: 350 });
 
+        $('[data-toggle="collapse"]').tooltip();
+
         var oldTitle = $("#title").val();
 
         if(oldTitle != ""){
@@ -443,6 +501,61 @@
                 setCurrentCanvas(id);
             }
         });
+        
+        $("#groupButton").on("click", function (e) {
+            if (!currentCanvas.getActiveObject()) {
+                return;
+            }
+            if (currentCanvas.getActiveObject().type !== 'activeSelection') {
+                return;
+            }
+            currentCanvas.getActiveObject().toGroup();
+            currentCanvas.requestRenderAll();
+        });
+
+        $("#ungroupButton").on("click", function (e) {
+            if (!currentCanvas.getActiveObject()) {
+                return;
+            }
+            if (currentCanvas.getActiveObject().type !== 'group') {
+                return;
+            }
+            currentCanvas.getActiveObject().toActiveSelection();
+            currentCanvas.requestRenderAll();
+        });
+
+        $("#discardSelectionButton").on("click", function (e) {
+            currentCanvas.discardActiveObject();
+            currentCanvas.requestRenderAll();
+        });
+
+        $("#backward").on("click", function (e) {
+            var activeObject = currentCanvas.getActiveObject();
+            if(activeObject){
+                currentCanvas.sendBackwards(activeObject);
+            }
+        });
+
+        $("#forward").on("click", function (e) {
+            var activeObject = currentCanvas.getActiveObject();
+            if(activeObject){
+                currentCanvas.bringForward(activeObject);
+            }
+        });
+
+        $("#back").on("click", function (e) {
+            var activeObject = currentCanvas.getActiveObject();
+            if(activeObject){
+                currentCanvas.sendToBack(activeObject);
+            }
+        });
+
+        $("#front").on("click", function (e) {
+            var activeObject = currentCanvas.getActiveObject();
+            if(activeObject){
+                currentCanvas.bringToFront(activeObject);
+            }
+        });
 
         $("#shape-stroke-width").change(function(){
             strokeWidth = parseInt(this.value, 10) || 1;
@@ -471,12 +584,14 @@
         $("#tools").children().on("click", function () {
             staticMode();
             removeCanvasListener();
+            removeDeleteListener();
             var collapse = $(".selected").data("target");
             $(collapse).collapse('hide');
 
             $(this).addClass("selected").siblings().removeClass("selected");
             toolType = this.id;
             console.log(this);
+            currentCanvas.discardActiveObject();
             switch (toolType) {
                 case "draw":
                     freeDrawingMode();
@@ -487,6 +602,7 @@
                 case "image":
                     break;
                 case "eraser":
+                    initDeleteListener();
                     break;
                 case "clear":
                     clearCanvas();
@@ -587,6 +703,25 @@
         currentCanvas.off('mouse:down', mouseDown);
         currentCanvas.off('mouse:up', mouseUp);
         currentCanvas.off('mouse:move', mouseMove);
+    }
+
+    function initDeleteListener(){
+        currentCanvas.selection = true;
+        currentCanvas.hoverCursor = 'move';
+        currentCanvas.forEachObject(function(object){
+            object.selectable = true;
+        })
+        currentCanvas.renderAll();
+        currentCanvas.on('object:selected', deleteTool);
+    }
+
+    function removeDeleteListener() {
+        currentCanvas.off('object:selected', deleteTool);
+    }
+    
+    function deleteTool() {
+        console.log(this);
+        currentCanvas.remove(currentCanvas.getActiveObject());
     }
     
     function mouseDown() {
