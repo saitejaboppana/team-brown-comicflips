@@ -179,7 +179,7 @@
                                 <div class="media-body">
                                     <span class="close" id="close">&times;</span>
                                     <h5 class="mt-0" th:text="${comment.user}"></h5>
-                                    <span th:text="${comment.comment}"></span>
+                                    <span id="ctext" th:text="${comment.comment}"></span>
                                 </div>
                             </div>
                         </div>
@@ -265,6 +265,7 @@
 
             $("#close").click(function(){
                 var comicId = $("#comicTitle").attr("value");
+                var comment = $("#ctext").attr("text");
                 $.post('/deleteComment', {comment: comment,id: comicId})
             });
 
