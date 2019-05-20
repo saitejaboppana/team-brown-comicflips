@@ -85,6 +85,9 @@
                 <li class="nav-item active">
                     <a class="nav-link" href="/">Home</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/series">Series</a>
+                </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
                         Comic
@@ -177,9 +180,9 @@
                                 <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
 
                                 <div class="media-body">
-                                    <span class="close" id="close" th:style="${user != comment.user ? 'display:none': ''}">&times;</span>
+                                    <span class="close" th:style="${user != comment.user ? 'display:none': ''}">&times;</span>
                                     <h5 class="mt-0" th:text="${comment.user}"></h5>
-                                    <span id="ctext" th:text="${comment.comment}"></span>
+                                    <span th:text="${comment.comment}"></span>
                                 </div>
                             </div>
                         </div>
@@ -262,12 +265,10 @@
             $("#share").click(function(){
 
             });
-
-            $("#close").click(function(){
-                var comicId = $("#comicTitle").attr("value");
-                var comment = $("#ctext").attr("text");
-                $.post('/deleteComment', {comment: comment,id: comicId})
-            });
+            
+            $(".close").on("click", function () {
+                
+            })
 
             $("#subscribe").on("click", function (e) {
                 var buttonName = $(this).text();
