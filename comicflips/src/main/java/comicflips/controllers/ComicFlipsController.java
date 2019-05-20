@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
 import org.springframework.security.core.Authentication;
 
+import javax.jws.WebParam;
 import javax.websocket.server.PathParam;
 import java.security.Principal;
 import java.util.ArrayList;
@@ -113,6 +114,19 @@ public class ComicFlipsController {
         }
 
         return "login";
+    }
+
+    @GetMapping("/series")
+    ModelAndView series(Principal user){
+        ModelAndView mv = new ModelAndView("series");
+        List<User> users = userRepository.findAll();
+        List<String> series = new ArrayList<String>();
+        for (User u: users) {
+            series.addAll(u.getCreatedGroups());
+        }
+        Collections.sort(series);
+        mv.addObject("series", series);
+        return mv;
     }
 
     /**
@@ -581,30 +595,37 @@ public class ComicFlipsController {
      */
     @GetMapping("/subscribed/{group}")
     String getSubscribedPage(@PathVariable String group, Authentication auth, Model mv){
-        String username = auth.getName();
-        User user = userDetailsService.getUser(username);
-        if(!user.getSubscriptions().contains(group)){
-            return "redirect:/";
-        }
         List <Comic> comics = comicRepository.findByGroup(group, new Sort(Sort.Direction.ASC, "dateTime"));
-        List<Boolean> likes = Arrays.asList(new Boolean[comics.size()]);
-        Collections.fill(likes, Boolean.FALSE);
-        List <String> userLikedComics = user.getLikedComics();
-        likes = new ArrayList<Boolean>();
-
-        for (Comic c: comics) {
-            if(userLikedComics.contains(c.getId())){
-                likes.add(true);
-            }else{
-                likes.add(false);
+        if(auth != null){
+            String username = auth.getName();
+            User user = userDetailsService.getUser(username);
+            if(!user.getSubscriptions().contains(group)){
+                return "redirect:/";
             }
+//            List <Comic> comics = comicRepository.findByGroup(group, new Sort(Sort.Direction.ASC, "dateTime"));
+            List<Boolean> likes = Arrays.asList(new Boolean[comics.size()]);
+            Collections.fill(likes, Boolean.FALSE);
+            List <String> userLikedComics = user.getLikedComics();
+            likes = new ArrayList<Boolean>();
+
+            for (Comic c: comics) {
+                if(userLikedComics.contains(c.getId())){
+                    likes.add(true);
+                }else{
+                    likes.add(false);
+                }
+            }
+
+            System.out.println("username:" + username);
+            mv.addAttribute("user", username);
+            mv.addAttribute("comics",comics);
+            mv.addAttribute("likes", likes);
+            mv.addAttribute("title", group);
+        }else{
+            mv.addAttribute("user", "");
+            mv.addAttribute("comics",comics);
+            mv.addAttribute("title", group);
         }
-        
-        System.out.println("username:" + username);
-        mv.addAttribute("user", username);
-        mv.addAttribute("comics",comics);
-        mv.addAttribute("likes", likes);
-        mv.addAttribute("title", group);
         return "index";
     }
 

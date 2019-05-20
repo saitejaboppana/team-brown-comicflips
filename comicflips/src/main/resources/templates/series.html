@@ -89,10 +89,12 @@
 </nav>
 
 <div class="container">
-    <h4 style="text-align: center;">My Subscriptions</h4>
+    <h3 class="my-4" style="text-align: center;">
+        Series
+    </h3>
     <table id = "subscriptionTable" class="table table-bordered" bgcolor="white">
         <tbody>
-        <tr th:each="group : ${user.subscriptions}">
+        <tr th:each="group : ${series}">
             <td style="text-align:center;" th:text="${group}">
             </td>
 
