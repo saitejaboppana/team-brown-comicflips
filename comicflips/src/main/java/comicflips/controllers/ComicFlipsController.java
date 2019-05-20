@@ -117,14 +117,22 @@ public class ComicFlipsController {
     }
 
     @GetMapping("/series")
-    ModelAndView series(Principal user){
+    ModelAndView series(Authentication auth){
         ModelAndView mv = new ModelAndView("series");
+
         List<User> users = userRepository.findAll();
         List<String> series = new ArrayList<String>();
         for (User u: users) {
             series.addAll(u.getCreatedGroups());
         }
         Collections.sort(series);
+        if(auth != null){
+            String username = auth.getName();
+            User currentUser = userDetailsService.getUser(username);
+            mv.addObject("user", currentUser);
+        }else{
+            mv.addObject("user", "");
+        }
         mv.addObject("series", series);
         return mv;
     }
@@ -563,11 +571,20 @@ public class ComicFlipsController {
     @PostMapping("/subscribe")
     @ResponseBody
     String subscribeToGroup(@RequestParam String group, Authentication auth){
-        String username = auth.getName();
-        User currentUser = userDetailsService.getUser(username);
-        currentUser.addToSubscribed(group);
-        userDetailsService.updateUser(currentUser);
-        return "subscription success";
+        if(auth != null){
+            String username = auth.getName();
+            User currentUser = userDetailsService.getUser(username);
+            currentUser.addToSubscribed(group);
+            userDetailsService.updateUser(currentUser);
+            return "success";
+        }else{
+            return "You must be logged in";
+        }
+//        String username = auth.getName();
+//        User currentUser = userDetailsService.getUser(username);
+//        currentUser.addToSubscribed(group);
+//        userDetailsService.updateUser(currentUser);
+//        return "subscription success";
     }
 
     /**
@@ -579,11 +596,20 @@ public class ComicFlipsController {
     @PostMapping("/unsubscribe")
     @ResponseBody
     String unsubscribeFromGroup(@RequestParam String group, Authentication auth){
-        String username = auth.getName();
-        User currentUser = userDetailsService.getUser(username);
-        currentUser.removeFromSubscribed(group);
-        userDetailsService.updateUser(currentUser);
-        return "unsubscribe success";
+        if(auth != null){
+            String username = auth.getName();
+            User currentUser = userDetailsService.getUser(username);
+            currentUser.removeFromSubscribed(group);
+            userDetailsService.updateUser(currentUser);
+            return "success";
+        }else{
+            return "You must be logged in";
+        }
+//        String username = auth.getName();
+//        User currentUser = userDetailsService.getUser(username);
+//        currentUser.removeFromSubscribed(group);
+//        userDetailsService.updateUser(currentUser);
+//        return "unsubscribe success";
     }
 
     /**

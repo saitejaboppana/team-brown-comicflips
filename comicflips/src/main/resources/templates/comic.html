@@ -177,7 +177,7 @@
                                 <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
 
                                 <div class="media-body">
-                                    <span class="close" id="close">&times;</span>
+                                    <span class="close" id="close" th:style="${user != comment.user ? 'display:none': ''}">&times;</span>
                                     <h5 class="mt-0" th:text="${comment.user}"></h5>
                                     <span id="ctext" th:text="${comment.comment}"></span>
                                 </div>

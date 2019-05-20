@@ -29,6 +29,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
                 .antMatchers("/changePassword").permitAll()
                 .antMatchers("/series").permitAll()
                 .antMatchers("/subscribed/**").permitAll()
+                .antMatchers("/subscribe").permitAll()
+                .antMatchers("/unsubscribe").permitAll()
                 .antMatchers("/comic/**").permitAll()
                 .antMatchers(
                         "/css/**",
