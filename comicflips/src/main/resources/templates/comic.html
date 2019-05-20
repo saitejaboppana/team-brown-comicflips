@@ -266,8 +266,28 @@
 
             });
             
-            $(".close").on("click", function () {
-                
+            $("#comments").on("click", '.close',function () {
+                var choice = confirm("Are you sure you want to delete this comment?");
+                if(choice == true){
+                    console.log($(this).siblings());
+                    var comicId = $("#comicTitle").attr("value");
+                    var comment = $(this).siblings("span").text();
+                    var componentToDelete = $(this).parent().parent();
+                    console.log(componentToDelete);
+                    console.log(comicId + " : " + comment);
+                    $.post('/deleteComment',   // url
+                        { comment: comment, id : comicId}, // data to be submit
+                        function(data, status, jqXHR) {// success callback
+                            console.log('status: ' + status + ', data: ' + data);
+                            componentToDelete.remove();
+                            var text = document.getElementById("likeCommentCount").innerText.split(" ");
+                            text[2] = (parseInt(text[2]) - 1).toString();
+                            var newtext = text.join(" ");
+                            document.getElementById("likeCommentCount").innerText = newtext;
+                        });
+                }else {
+                    return
+                }
             })
 
             $("#subscribe").on("click", function (e) {
@@ -327,9 +347,13 @@
 
                 var div = document.createElement("div");
                 div.className = "media-body";
+                var deleteSpan = document.createElement("span");
+                deleteSpan.className = "close";
+                deleteSpan.textContent = "×";
                 var h5 = document.createElement("h5");
                 h5.className = "mt-0";
                 h5.textContent = user;
+                div.appendChild(deleteSpan);
                 div.appendChild(h5);
                 var span = document.createElement("span");
                 span.textContent = comment;
@@ -339,6 +363,10 @@
                 console.log(comment);
                 $("#commenttext").val("");
                 $.post('/addComment', {comment: comment,id: comicId})
+                var text = document.getElementById("likeCommentCount").innerText.split(" ");
+                text[2] = (parseInt(text[2]) + 1).toString();
+                var newtext = text.join(" ");
+                document.getElementById("likeCommentCount").innerText = newtext;
             })
 
         });

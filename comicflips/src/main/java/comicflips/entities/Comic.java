@@ -153,6 +153,14 @@ public class Comic {
     }
 
     public void deleteComment(Comment c){
-        comments.remove(c);
+        String user = c.getUser();
+        String comment = c.getComment();
+        for(Comment com: comments){
+            if(com.getUser().equals(user) && com.getComment().equals(comment)){
+                comments.remove(com);
+                break;
+            }
+        }
+//        comments.remove(c);
     }
 }
