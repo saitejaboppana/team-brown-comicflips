@@ -507,7 +507,7 @@ public class ComicFlipsController {
      * @return Success message
      */
     @PostMapping("/deleteComment")
-    String deleteComponent(@RequestParam String comment,@RequestParam String comicID ,Authentication auth) {
+    String deleteComponent(@RequestParam("comment") String comment,@RequestParam("id") String comicID ,Authentication auth) {
         Comic comic = comicRepository.findById(comicID).get();
         comic.deleteComment(new Comment(auth.getName(), comment));
         return "Success!";
