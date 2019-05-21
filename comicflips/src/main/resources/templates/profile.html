@@ -107,6 +107,32 @@
                 canvas.renderAll();
                 canvas.calcOffset();
             });
+
+            $("#profileSubmit").click(function (event) {
+                event.preventDefault();
+
+                var form = $('#fileUploadForm')[0];
+
+                var data = new FormData(form);
+
+                $.ajax({
+                    type: "POST",
+                    enctype: 'multipart/form-data',
+                    url: "/editProfileImage",
+                    data: data,
+                    processData: false, //prevent jQuery from automatically transforming the data into a query string
+                    contentType: false,
+                    cache: false,
+                    timeout: 600000,
+                    success: function (data) {
+                        console.log(data);
+                    },
+                    error: function (e) {
+                        console.log("ERROR : ", e);
+                    }
+                });
+
+            });
         })
     </script>
     <style>
@@ -201,7 +227,11 @@
                         Info
                     </h5>
                     <div class="card-body" style="text-align: center;">
-                        <img src="http://placehold.it/500x400" alt="Card image cap">
+                        <img th:src="@{'/profiles/'+ ${user.avatar}}" width="500" height="400" src="http://placehold.it/500x400" alt="Card image cap">
+                        <form method="post" enctype="multipart/form-data" id="fileUploadForm">
+                            <input type="file" name="file">
+                            <input type="submit" value="Submit" id="profileSubmit">
+                        </form>
                         <p></p>
                         <form th:action="@{/updateUser}" method="post" class="form-horizontal" role="form">
                             <div class="form-group">
@@ -271,8 +301,8 @@
                     <h4 class="card-title" th:text="${comic.name}"></h4>
                 </div>
                 <div class="btn-group">
-                    <a th:href="@{/comic/{id}(id=${comic.id})}" th:style="${comic.isPublic == false ? 'display:none' : ''}"><button type="button" class="btn btn-sm btn-outline-secondary">View</button></a>
-                    <a th:href="@{/editComic/{id}(id=${comic.id})}" th:style="${comic.isPublic == true ? 'display:none' : ''}"><button type="button" class="btn btn-sm btn-outline-secondary">Edit</button></a>
+                    <a th:href="@{/comic/{id}(id=${comic.id})}" th:style="${comic.isPublic == false ? 'display:none' : ''}"><button type="button" class="btn btn-sm btn-primary">View</button></a>
+                    <a th:href="@{/editComic/{id}(id=${comic.id})}" th:style="${comic.isPublic == true ? 'display:none' : ''}"><button type="button" class="btn btn-sm btn-warning">Edit</button></a>
                     <form method="post" th:action="@{/deleteComic/{id}(id=${comic.id})}">
                         <button type="submit" class="btn btn-sm btn-danger">Delete</button>
                     </form>

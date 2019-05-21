@@ -11,6 +11,7 @@ import comicflips.repositories.UserRepository;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,6 +21,10 @@ import org.springframework.security.core.Authentication;
 
 import javax.jws.WebParam;
 import javax.websocket.server.PathParam;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -363,6 +368,7 @@ public class ComicFlipsController {
         }
         Comic c = comicRepository.findByName(title);
         String username = auth.getName();
+        User author = userRepository.findByUsername(username);
         if (c != null && username == c.getUsername()){
             return "Comic with this name already exists!";
         }
@@ -375,10 +381,11 @@ public class ComicFlipsController {
             c.setGroup(group);
             c.setPublic(isPublic);//for now, lets have this hardcoded as true
             c.setTags(tags);
+            c.setAuthor(author);
 
         }
         comicRepository.save(c);
-        User author = userRepository.findByUsername(username);
+//        User author = userRepository.findByUsername(username);
         author.addComicId(c.getId());
         author.addToCreatedGroups(group);
         userRepository.save(author);
@@ -708,5 +715,32 @@ public class ComicFlipsController {
         user.setPassword(password);
         userDetailsService.saveUser(user);
         return "Success";
+    }
+
+    @PostMapping("/editProfileImage")
+    @ResponseBody
+    String uploadFile(@RequestParam("file") MultipartFile uploadfile,
+                      Authentication auth) {
+
+        if (uploadfile.isEmpty()) {
+            return "please select a file!";
+        }
+
+        System.out.println("Entering edit profile");
+        String username = auth.getName();
+        User currentUser = userDetailsService.getUser(username);
+
+        try {
+            byte[] bytes = uploadfile.getBytes();
+            Path path = Paths.get("./src/main/profiles/" + uploadfile.getOriginalFilename());
+            Files.write(path, bytes);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        currentUser.setAvatar(uploadfile.getOriginalFilename());
+        userDetailsService.updateUser(currentUser);
+        return "success";
+
     }
 }

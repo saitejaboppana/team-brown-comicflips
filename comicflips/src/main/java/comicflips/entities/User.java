@@ -13,7 +13,7 @@ public class User {
     private String lastName;
     private String username;
     private String password;
-    private Blob avatar;
+    private String avatar;
     private String email;
     private ArrayList<String> createdComics;
     private ArrayList<String> likedComics;
@@ -34,7 +34,7 @@ public class User {
         this.createdGroups = new ArrayList<String>();
     }
 
-    public User(String firstName, String lastName,String username, String password, Blob avatar,
+    public User(String firstName, String lastName,String username, String password, String avatar,
                 String email, ArrayList<String> createdComics, ArrayList<String> likedComics,
                 ArrayList<String> following, ArrayList<String> subscriptions, ArrayList<String> createdComponents) {
         this.firstName = firstName;
@@ -92,11 +92,11 @@ public class User {
         this.password = password;
     }
 
-    public Blob getAvatar() {
+    public String getAvatar() {
         return avatar;
     }
 
-    public void setAvatar(Blob avatar) {
+    public void setAvatar(String avatar) {
         this.avatar = avatar;
     }
 

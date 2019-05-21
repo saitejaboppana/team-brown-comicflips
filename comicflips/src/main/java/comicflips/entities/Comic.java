@@ -22,6 +22,7 @@ public class Comic {
     private String description;
     private String username;
     private String dateTime;
+    private User author;
 
     public Comic(){
         likes = 0;
@@ -162,5 +163,13 @@ public class Comic {
             }
         }
 //        comments.remove(c);
+    }
+
+    public User getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(User author) {
+        this.author = author;
     }
 }
