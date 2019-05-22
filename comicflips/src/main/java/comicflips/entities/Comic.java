@@ -23,6 +23,8 @@ public class Comic {
     private String username;
     private String dateTime;
     private User author;
+    private boolean isExternal;
+    private ArrayList<String> uploadLinks;
 
     public Comic(){
         likes = 0;
@@ -30,6 +32,7 @@ public class Comic {
         components = new ArrayList<Component>();
         tags = new ArrayList<String>();
         dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MMM dd, yyyy HH:mm:ss"));
+        isExternal = false;
     }
 
     public Comic(String group, String name, boolean isPublic, String description,
@@ -171,5 +174,21 @@ public class Comic {
 
     public void setAuthor(User author) {
         this.author = author;
+    }
+
+    public boolean getIsExternal() {
+        return isExternal;
+    }
+
+    public void setExternal(boolean external) {
+        isExternal = external;
+    }
+
+    public ArrayList<String> getUploadLinks() {
+        return uploadLinks;
+    }
+
+    public void setUploadLinks(ArrayList<String> uploadLinks) {
+        this.uploadLinks = uploadLinks;
     }
 }

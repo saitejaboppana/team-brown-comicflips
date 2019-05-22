@@ -156,6 +156,7 @@
                     timeout: 600000,
                     success: function (data) {
                         console.log(data);
+                        window.location.reload();
                     },
                     error: function (e) {
                         console.log("ERROR : ", e);
@@ -225,6 +226,7 @@
                         <div class="dropdown-menu">
                             <a class="dropdown-item" href="#" th:href="@{/create}">Create Comic</a>
                             <a class="dropdown-item" href="#" th:href="@{/component}">Create Component</a>
+                            <a class="dropdown-item" href="#" th:href="@{/upload}">Upload a Comic</a>
                         </div>
                     </li>
                 </ul>
@@ -326,7 +328,14 @@
 
         <div id="comics" style="overflow: auto;  white-space: nowrap;">
             <div class="card" style="width: 360px; text-align: center; margin: 5px;" th:each="comic : ${comics}">
-                <canvas class="border border-secondary" style="margin: 5px;" th:value="${comic.canvases[0]}"></canvas>
+                <div th:if="${comic.isExternal}">
+                    <a style="display: block; text-align: center;" th:href="@{/comic/{id}(id=${comic.id})}"><img th:src="@{'/profiles/uploads/'+ ${comic.uploadLinks[0]}}" height="350" width="350" src="http://placehold.it/500x400" alt="Card image cap"></a>
+                </div>
+                <!-- ELSE -->
+                <div th:unless="${comic.isExternal}">
+                    <a style="display: block; text-align: center;" th:href="@{/comic/{id}(id=${comic.id})}"><canvas class="border border-secondary" style="margin: 5px;" width = "350" height="350" th:value="${comic.canvases[0]}"></canvas></a>
+                </div>
+                <!--<canvas class="border border-secondary" style="margin: 5px;" th:value="${comic.canvases[0]}"></canvas>-->
                 <div class="card-body">
                     <h4 class="card-title" th:text="${comic.name}"></h4>
                 </div>

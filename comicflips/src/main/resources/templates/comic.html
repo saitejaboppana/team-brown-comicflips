@@ -82,19 +82,20 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
+                <li class="nav-item">
                     <a class="nav-link" href="/">Home</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/series">Series</a>
                 </li>
-                <li class="nav-item dropdown">
+                <li class="nav-item dropdown active">
                     <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
                         Comic
                     </a>
                     <div class="dropdown-menu">
                         <a class="dropdown-item" href="#" th:href="@{/create}">Create Comic</a>
                         <a class="dropdown-item" href="#" th:href="@{/component}">Create Component</a>
+                        <a class="dropdown-item" href="#" th:href="@{/upload}">Upload a Comic</a>
                     </div>
                 </li>
             </ul>
@@ -137,11 +138,28 @@
                 <div class="card mb-4">
 
                     <div class="card-body">
-                        <div id="canvasContainer" class="d-flex flex-wrap justify-content-center">
-                            <th:block th:each="canvas : ${comic.canvases}">
-                                <canvas height="350" width="350" th:value="${canvas}"></canvas>
-                            </th:block>
+
+                        <div th:if="${comic.isExternal}">
+                            <div class="d-flex flex-wrap justify-content-center">
+                                <th:block th:each="url : ${comic.uploadLinks}">
+                                    <img th:src="@{'/profiles/uploads/'+ ${url}}" height="350" width="350" src="http://placehold.it/500x400" alt="Card image cap">
+                                </th:block>
+                            </div>
                         </div>
+                        <!-- ELSE -->
+                        <div th:unless="${comic.isExternal}">
+                            <div id="canvasContainer" class="d-flex flex-wrap justify-content-center">
+                                <th:block th:each="canvas : ${comic.canvases}">
+                                    <canvas height="350" width="350" th:value="${canvas}"></canvas>
+                                </th:block>
+                            </div>
+                        </div>
+
+                        <!--<div id="canvasContainer" class="d-flex flex-wrap justify-content-center">-->
+                            <!--<th:block th:each="canvas : ${comic.canvases}">-->
+                                <!--<canvas height="350" width="350" th:value="${canvas}"></canvas>-->
+                            <!--</th:block>-->
+                        <!--</div>-->
                     </div>
 
                     <hr>

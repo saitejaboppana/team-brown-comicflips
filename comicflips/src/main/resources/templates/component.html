@@ -42,9 +42,8 @@
             /*z-index: 1;*/
         }
 
-        /*.canvas-container{*/
-        /*margin: 5px;*/
-        /*}*/
+        #components > .card {display:inline-block;}
+
 
         .canvas-container {
             margin:0 auto ;
@@ -118,19 +117,20 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav mr-auto">
-                    <li class="nav-item active">
+                    <li class="nav-item">
                         <a class="nav-link" href="/">Home</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/series">Series</a>
                     </li>
-                    <li class="nav-item dropdown">
+                    <li class="nav-item dropdown active">
                         <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
                             Comic
                         </a>
                         <div class="dropdown-menu">
                             <a class="dropdown-item" href="#" th:href="@{/create}">Create Comic</a>
                             <a class="dropdown-item" href="#" th:href="@{/component}">Create Component</a>
+                            <a class="dropdown-item" href="#" th:href="@{/upload}">Upload a Comic</a>
                         </div>
                     </li>
                 </ul>
@@ -281,6 +281,50 @@
                         window.location = "/";
                     });
 
+            });
+
+            $("#components > .card").on("click", function(event){
+                console.log($(this).children()[0]);
+                var canvas = $(this).children()[0].fabric;
+                var group = new fabric.Group(canvas.getObjects());
+                currentCanvas.add(group).renderAll();
+            })
+
+            $("#components > div > canvas").each(function(e) {
+                var firstCanvas = $(this).attr("value");
+                $(this).attr("value", "");
+                var canvas = new fabric.StaticCanvas(this, { width: 200, height: 200 });
+                this.fabric = canvas;
+                canvas.loadFromJSON(firstCanvas);
+
+                var objects = canvas.getObjects();
+                var factorX = 200/900;
+                var factorY = 200/900;
+
+                var tcounter = 0;
+
+                for (var i in objects) {
+
+                    tcounter++;
+
+                    var scaleX = objects[i].scaleX;
+                    var scaleY = objects[i].scaleY;
+                    var left = objects[i].left;
+                    var top = objects[i].top;
+
+                    var tempScaleX = scaleX * factorX;
+                    var tempScaleY = scaleY * factorY;
+                    var tempLeft = left * factorX;
+                    var tempTop = top * factorY;
+
+                    objects[i].scaleX = tempScaleX;
+                    objects[i].scaleY = tempScaleY;
+                    objects[i].left = tempLeft;
+                    objects[i].top = tempTop;
+                    objects[i].setCoords();
+                }
+                canvas.renderAll();
+                canvas.calcOffset();
             });
 
             $("#groupButton").on("click", function (e) {
