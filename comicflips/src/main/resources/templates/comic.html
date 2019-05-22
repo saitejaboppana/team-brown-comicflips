@@ -175,7 +175,7 @@
 
                 <h4 style="text-align:center; margin-bottom: 1.5rem;top: 0" th:text="${'by ' + comic.username}"></h4>
 
-                <h3 id = "group" style="text-align: center" th:text="${'Comic Series: ' + group}"></h3>
+                <h3 id = "group" style="text-align: center" th:text="${ group == '' ? '': 'Comic Series: ' + group}"></h3>
 
                 <div class="row justify-content-center">
                     <button id = "subscribe" type="button" th:class="${subButton == 'Subscribe' ? 'btn btn-success' : 'btn btn-danger'}" th:style="${user == '' || group == '' ? 'display:none' : ''}" th:value="${group}" th:text="${subButton}">Subscribe</button>

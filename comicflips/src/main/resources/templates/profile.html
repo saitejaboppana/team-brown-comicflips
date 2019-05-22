@@ -64,7 +64,7 @@
                 $("#answer").val($("#answer").attr("placeholder"));
             })
 
-            $("#comics > div > canvas").each(function(e) {
+            $("#comics > div > div >  a > canvas").each(function(e) {
                 var firstCanvas = $(this).attr("value");
                 // $(this).attr("value", "");
                 var canvas = new fabric.StaticCanvas(this, { width: 350, height: 350 });
