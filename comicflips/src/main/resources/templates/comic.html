@@ -128,6 +128,28 @@
     </div>
 </nav>
 
+<!-- The Modal -->
+<div class="modal" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title" th:text="${'Share: ' + comic.name}"></h4>
+            </div>
+
+            <!-- Modal body -->
+            <a th:href="${comic.id}"> <div class="modal-body" th:text="${'18.224.82.89:8080/comic/' + comic.id}"> </a>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
 
     <div class="container">
 
@@ -192,13 +214,13 @@
                             </div>
 
                             <div class="col">
-                                <i class="fas fa-share" style="font-size:20px;"><span style="padding: 10px;font-weight: normal" id="share">Share</span></i>
+                                <i class="fas fa-share" style="font-size:20px;" data-toggle="modal" data-target="#myModal"><span style="padding: 10px;font-weight: normal" id="share">Share</span></i>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="card my-4" id="commentbox" hidden="true">
+                <div class="card my-4" id="commentbox">
                     <span class="card-header">
                         <i style="float: right; cursor:pointer;"  class="fa fa-close" id="cancelComment" ></i>
                         <h5>Leave a Comment:</h5>
@@ -282,7 +304,6 @@
                 }
             });
             $("#comment").click(function(){
-                $("#commentbox").removeAttr('hidden');
                 $("#commenttext").focus();
             });
 
