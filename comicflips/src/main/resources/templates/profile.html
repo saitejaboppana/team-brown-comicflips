@@ -33,7 +33,7 @@
         $(document).ready(function(){
             $("#update").hide();
             
-            $(".btn-danger").on("click", function () {
+            $(".unsub").on("click", function () {
                 var group = $(this).val();
                 var parent = $(this).parent().parent();
                 console.log(group);
@@ -107,6 +107,36 @@
                 canvas.renderAll();
                 canvas.calcOffset();
             });
+
+            $(".deleteComponent").click(function () {
+                var id = $(this).val();
+                var choice = confirm("Are you sure you want to delete this component?");
+                if(choice == true){
+                    $.post('/deleteComponent/' + id,   // url
+                        {}, // data to be submit
+                        function(data, status, jqXHR) {// success callback
+                            console.log('status: ' + status + ', data: ' + data);
+                            window.location = "/profile";
+                        });
+                }else{
+                    return;
+                }
+            });
+
+            $(".deleteComic").click(function () {
+                var id = $(this).val();
+                var choice = confirm("Are you sure you want to delete this comic?");
+                if(choice == true){
+                    $.post('/deleteComic/' + id,   // url
+                        {}, // data to be submit
+                        function(data, status, jqXHR) {// success callback
+                            console.log('status: ' + status + ', data: ' + data);
+                            window.location = "/profile";
+                        });
+                }else{
+                    return;
+                }
+            })
 
             $("#profileSubmit").click(function (event) {
                 event.preventDefault();
@@ -303,9 +333,7 @@
                 <div class="btn-group">
                     <a th:href="@{/comic/{id}(id=${comic.id})}" th:style="${comic.isPublic == false ? 'display:none' : ''}"><button type="button" class="btn btn-sm btn-primary">View</button></a>
                     <a th:href="@{/editComic/{id}(id=${comic.id})}" th:style="${comic.isPublic == true ? 'display:none' : ''}"><button type="button" class="btn btn-sm btn-warning">Edit</button></a>
-                    <form method="post" th:action="@{/deleteComic/{id}(id=${comic.id})}">
-                        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-                    </form>
+                    <button type="button" class="btn btn-sm btn-danger deleteComic" th:value="${comic.id}">Delete</button>
                 </div>
             </div>
         </div>
@@ -317,9 +345,7 @@
                 <div class="card-body">
                     <h4 class="card-title" th:text="${component.name}"></h4>
                 </div>
-                <form method="post" th:action="@{/deleteComponent/{id}(id=${component.id})}">
-                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-                </form>
+                <button type="button" class="btn btn-sm btn-danger deleteComponent" th:value="${component.id}">Delete</button>
             </div>
         </div>
 
@@ -335,7 +361,7 @@
                     </td>
 
                     <td style="text-align:center;">
-                        <button type="button" class="btn btn-sm btn-danger" th:value="${group}">Unsubscribe</button>
+                        <button type="button" class="btn btn-sm btn-danger unsub" th:value="${group}">Unsubscribe</button>
                     </td>
                 </tr>
             </tbody>
