@@ -678,6 +678,10 @@
                     { title: title, about: about, canvases: canvases, isPublic: isPublic, group:comicGroup, tags:tags }, // data to be submit
                     function(data, status, jqXHR) {// success callback
                         console.log('status: ' + status + ', data: ' + data);
+                        if(data != "Success"){
+                            alert(data);
+                            return;
+                        }
                         window.onbeforeunload = null;
                         window.location = "/";
                 });
@@ -687,6 +691,10 @@
                     { oldTitle : oldTitle, title: title, about: about, canvases: canvases, isPublic: isPublic, group:comicGroup, tags:tags }, // data to be submit
                     function(data, status, jqXHR) {// success callback
                         console.log('status: ' + status + ', data: ' + data);
+                        if(data != "update complete"){
+                            alert(data);
+                            return;
+                        }
                         window.onbeforeunload = null;
                         window.location = "/";
                 });
