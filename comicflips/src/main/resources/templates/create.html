@@ -113,13 +113,13 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
+                <li class="nav-item">
                     <a class="nav-link" href="/">Home</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/series">Series</a>
                 </li>
-                <li class="nav-item dropdown">
+                <li class="nav-item active dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
                         Comic
                     </a>
@@ -320,7 +320,7 @@
                     <div class="row justify-content-center">
                         <div class="custom-control custom-checkbox mb-3">
                             <input type="checkbox" class="custom-control-input" id="romance" value="Romance" th:checked="${#lists.contains(genres, 'Romance')}">
-                            <label class="custom-control-label" for="political">Romance</label>
+                            <label class="custom-control-label" for="romance">Romance</label>
                         </div>
                     </div>
 

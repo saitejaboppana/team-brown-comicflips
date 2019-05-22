@@ -14,13 +14,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
 import org.springframework.security.core.Authentication;
 
-import javax.jws.WebParam;
-import javax.websocket.server.PathParam;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
