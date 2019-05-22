@@ -7,10 +7,12 @@ public class Comment {
     @Id
     private String user;
     private String comment;
+    private String userImage;
 
     public Comment(String user, String comment){
         this.setUser(user);
         this.setComment(comment);
+        this.userImage = "";
     }
 
     public String getUser() {
@@ -29,4 +31,11 @@ public class Comment {
         this.comment = comment;
     }
 
+    public String getUserImage() {
+        return userImage;
+    }
+
+    public void setUserImage(String userImage) {
+        this.userImage = userImage;
+    }
 }

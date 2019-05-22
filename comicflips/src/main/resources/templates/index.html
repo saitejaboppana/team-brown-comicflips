@@ -182,7 +182,7 @@
                         <h5><strong th:text="${comic.name}">Post Title</strong></h5>
                     </div>
                     <hr>
-                    <span style="padding: 5px 10px 5px 10px;">
+                    <span style="padding: 5px 10px 5px 10px; display: none">
                         <div class="d-flex">
                             <div class="genre" th:each="genre : ${comic.tags}">
                                 <span th:text="${genre + ', '}">Action, Comedy, Mystery</span>
@@ -201,9 +201,9 @@
                                 <a style="color:rgb(33, 37, 41)" th:href="@{/comic/{id}(id=${comic.id})}"><i class="far fa-comment" style="font-size:20px;" th:href="@{/comic/{id}(id=${comic.id})}"><span style="padding: 10px;">Comment</span></i></a>
                             </div>
 
-                            <div class="col">
-                                <i class="fas fa-share" style="font-size:20px;"><span style="padding: 10px;font-weight: normal">Share</span></i>
-                            </div>
+                            <!--<div class="col">-->
+                                <!--<i class="fas fa-share" style="font-size:20px;"><span style="padding: 10px;font-weight: normal">Share</span></i>-->
+                            <!--</div>-->
                         </div>
                     </div>
                 </div>

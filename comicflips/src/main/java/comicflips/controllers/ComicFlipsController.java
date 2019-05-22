@@ -136,9 +136,21 @@ public class ComicFlipsController {
 
         List<User> users = userRepository.findAll();
         List<String> series = new ArrayList<String>();
+//        for (User u: users) {
+//            series.addAll(u.getCreatedGroups());
+//        }
+
         for (User u: users) {
-            series.addAll(u.getCreatedGroups());
+            List<String> userGroups = u.getCreatedGroups();
+            for(String g: userGroups){
+                System.out.println(g + ": " + comicRepository.findByGroup(g, new Sort(Sort.Direction.ASC, "dateTime")).size());
+                if(comicRepository.findByGroup(g, new Sort(Sort.Direction.ASC, "dateTime")).size() != 0){
+                    series.add(g);
+                }
+            }
+//            series.addAll(u.getCreatedGroups());
         }
+
         Collections.sort(series);
         if(auth != null){
             String username = auth.getName();
@@ -553,7 +565,11 @@ public class ComicFlipsController {
     @PostMapping("/addComment")
     @ResponseBody
     String addComment(@RequestParam("comment") String comment,@RequestParam("id") String comicID ,Authentication auth){
+        User currentUser = userDetailsService.getUser(auth.getName());
         Comment c = new Comment(auth.getName(),comment);
+        if(currentUser.getAvatar() != null){
+            c.setUserImage(currentUser.getAvatar());
+        }
         Comic comic = comicRepository.findById(comicID).get();
         comic.addComment(c);
         comicRepository.save(comic);
@@ -685,6 +701,7 @@ public class ComicFlipsController {
 
             System.out.println("username:" + username);
             mv.addAttribute("user", username);
+            mv.addAttribute("currentUser", user);
             mv.addAttribute("comics",comics);
             mv.addAttribute("likes", likes);
             mv.addAttribute("title", group);
@@ -693,6 +710,12 @@ public class ComicFlipsController {
             mv.addAttribute("comics",comics);
             mv.addAttribute("title", group);
         }
+        List<Comic> mostLiked = comicRepository.findByIsPublic(true, new Sort(Sort.Direction.DESC, "likes"));
+        List<Comic> threeTop = new ArrayList<Comic>();
+        threeTop.add(mostLiked.get(0));
+        threeTop.add(mostLiked.get(1));
+        threeTop.add(mostLiked.get(2));
+        mv.addAttribute("topComics", threeTop);
         return "index";
     }
 

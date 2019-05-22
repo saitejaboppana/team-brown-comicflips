@@ -96,7 +96,7 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/series">Series</a>
                 </li>
-                <li class="nav-item dropdown active">
+                <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
                         Comic
                     </a>
@@ -241,7 +241,8 @@
                     <div class="card-body">
                         <div id = "comments">
                             <div class="media mb-4" th:each="comment : ${comic.comments}">
-                                <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
+
+                                <i class="fas fa-user-circle" style="font-size: 40px; padding-right:10px" aria-haspopup="true" aria-expanded="false"></i>
 
                                 <div class="media-body">
                                     <span class="close" th:style="${user != comment.user ? 'display:none': ''}">&times;</span>
@@ -402,10 +403,14 @@
                 mainDiv.className = "media mb-4";
                 // mainDiv.attr("class", "media mb-4");
 
+                var iTag = document.createElement("i");
+                iTag.className = "fas fa-user-circle";
+                iTag.style.cssText = "font-size: 40px; padding-right:10px";
+
                 var img = document.createElement("img");
                 img.className = "d-flex mr-3 rounded-circle";
                 img.src = "http://placehold.it/50x50";
-                mainDiv.appendChild(img);
+                mainDiv.appendChild(iTag);
                 // comments.appendChild(img);
 
                 var div = document.createElement("div");

@@ -385,17 +385,14 @@
     var fill = "transparent";
     var stroke = "black";
     var strokeWidth = 2;
+    var shapeStroke = "black";
+    var shapeStrokeWidth = 2;
     var isDown = false;
     var origX;
     var origY;
     var warn_on_unload = "You have unsaved changes!"
 
     $(document).ready(function () {
-        // addCanvas();
-
-        // comicSlides["c1"] = new fabric.Canvas("c1", { width: 350, height: 350 });
-        // comicSlides["c2"] = new fabric.Canvas("c2", { width: 350, height: 350 });
-        // comicSlides["c3"] = new fabric.Canvas("c3", { width: 350, height: 350 });
 
         $('[data-toggle="collapse"]').tooltip();
 
@@ -483,6 +480,8 @@
             if(id != null && id != "canvasContainer" && id != currentCanvas.lowerCanvasEl.id ){
                 removeCanvasListener();
                 setCurrentCanvas(id);
+                currentCanvas.freeDrawingBrush.color = stroke;
+                currentCanvas.freeDrawingBrush.width = strokeWidth;
             }
         });
 
@@ -542,12 +541,12 @@
         });
 
         $("#shape-stroke-width").change(function(){
-            strokeWidth = parseInt(this.value, 10) || 1;
+            shapeStrokeWidth = parseInt(this.value, 10) || 1;
             this.previousSibling.innerHTML = this.value;
         });
 
         $("#shape-stroke").change(function(){
-            stroke = this.value;
+            shapeStroke = this.value;
         });
 
         $("#shape-fill").change(function(){
@@ -593,6 +592,8 @@
                     break;
                 case "addCanvas":
                     addCanvas();
+                    currentCanvas.freeDrawingBrush.color = stroke;
+                    currentCanvas.freeDrawingBrush.width = strokeWidth;
                     break;
                 case "deleteCanvas":
                     deleteCanvas();
@@ -795,8 +796,8 @@
                 left: pointer.x,
                 top: pointer.y,
                 radius: 1,
-                strokeWidth: strokeWidth,
-                stroke: stroke,
+                strokeWidth: shapeStrokeWidth,
+                stroke: shapeStroke,
                 fill: fill,
                 originX: 'center',
                 originY: 'center',
@@ -808,8 +809,8 @@
             shape = new fabric.Rect({
                 left:origX,
                 top:origY,
-                strokeWidth: strokeWidth,
-                stroke: stroke,
+                strokeWidth: shapeStrokeWidth,
+                stroke: shapeStroke,
                 fill: fill,
                 selectable: false
             });
@@ -829,8 +830,8 @@
             shape = new fabric.Triangle({
                 left: pointer.x,
                 top: pointer.y,
-                strokeWidth: strokeWidth,
-                stroke: stroke,
+                strokeWidth: shapeStrokeWidth,
+                stroke: shapeStroke,
                 fill: fill,
                 width:2,
                 height:2,
