@@ -186,9 +186,15 @@ public class ComicFlipsController {
         }
 
         System.out.println("username:" + username);
+        List<Comic> mostLiked = comicRepository.findByIsPublic(true, new Sort(Sort.Direction.DESC, "likes"));
+        List<Comic> threeTop = new ArrayList<Comic>();
+        threeTop.add(mostLiked.get(0));
+        threeTop.add(mostLiked.get(1));
+        threeTop.add(mostLiked.get(2));
         mv.addObject("user", username);
         mv.addObject("comics",comics);
         mv.addObject("likes", likes);
+        mv.addObject("topComics", threeTop);
         mv.addObject("title", "All Comics");
         return mv;
     }
@@ -816,8 +822,8 @@ public class ComicFlipsController {
 
             try {
                 byte[] bytes = file.getBytes();
-                Path path = Paths.get("./src/main/profiles/uploads/" + file.getOriginalFilename());
-                uploadLinks.add(file.getOriginalFilename());
+                Path path = Paths.get("./src/main/profiles/uploads/" + c.getAuthor().getUsername() + "_" + c.getName() + file.getOriginalFilename());
+                uploadLinks.add(c.getAuthor().getUsername() + "_" + c.getName() + file.getOriginalFilename());
                 Files.write(path, bytes);
             } catch (IOException e) {
                 e.printStackTrace();

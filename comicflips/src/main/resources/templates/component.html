@@ -105,6 +105,10 @@
             border-radius: 50%;
         }
 
+        .author:hover{
+            cursor: pointer;
+        }
+
     </style>
 
 </head>
@@ -146,9 +150,18 @@
                                 <!--<i class="fas fa-user-circle" style="font-size: 30px; color:white;" aria-haspopup="true" aria-expanded="false"></i>-->
                             <!--</div>-->
                             <!-- ELSE -->
-                            <div id="dropdownMenuButton1" data-toggle="dropdown">
+                            <!--<div id="dropdownMenuButton1" data-toggle="dropdown">-->
+                                <!--<img class="author" th:src="@{'/profiles/'+ ${user.avatar}}" height="35" width="35" src="http://placehold.it/500x400" alt="Card image cap">-->
+                            <!--</div>-->
+
+                            <div id="dropdownMenuButton" data-toggle="dropdown" th:if="${user.avatar == null} ">
+                                <i class="fas fa-user-circle" style="font-size: 30px; color:white;" aria-haspopup="true" aria-expanded="false"></i>
+                            </div>
+                            <!-- ELSE -->
+                            <div id="dropdownMenuButton1" data-toggle="dropdown" th:if="${user != '' and user.avatar != null}">
                                 <img class="author" th:src="@{'/profiles/'+ ${user.avatar}}" height="35" width="35" src="http://placehold.it/500x400" alt="Card image cap">
                             </div>
+
                             <!--<i class="fas fa-user-circle" style="font-size: 30px; color:white;" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>-->
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton dropdownMenuButton1">
                                 <a class="dropdown-item" href="#" th:href="@{/profile}">View Profile</a>

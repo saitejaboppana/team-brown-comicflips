@@ -47,6 +47,10 @@
             border-radius: 50%;
         }
 
+        .author:hover{
+            cursor: pointer;
+        }
+
 
     </style>
 
@@ -84,11 +88,11 @@
                 <ul class="navbar-nav">
                     <li class="nav-item">
                         <div class="dropdown dropdown">
-                            <div id="dropdownMenuButton" data-toggle="dropdown" th:if="${user} == ''">
+                            <div id="dropdownMenuButton" data-toggle="dropdown" th:if="${user == '' or (user != null and user.avatar == null)} ">
                                 <i class="fas fa-user-circle" style="font-size: 30px; color:white;" aria-haspopup="true" aria-expanded="false"></i>
                             </div>
                             <!-- ELSE -->
-                            <div id="dropdownMenuButton1" data-toggle="dropdown" th:if="${user} != ''">
+                            <div id="dropdownMenuButton1" data-toggle="dropdown" th:if="${user != '' and user.avatar != null}">
                                 <img class="author" th:src="@{'/profiles/'+ ${user.avatar}}" height="35" width="35" src="http://placehold.it/500x400" alt="Card image cap">
                             </div>
 

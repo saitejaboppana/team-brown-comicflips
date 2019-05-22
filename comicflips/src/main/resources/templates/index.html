@@ -64,6 +64,10 @@
             border-radius: 50%;
         }
 
+        .author:hover{
+            cursor: pointer;
+        }
+
 
     </style>
 
@@ -103,11 +107,11 @@
                 <li class="nav-item">
                     <div class="dropdown dropdown">
 
-                        <div id="dropdownMenuButton" data-toggle="dropdown" th:if="${user} == ''">
+                        <div id="dropdownMenuButton" data-toggle="dropdown" th:if="${user == '' or (currentUser != null and currentUser.avatar == null)} ">
                             <i class="fas fa-user-circle" style="font-size: 30px; color:white;" aria-haspopup="true" aria-expanded="false"></i>
                         </div>
                         <!-- ELSE -->
-                        <div id="dropdownMenuButton1" data-toggle="dropdown" th:if="${user} != ''">
+                        <div id="dropdownMenuButton1" data-toggle="dropdown" th:if="${user != '' and currentUser.avatar != null}">
                             <img class="author" th:src="@{'/profiles/'+ ${currentUser.avatar}}" height="35" width="35" src="http://placehold.it/500x400" alt="Card image cap">
                         </div>
 
@@ -146,7 +150,14 @@
                         <div class="d-flex">
                             <div class="" style="margin: 0px;">
                                 <!--<i class="fas fa-user-circle" style="font-size:50px"></i>-->
-                                <img class="author" th:src="@{'/profiles/'+ ${comic.author.avatar}}" height="65" width="65" src="http://placehold.it/500x400" alt="Card image cap">
+                                <div th:if="${comic.author.avatar}">
+                                    <img class="author" th:src="@{'/profiles/'+ ${comic.author.avatar}}" height="65" width="65" src="http://placehold.it/500x400" alt="Card image cap">
+                                </div>
+
+                                <div th:unless="${comic.author.avatar}">
+                                    <i class="fas fa-user-circle" style="font-size:50px"></i>
+                                </div>
+
                             </div>
                             <div class="" style="float: left; padding: 3px;">
                                 <h5 th:text="${comic.username}">User</h5>
@@ -214,20 +225,9 @@
                     <div class="card my-3" style="text-align: center;">
                         <h5 class="card-header">Top Comics</h5>
                         <div class="card-body" style="font-size: 14px;">
-                            <div class="row">
+                            <div class="row" th:each="c : ${topComics}">
                                 <div class="col">
-                                    <a href = "#">Comic 1</a>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col">
-                                    <a href = "#">Comic 1</a>
-                                </div>                        </div>
-
-                            <div class="row">
-                                <div class="col">
-                                    <a href = "#">Comic 1</a>
+                                    <a th:href="${'comic/' + c.id}" th:text="${c.name}"></a>
                                 </div>
                             </div>
                         </div>
