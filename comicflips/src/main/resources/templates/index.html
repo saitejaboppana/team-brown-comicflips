@@ -60,6 +60,10 @@
             font-weight: bold;
         }
 
+        img {
+            border-radius: 50%;
+        }
+
 
     </style>
 
@@ -126,16 +130,26 @@
                 <!-- Blog Post -->
                 <div class="card mb-4" th:each="comic, iterStat : ${comics}">
                     <div class="card-header">
-                        <div class="row">
-                            <div class="col col-md-1" style="margin: 0px;">
-                                <i class="fas fa-user-circle" style="font-size:50px"></i>
-                                <!--<img th:src="@{'/profiles/'+ ${user.avatar}}" width="500" height="400" src="http://placehold.it/500x400" alt="Card image cap">-->
+                        <div class="d-flex">
+                            <div class="" style="margin: 0px;">
+                                <!--<i class="fas fa-user-circle" style="font-size:50px"></i>-->
+                                <img th:src="@{'/profiles/'+ ${comic.author.avatar}}" height="65" width="65" src="http://placehold.it/500x400" alt="Card image cap">
                             </div>
-                            <div class="col" style="float: left">
+                            <div class="" style="float: left; padding: 3px;">
                                 <h5 th:text="${comic.username}">User</h5>
                                 <span class="date" th:text = "${comic.dateTime}">Time Stamp</span>
                             </div>
                         </div>
+                        <!--<div class="row">-->
+                            <!--<div class="col col-md-1" style="margin: 0px;">-->
+                                <!--&lt;!&ndash;<i class="fas fa-user-circle" style="font-size:50px"></i>&ndash;&gt;-->
+                                <!--<img th:src="@{'/profiles/'+ ${comic.author.avatar}}" height="100" width="100" src="http://placehold.it/500x400" alt="Card image cap">-->
+                            <!--</div>-->
+                            <!--<div class="col" style="float: left">-->
+                                <!--<h5 th:text="${comic.username}">User</h5>-->
+                                <!--<span class="date" th:text = "${comic.dateTime}">Time Stamp</span>-->
+                            <!--</div>-->
+                        <!--</div>-->
                     </div>
                     <a style="display: block; text-align: center;" th:href="@{/comic/{id}(id=${comic.id})}"><canvas class="card-img-top" width = "350" height="350" th:value="${comic.canvases[0]}"></canvas></a>
                     <hr>

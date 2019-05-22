@@ -36,7 +36,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
                         "/css/**",
                         "/js/**",
                         "/img/**",
-                        "/webjars/**").permitAll()
+                        "/webjars/**",
+                        "/profiles/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()

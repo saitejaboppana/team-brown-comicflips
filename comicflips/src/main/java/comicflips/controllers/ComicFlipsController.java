@@ -419,6 +419,12 @@ public class ComicFlipsController {
         }
 
         String username = auth.getName();
+
+        Comic existingComic = comicRepository.findByName(title);
+        if (existingComic != null && existingComic.getIsPublic() && username == existingComic.getUsername()){
+            return "Comic with this name already exists!";
+        }
+
         Comic c = comicRepository.findByNameAndUsername(oldTitle, username);
         c.setName(title);
         c.setDescription(about);
@@ -634,9 +640,9 @@ public class ComicFlipsController {
         if(auth != null){
             String username = auth.getName();
             User user = userDetailsService.getUser(username);
-            if(!user.getSubscriptions().contains(group)){
-                return "redirect:/";
-            }
+//            if(!user.getSubscriptions().contains(group)){
+//                return "redirect:/";
+//            }
 //            List <Comic> comics = comicRepository.findByGroup(group, new Sort(Sort.Direction.ASC, "dateTime"));
             List<Boolean> likes = Arrays.asList(new Boolean[comics.size()]);
             Collections.fill(likes, Boolean.FALSE);
