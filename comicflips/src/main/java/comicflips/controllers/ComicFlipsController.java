@@ -503,7 +503,7 @@ public class ComicFlipsController {
     }
 
     /**
-     * Deletes component from the database using the component id
+     * Deletes component from the database using the component id.
      * @param id The id of the component
      * @return String to redirect to profile page
      */
@@ -575,7 +575,7 @@ public class ComicFlipsController {
     }
 
     /**
-     * Subscribes user to the group
+     * Subscribes user to the group.
      * @param group Group that the user wants to subscribe to.
      * @param auth The Spring Authentication object
      * @return Subscription complete message
@@ -600,7 +600,7 @@ public class ComicFlipsController {
     }
 
     /**
-     * Unsubscribe user from the group
+     * Unsubscribe user from the group.
      * @param group The comic group the user wants to unsubscribe to.
      * @param auth The Spring Authentication object
      * @return Unsubscription complete message
@@ -668,7 +668,7 @@ public class ComicFlipsController {
     }
 
     /**
-     * Gets the security question that the user put in upon registering
+     * Gets the security question that the user put in upon registering.
      * @param username The user's username
      * @return The user's security question
      */
@@ -706,7 +706,7 @@ public class ComicFlipsController {
     }
 
     /**
-     * Changes the password of the user account
+     * Changes the password of the user account.
      * @param username The user's username
      * @param password The user's new password
      * @return Success String
@@ -720,6 +720,12 @@ public class ComicFlipsController {
         return "Success";
     }
 
+    /**
+     * This avatar is uploaded by a user and is used to be displayed in multiple places of the app.
+     * @param uploadfile The avatar file that will be uploaded
+     * @param auth The Authentication
+     * @return
+     */
     @PostMapping("/editProfileImage")
     @ResponseBody
     String uploadFile(@RequestParam("file") MultipartFile uploadfile,
