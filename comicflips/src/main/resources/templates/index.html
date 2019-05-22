@@ -60,7 +60,7 @@
             font-weight: bold;
         }
 
-        img {
+        .author {
             border-radius: 50%;
         }
 
@@ -94,6 +94,7 @@
                     <div class="dropdown-menu">
                         <a class="dropdown-item" href="#" th:href="@{/create}">Create Comic</a>
                         <a class="dropdown-item" href="#" th:href="@{/component}">Create Component</a>
+                        <a class="dropdown-item" href="#" th:href="@{/upload}">Upload a Comic</a>
                     </div>
                 </li>
             </ul>
@@ -133,25 +134,26 @@
                         <div class="d-flex">
                             <div class="" style="margin: 0px;">
                                 <!--<i class="fas fa-user-circle" style="font-size:50px"></i>-->
-                                <img th:src="@{'/profiles/'+ ${comic.author.avatar}}" height="65" width="65" src="http://placehold.it/500x400" alt="Card image cap">
+                                <img class="author" th:src="@{'/profiles/'+ ${comic.author.avatar}}" height="65" width="65" src="http://placehold.it/500x400" alt="Card image cap">
                             </div>
                             <div class="" style="float: left; padding: 3px;">
                                 <h5 th:text="${comic.username}">User</h5>
                                 <span class="date" th:text = "${comic.dateTime}">Time Stamp</span>
                             </div>
                         </div>
-                        <!--<div class="row">-->
-                            <!--<div class="col col-md-1" style="margin: 0px;">-->
-                                <!--&lt;!&ndash;<i class="fas fa-user-circle" style="font-size:50px"></i>&ndash;&gt;-->
-                                <!--<img th:src="@{'/profiles/'+ ${comic.author.avatar}}" height="100" width="100" src="http://placehold.it/500x400" alt="Card image cap">-->
-                            <!--</div>-->
-                            <!--<div class="col" style="float: left">-->
-                                <!--<h5 th:text="${comic.username}">User</h5>-->
-                                <!--<span class="date" th:text = "${comic.dateTime}">Time Stamp</span>-->
-                            <!--</div>-->
-                        <!--</div>-->
                     </div>
-                    <a style="display: block; text-align: center;" th:href="@{/comic/{id}(id=${comic.id})}"><canvas class="card-img-top" width = "350" height="350" th:value="${comic.canvases[0]}"></canvas></a>
+
+                    <div th:if="${comic.isExternal}">
+                        <a style="display: block; text-align: center;" th:href="@{/comic/{id}(id=${comic.id})}"><img th:src="@{'/profiles/uploads/'+ ${comic.uploadLinks[0]}}" height="350" width="350" src="http://placehold.it/500x400" alt="Card image cap"></a>
+                    </div>
+                    <!-- ELSE -->
+                    <div th:unless="${comic.isExternal}">
+                        <a style="display: block; text-align: center;" th:href="@{/comic/{id}(id=${comic.id})}"><canvas class="card-img-top" width = "350" height="350" th:value="${comic.canvases[0]}"></canvas></a>
+                    </div>
+
+                    <!--<a style="display: block; text-align: center;" th:href="@{/comic/{id}(id=${comic.id})}"><canvas class="card-img-top" width = "350" height="350" th:value="${comic.canvases[0]}"></canvas></a>-->
+
+
                     <hr>
                     <div class="card-body blogBody">
                         <h5><strong th:text="${comic.name}">Post Title</strong></h5>

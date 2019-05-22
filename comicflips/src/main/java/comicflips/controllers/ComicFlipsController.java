@@ -63,6 +63,18 @@ public class ComicFlipsController {
         return "forgotpass";
     }
 
+    @GetMapping("/upload")
+    String uploadPage(Authentication auth, Model mv){
+        if(auth == null){
+            return "redirect:/";
+        }
+        User currentUser = userDetailsService.getUser(auth.getName());
+        mv.addAttribute("groups", currentUser.getCreatedGroups());
+        mv.addAttribute("user", currentUser);
+
+        return "upload";
+    }
+
     /**
      * When a user registers, this endpoint will get called. This method will create a new user object and set all
      * of the provided information from the register page. This method will then redirect the user to the login
@@ -167,6 +179,10 @@ public class ComicFlipsController {
                 }
             }
 
+            mv.addObject("currentUser", user);
+
+        }else{
+            mv.addObject("currentUser", "");
         }
 
         System.out.println("username:" + username);
@@ -191,6 +207,7 @@ public class ComicFlipsController {
         mv.addObject("groups", currentUser.getCreatedGroups());
         mv.addObject("genres", "");
         mv.addObject("button", "Publish");
+        mv.addObject("user", currentUser);
         return mv;
     }
 
@@ -199,8 +216,12 @@ public class ComicFlipsController {
      * @return ModelAndView that takes user to the create component page
      */
     @GetMapping("/component")
-    ModelAndView createComponentPage(){
-        return new ModelAndView("component");
+    ModelAndView createComponentPage(Authentication auth){
+        ModelAndView mv = new ModelAndView("component");
+        User currentUser = userDetailsService.getUser(auth.getName());
+        mv.addObject("components",componentRepository.findAll());
+        mv.addObject("user", currentUser);
+        return mv;
     }
 
     /**
@@ -278,6 +299,7 @@ public class ComicFlipsController {
         String subscribeButton = "Subscribe";
         if(auth == null){
             isLiked = "";
+            mv.addObject("currentUser", "");
         }
         else {
             userName = auth.getName();
@@ -286,6 +308,7 @@ public class ComicFlipsController {
             if(user.getSubscriptions().contains(group)){
                 subscribeButton = "Unsubscribe";
             }
+            mv.addObject("currentUser", user);
         }
         mv.addObject("liked", isLiked);
         mv.addObject("user", userName);
@@ -749,7 +772,62 @@ public class ComicFlipsController {
 
         currentUser.setAvatar(uploadfile.getOriginalFilename());
         userDetailsService.updateUser(currentUser);
+
+        List<Comic> usersComics = comicRepository.findByUsername(currentUser.getUsername());
+        for(Comic temp: usersComics){
+            temp.setAuthor(currentUser);
+            comicRepository.save(temp);
+        }
         return "success";
 
+    }
+
+    @PostMapping("/uploadComic")
+    @ResponseBody
+    String uploadComic(@RequestParam("file") MultipartFile[] uploads, @RequestParam("title") String title,
+                       @RequestParam("about") String about,
+                       @RequestParam("group") String group,
+                       @RequestParam("tags[]") ArrayList<String> tags,Authentication auth){
+        System.out.println("entering upload comics");
+        System.out.println("title: " + title);
+        System.out.println("about: " + about);
+        System.out.println("group: " + group);
+        for(String tag: tags){
+            System.out.println(tag);
+        }
+
+        User currentUser = userDetailsService.getUser(auth.getName());
+        Comic c = new Comic();
+        c.setName(title);
+        c.setDescription(about);
+        c.setUsername(auth.getName());
+        c.setGroup(group);
+        c.setPublic(true);//for now, lets have this hardcoded as true
+        c.setExternal(true);
+        c.setTags(tags);
+        c.setAuthor(currentUser);
+
+        ArrayList<String> uploadLinks = new ArrayList<String>();
+        for(MultipartFile file: uploads){
+            System.out.println(file.getOriginalFilename());
+            if (file.isEmpty()) {
+                continue;
+            }
+
+            try {
+                byte[] bytes = file.getBytes();
+                Path path = Paths.get("./src/main/profiles/uploads/" + file.getOriginalFilename());
+                uploadLinks.add(file.getOriginalFilename());
+                Files.write(path, bytes);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        c.setUploadLinks(uploadLinks);
+        comicRepository.save(c);
+        currentUser.addComicId(c.getId());
+        currentUser.addToCreatedGroups(group);
+        userRepository.save(currentUser);
+        return "success";
     }
 }

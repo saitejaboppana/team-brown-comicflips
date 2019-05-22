@@ -126,6 +126,7 @@
                     <div class="dropdown-menu">
                         <a class="dropdown-item" href="#" th:href="@{/create}">Create Comic</a>
                         <a class="dropdown-item" href="#" th:href="@{/component}">Create Component</a>
+                        <a class="dropdown-item" href="#" th:href="@{/upload}">Upload a Comic</a>
                     </div>
                 </li>
             </ul>
@@ -205,46 +206,6 @@
                 </div>
 
             </div>
-
-            <!--<div id = "tools" class="d-flex justify-content-center sticky-top" style="top:56px; text-align: center;">-->
-                <!--<i id = "addCanvas" class="control fas fa-plus-circle" style="border-left: #dad7d9 solid 1px;"></i>-->
-                <!--<i id = "select" class="control fas fa-mouse-pointer" style="padding-left: 23px; padding-right: 23px;"></i>-->
-                <!--<i id = "draw" data-toggle="collapse" data-target="#drawOptions" class="control fas fa-pencil-alt"></i>-->
-                <!--<i id = "circle" data-toggle="collapse" data-target="#shapeOptions" class="control far fa-circle"></i>-->
-                <!--<span id = "rectangle" data-toggle="collapse" data-target="#shapeOptions" class="control" style='line-height: 15px;font-size: 30px;'>&#9645;</span>-->
-                <!--<span id = "line" class="control" style='line-height: 20px;'>&#8213;</span>-->
-                <!--<span id = "triangle" data-toggle="collapse" data-target="#shapeOptions" class="control" style="font-size:25px;line-height: 20px;" >&#9651;</span>-->
-                <!--<i id = "image" data-toggle="collapse" data-target="#components" class="control far fa-image"></i>-->
-                <!--<i id = "text" class="control fas fa-font"></i>-->
-                <!--<i id = "eraser" class="control fas fa-eraser"></i>-->
-                <!--<i id = "clear" class="control fas fa-trash"></i>-->
-                <!--<i id = "deleteCanvas" class="control fas fa-minus-circle"></i>-->
-            <!--</div>-->
-
-            <!--<div id = "drawOptions" class="collapse sticky-top">-->
-                <!--<label for="drawing-line-width">Line width:</label>-->
-                <!--<span class="info">1</span><input type="range" value="1" min="0" max="150" id="drawing-line-width" class="custom-range" style="width: 50%;"><br>-->
-                <!--<label for="drawing-color">Line color:</label>-->
-                <!--<input type="color" value="#000000" id="drawing-color"><br>-->
-            <!--</div>-->
-
-            <!--<div id = "shapeOptions" class="collapse">-->
-                <!--<label for="shape-stroke-width">Stroke width:</label>-->
-                <!--<span class="info">1</span><input type="range" value="1" min="0" max="150" id="shape-stroke-width"><br>-->
-                <!--<label for="shape-stroke">Stroke color:</label>-->
-                <!--<input type="color" value="#000000" id="shape-stroke"><br>-->
-                <!--<label for="shape-fill">Fill:</label>-->
-                <!--<input type="color" value="#000000" id="shape-fill"><br>-->
-            <!--</div>-->
-
-            <!--<div id="components" class="collapse" style="overflow: auto;  white-space: nowrap;">-->
-                <!--<div class="card" style="width: 250px;text-align: center" th:each="component : ${components}">-->
-                    <!--<canvas th:value="${component.canvas}"></canvas>-->
-                    <!--<div class="card-body">-->
-                        <!--<h4 class="card-title" th:text="${component.name}"></h4>-->
-                    <!--</div>-->
-                <!--</div>-->
-            <!--</div>-->
 
             <div class="card mb-4">
 
@@ -378,9 +339,15 @@
                     </div>
 
                     <button id = "publish" type="button" class="btn btn-primary btn-block" style="margin-top:10px;" th:text="${button}">Publish</button>
-                    <i class="import fas fa-upload" style="border-left: #dad7d9 solid 1px;margin-top:10px;width:100%;text-align: center;">
-                        <p>Import</p>
-                    </i>
+                    <!--<i class="import fas fa-upload" style="border-left: #dad7d9 solid 1px;margin-top:10px;width:100%;text-align: center;">-->
+                        <!--<p>Import</p>-->
+                    <!--</i>-->
+
+                    <!--<form method="post" enctype="multipart/form-data" id="fileUploadForm">-->
+                        <!--<input type="file" name="file" multiple>-->
+                        <!--<input type="submit" value="Submit" id="import">-->
+                    <!--</form>-->
+
                 </div>
 
                 <hr>
@@ -504,7 +471,7 @@
                 setCurrentCanvas(id);
             }
         });
-        
+
         $("#groupButton").on("click", function (e) {
             if (!currentCanvas.getActiveObject()) {
                 return;
@@ -700,7 +667,69 @@
                 });
 
             }
-        })
+        });
+
+        $("#import").click(function (event) {
+            event.preventDefault();
+
+            var title = $("#title").val();
+            var about = $("#about").val();
+            var comicGroup = $("#series").val();
+            if(comicGroup == "new"){
+                comicGroup = $("#customSeries").val();
+                if(comicGroup == ""){
+                    alert("Please enter a custom group");
+                    return;
+                }
+            }
+            var button = $(this).text();
+
+            console.log("button name: " + button);
+
+            if(title == '' || about ==''){
+                alert("Please Fill Out All The Fields");
+                return;
+            }
+
+            var tags = [];
+            $(".custom-control-input").each(function () {
+                if($(this).is(":checked")){
+                    tags.push($(this).val());
+                }
+            });
+
+            if(tags.length == 0){
+                alert("Please choose at least one genre");
+                return;
+            }
+
+            var form = $('#fileUploadForm')[0];
+
+            var data = new FormData(form);
+            console.log(data);
+            data.append("title", title);
+            data.append("about", about);
+            data.append("group", comicGroup);
+            data.append("tags[]", tags);
+
+            $.ajax({
+                type: "POST",
+                enctype: 'multipart/form-data',
+                url: "/uploadComic",
+                data: data,
+                processData: false, //prevent jQuery from automatically transforming the data into a query string
+                contentType: false,
+                cache: false,
+                timeout: 600000,
+                success: function (data) {
+                    console.log(data);
+                },
+                error: function (e) {
+                    console.log("ERROR : ", e);
+                }
+            });
+
+        });
 
     });
 
@@ -729,12 +758,12 @@
     function removeDeleteListener() {
         currentCanvas.off('object:selected', deleteTool);
     }
-    
+
     function deleteTool() {
         console.log(this);
         currentCanvas.remove(currentCanvas.getActiveObject());
     }
-    
+
     function mouseDown() {
         if(toolType != "circle" && toolType != "rectangle"&& toolType != "line" && toolType != "triangle" && toolType != "text"){
             return;
@@ -807,7 +836,7 @@
         }
         currentCanvas.add(shape);
     }
-    
+
     function mouseUp() {
         if(toolType != "circle" && toolType != "rectangle"&& toolType != "line" && toolType != "triangle"){
             return;
@@ -817,7 +846,7 @@
         shape.setCoords();
         isDown = false;
     }
-    
+
     function mouseMove() {
         if(toolType != "circle" && toolType != "rectangle" && toolType != "line" && toolType != "triangle"){
             return;
