@@ -265,7 +265,7 @@
                         Info
                     </h5>
                     <div class="card-body" style="text-align: center;">
-                        <img th:src="@{'/profiles/'+ ${user.avatar}}" width="500" height="400" src="http://placehold.it/500x400" alt="Card image cap">
+                        <img th:src="@{${user.avatar}== null ? 'http://placehold.it/500x400' : '/profiles/'+ ${user.avatar}}" width="500" height="400" src="http://placehold.it/500x400" alt="Card image cap">
                         <form method="post" enctype="multipart/form-data" id="fileUploadForm">
                             <input type="file" name="file">
                             <input type="submit" value="Submit" id="profileSubmit">
@@ -303,13 +303,13 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="question" class="col-sm-3 control-label">Security Question</label>
+                                <label for="question" class="col-sm-3 control-label" style="max-width: 1000px;">Security Question</label>
                                 <div class="col">
                                     <input name="question"  type="text" id="question" th:placeholder="${user.question}" class="form-control" disabled>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="password" class="col-sm-3 control-label">Security Answer</label>
+                                <label for="password" class="col-sm-3 control-label" style="max-width: 1000px;">Security Answer</label>
                                 <div class="col">
                                     <input name="password"  type="password" id="answer" placeholder="hidden" class="form-control" disabled>
                                 </div>
